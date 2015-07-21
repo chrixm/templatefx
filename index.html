@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TemplateFx | Dynamic Templating Tool</title>
+    <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAN4SURBVHhe7dyxjcJQFEVBe7tyW3Ydbssu62/yU1YrBAGcmYSbgqWjFwDrsl9jAZJ+5isQJAAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQ9rZ/BR7nNhefbD3uufhGLgAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIW5f9GnO/1Di3ufhk63HP9dg3Puv/vO9v4AKAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAsHXZrzE3EOMCgDABgDABgDABgDABgDABgDABgDABgLDsF4HGuc3FX9bjnusxn+X7/ec5PMMFAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGHrsl9jbnjKOLe5eJf1uOd6LRcAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhPk5MIS5ACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBrWX4BzZwje50jRbsAAAAASUVORK5CYII=">
+    <style type="text/css">
+      html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:bold}dfn{font-style:italic}h1{font-size:2em;margin:0.67em 0}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-0.5em}sub{bottom:-0.25em}img{border:0}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}pre{overflow:auto}code,kbd,pre,samp{font-family:monospace, monospace;font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input{line-height:normal}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}fieldset{border:1px solid #c0c0c0;margin:0 2px;padding:0.35em 0.625em 0.75em}legend{border:0;padding:0}textarea{overflow:auto}optgroup{font-weight:bold}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}*:before,*:after{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}html{font-size:62.5%;-webkit-tap-highlight-color:rgba(0,0,0,0)}body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#333;background-color:#fff}input,button,select,textarea{font-family:inherit;font-size:inherit;line-height:inherit}a{color:#428bca;text-decoration:none}a:hover,a:focus{color:#2a6496;text-decoration:underline}a:focus{outline:thin dotted;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}figure{margin:0}img{vertical-align:middle}.img-responsive{display:block;max-width:100%;height:auto}.img-rounded{border-radius:6px}.img-thumbnail{padding:4px;line-height:1.42857143;background-color:#fff;border:1px solid #ddd;border-radius:4px;-webkit-transition:all .2s ease-in-out;transition:all .2s ease-in-out;display:inline-block;max-width:100%;height:auto}.img-circle{border-radius:50%}hr{margin-top:20px;margin-bottom:20px;border:0;border-top:1px solid #eee}.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);border:0}
+      code,kbd,pre,samp{font-family:Menlo,Monaco,Consolas,"Courier New",monospace}code{padding:2px 4px;font-size:90%;color:#c7254e;background-color:#f9f2f4;white-space:nowrap;border-radius:4px}kbd{padding:2px 4px;font-size:90%;color:#fff;background-color:#333;border-radius:3px;box-shadow:inset 0 -1px 0 rgba(0,0,0,0.25)}pre{display:block;padding:9.5px;margin:0 0 10px;font-size:13px;line-height:1.42857143;word-break:break-all;word-wrap:break-word;color:#333;background-color:#f5f5f5;border:1px solid #ccc;border-radius:4px}pre code{padding:0;font-size:inherit;color:inherit;white-space:pre-wrap;background-color:transparent;border-radius:0}.pre-scrollable{max-height:340px;overflow-y:scroll}
+      .label{display:inline;padding:.2em .6em .3em;font-size:75%;font-weight:bold;line-height:1;color:#fff;text-align:center;white-space:nowrap;vertical-align:baseline;border-radius:.25em}.label[href]:hover,.label[href]:focus{color:#fff;text-decoration:none;cursor:pointer}.label:empty{display:none}.btn .label{position:relative;top:-1px}.label-default{background-color:#999}.label-default[href]:hover,.label-default[href]:focus{background-color:#808080}.label-primary{background-color:#428bca}.label-primary[href]:hover,.label-primary[href]:focus{background-color:#3071a9}.label-success{background-color:#5cb85c}.label-success[href]:hover,.label-success[href]:focus{background-color:#449d44}.label-info{background-color:#5bc0de}.label-info[href]:hover,.label-info[href]:focus{background-color:#31b0d5}.label-warning{background-color:#f0ad4e}.label-warning[href]:hover,.label-warning[href]:focus{background-color:#ec971f}.label-danger{background-color:#d9534f}.label-danger[href]:hover,.label-danger[href]:focus{background-color:#c9302c}
+      html { margin: 10px; font-family: Calibri, Geneva, sans-serif; text-align: justify }
+      div.content { width: 90% }
+      div.title h3 { margin-bottom: 0px }
+      div.title h4 { margin-top: 0px }
+      th, td { white-space: nowrap; padding: 2px }
+      h4.heading { color: #4169e1 }
+      span.if { background: #ee82ee }
+      span.for { background: #c0a172 }
+      span.field { background: #adff2f }
+      span.script { background: #ffc800 }
+      span.comment { background: #99ccff }
+      span.at { background: #ff7f50 }
+      .inline-left { text-align: left }
+      .inline-center { text-align: center }
+      .block-center { margin-left: auto; margin-right: auto }
+    </style>
+  </head>
+  <body>
+    <div class="content block-center">
+      <div class="title inline-center">
+        <img width="48" height="48" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAN4SURBVHhe7dyxjcJQFEVBe7tyW3Ydbssu62/yU1YrBAGcmYSbgqWjFwDrsl9jAZJ+5isQJAAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQ9rZ/BR7nNhefbD3uufhGLgAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIW5f9GnO/1Di3ufhk63HP9dg3Puv/vO9v4AKAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAsHXZrzE3EOMCgDABgDABgDABgDABgDABgDABgDABgLDsF4HGuc3FX9bjnusxn+X7/ec5PMMFAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGHrsl9jbnjKOLe5eJf1uOd6LRcAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhPk5MIS5ACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBrWX4BzZwje50jRbsAAAAASUVORK5CYII=" alt="Icon" /><br />
+        <h3>TemplateFx | Dynamic Templating Tool</h3>
+        <h4>by Chris Mason &lt;<a href="mailto:chris@netnix.org">chris@netnix.org</a>&gt;</h4>
+      </div>
+
+      <h4 class="heading">1. Introduction</h4>
+
+      <p>TemplateFx is a Dynamic Templating Tool which allows you to generate outputs based on a template and some source data. Its main use is in generating configurations for CLI based devices like Cisco routers and switches. It aims to be portable and platform independent through the use of Java and as such requires a Java Runtime Environment (JRE) of at least version 7 to be installed.</p>
+
+      <p>This document aims to be short as there isn't really a lot to talk about, due to the simplicity of TemplateFx and its hopeful ease of use. However, if you feel something could be made easier or simpler then feedback is welcomed using the email address above.</p>
+
+      <h4 class="heading">2. User Interface</h4>
+
+      <p>The TemplateFx user interface consists of the "IP Calc" and "DataTemplate" tabs and multiple "Output" tabs. The "IP Calc" tab provides easy access to an IPv4/IPv6 Subnet Calculator, the "DataTemplate" tab is the main tab where you compose your template and the "Output" tabs are where you see your merged data after clicking on the "Generate Output" button on the toolbar.</p>
+
+      <p>You have the ability to right click on the various panes to allow you to copy and paste or perform other normal operations. As well as the "File" menu to load and save content, you also have the ability to drag and drop data files and template files into the respective panes.</p>
+
+      <p>The "Group By" drop down allows you to select one of your data fields to allow grouping of your output data. As an example, if you have configuration that needs to be applied to different interfaces on a series of routers, then you could use this to group by your router identifier, to allow you to group interfaces for the same router in the same output. The "Merge Rows" checkbox is slightly different and is used in conjunction with the "Group By" drop down and it allows you to merge rows together which are grouped together. Using the same example, you would only have a single row per router with all the interfaces merged together using a delimiter.</p>
+
+      <h4 class="heading">2.1. Data Pane</h4>
+
+      <p>The data pane is where you enter your raw data that TemplateFx will use within your template. Text that is inserted into the data pane has a couple of restrictions that must be followed:</p>
+
+      <ol>
+        <li><p>Data is entered in rows and columns, with the columns separated by tabs or commas - you can't mix and match. In the same sense if you click on "Import Data" from the "File" menu then it expects tab or comma separated data.</p></li>
+        <li><p>You must define at least two rows within your data. The first row is considered the header row which allows TemplateFx to map the substitution fields in your template to the data. The only exception, is if you haven't used any template fields within the template plane - this is to support situations where you are just using the template pane and in this unusual situation you may leave the data pane blank.</p></li>
+      </ol>
+
+      <p>A nice feature of TemplateFx is its ability to accept data from Microsoft Excel. If you construct your data within Excel then you are able to copy and paste it into the data pane. This is the preferred method of constructing source data as you are able to manipulate and sort the data before pasting it into TemplateFx - however be aware of Excel dropping leading zeroes and converting "x/x/x" syntax into dates by default.</p>
+
+      <h4 class="heading">2.2. Template Pane</h4>
+
+      <p>The template pane is where you enter the text of your template that will be used as the basis for your output. TemplateFx fields are defined through the use of double chevrons (e.g. <code>&lt;&lt;FIELD&gt;&gt;</code>) and once you define them within the template pane, they are added to the "Template Fields" list (fields are highlighted in red if they don't exist in the data pane).</p>
+
+      <p>When you click on the "Generate Output" button, the fields will be substituted for the values in the source data. In the "Generate Output" dialog you have the option of specifying a label for the output tab as well as some optional criteria which allows you to limit which entries within the data pane are processed. When limiting which entries are processed you can select rows where a field "contains (=~)", "does not contain (!~)", "equals (==)" or "does not equal (!=)" a certain string, with the "contains" and "does not contain" operands supporting a regular expression.</p>
+      
+      <p>In the event that a template field hasn't been defined within the source data then you will get a warning message as well as it being highlighted in the output to allow you to easily identify it.</p>
+
+      <h4 class="heading">2.3. Output Pane</h4>
+
+      <p>Every time you click on the "Generate Output" button a new output pane is added as a new tab. This pane allows you to see the merged output with the ability to save it or to zip multiple outputs together into a single archive. If you have selected a field in the "Group By" drop down, then you have the ability to cycle through the different output groups. In the event that TemplateFx detects you are creating a HTML based template then it will give you the option of showing the output in your default browser using the "In Browser" button.</p>
+
+      <p>You also have various different selection options ("Select Line", "Select Block" and "Select Paragraph") by right clicking on the output pane which allows you to easily select blocks to copy. This goes one step further with a feature called "Copy Mode", which is available in the same menu that automatically highlights blocks as you move the mouse over them - this allows you to copy blocks without having to manually select them first.</p>
+
+      <h4 class="heading">2.4. Shortcut Keys</h4>
+
+      <p>TemplateFx defines the following shortcut/accelerator keys that can be used to perform tasks using the keyboard:</p>
+
+      <table class="inline-center">
+        <thead>
+          <tr>
+            <th class="inline-left" style="width: 200px">Action</th>
+            <th style="width: 100px">Windows</th>
+            <th style="width: 100px">Mac OS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="inline-left">New</td>
+            <td>^N</td>
+            <td>Option-N</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Load DataTemplate</td>
+            <td>^L</td>
+            <td>Option-L</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Save DataTemplate</td>
+            <td>^S</td>
+            <td>Option-S</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Find and Replace</td>
+            <td>^F</td>
+            <td>Option-F</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Bookmark DataTemplate</td>
+            <td>^D</td>
+            <td>Option-D</td>
+          </tr>
+          <tr>
+            <td class="inline-left">IP Calculator</td>
+            <td>^I</td>
+            <td>Option-I</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Generate Output</td>
+            <td>^G</td>
+            <td>Option-G</td>
+          </tr>
+          <tr>
+            <td class="inline-left">JavaScript Libraries</td>
+            <td>^J</td>
+            <td>Option-J</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Close Tab</td>
+            <td>^W</td>
+            <td>Option-W</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Help</td>
+            <td>F1</td>
+            <td>F1</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4 class="heading">3. DataTemplates</h4>
+
+      <p>A DataTemplate is a proprietary file format which uses the file extension ".dt" and is used to store a template along with the source data. Instead of having to distribute the template and source data in separate files, you can save it as a DataTemplate which combines them both together. Warning: The file format isn't text based and if you attempt to edit it outside of TemplateFx then you will screw up the checksum and it won't load.</p>
+
+      <p>TemplateFx also supports encrypted DataTemplates by selecting "Encrypt DataTemplate" from the "File" menu. After prompting for a password, the DataTemplate will be fully encrypted when it is saved using AES (Advanced Encryption Standard) encryption in CTR mode and with an SHA-256 HMAC for integrity. The key size is 128 bits and is generated by combining a pseudorandom salt with the password using the PBKDF2 key derivation function with 100,000 iterations. Please ensure you don't forget the password as there is no way to decrypt the DataTemplate without it!</p>
+
+      <h4 class="heading">4. Templates</h4>
+
+      <p>To help demonstrate how a template is constructed let us assume we have the following source data defined within our data pane:</p>
+
+      <pre><span class="comment">ROUTER, INTERFACE, IP, DEST</span>
+PE-1A, Gi0/0/0, 192.0.2.1, R1 (Gi0/0)
+PE-1A, Gi0/0/1, 192.0.2.5, R2 (Gi0/1)
+PE-1A, Gi0/0/2, 192.0.2.9, R3 (Gi0/2)</pre>
+
+      <p>We are going to create a template which configures a series of interfaces based on the data provided within the data pane. You can see in the example below that we have used chevrons to mark where we want the substituted data to be placed:</p>
+
+      <pre>interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>
+ description ## Connection from <span class="field">&lt;&lt;ROUTER&gt;&gt;</span> (<span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>) to <span class="field">&lt;&lt;DEST&gt;&gt;</span> ##
+ ip address <span class="field">&lt;&lt;IP&gt;&gt;</span> 255.255.255.252
+ no shutdown
+!</pre>
+
+      <p>Once you click on "Generate Output", the data within the template pane is effectively duplicated for each line within your source data with the necessary substitutions taking place - it will produce the following output:</p>
+
+      <pre>interface Gi0/0/0
+ description ## Connection from PE-1A (Gi0/0/0) to R1 (Gi0/0) ##
+ ip address 192.0.2.1 255.255.255.252
+ no shutdown
+!
+
+interface Gi0/0/1
+ description ## Connection from PE-1A (Gi0/0/1) to R2 (Gi0/1) ##
+ ip address 192.0.2.5 255.255.255.252
+ no shutdown
+!
+
+interface Gi0/0/2
+ description ## Connection from PE-1A (Gi0/0/2) to R3 (Gi0/2) ##
+ ip address 192.0.2.9 255.255.255.252
+ no shutdown
+!</pre>
+
+      <h4 class="heading">4.1. Branching and Looping Constructs</h4>
+
+      <h4 class="heading">4.1.1. IF</h4>
+
+      <p>The IF construct is one of the most important features of many languages, templates included. It allows for the conditional use of template text based on a true or false statement. If the statement evaluates to true, the text will be displayed, and if it evaluates to false, it won't.</p>
+
+      <pre><span class="if">&lt;IF (<span class="script">"expression"</span>)&gt;</span>
+  ...
+<span class="if">&lt;ELSE IF (<span class="script">"expression"</span>)&gt;</span>
+  ...
+<span class="if">&lt;ELSE IF (<span class="script">"expression"</span>)&gt;</span>
+  ...
+<span class="if">&lt;ELSE&gt;</span>
+  ...
+<span class="if">&lt;/IF&gt;</span>
+</pre>
+
+      <p>The "expression" will be evaluated by the JavaScript parser, so it needs to be valid JavaScript, however the syntax is relatively simple as demonstrated in the example below (white space is maintained at the beginning and end of IF blocks, but not empty lines).</p>
+
+      <pre>interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>
+<span class="if">&lt;IF (<span class="script">"<span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>" == "Gi0/0/0"</span>)&gt;</span>
+ no shutdown
+<span class="if">&lt;/IF&gt;</span>
+!</pre>
+
+      <p>In the above example, the block will only be displayed if the "INTERFACE" field equals "Gi0/0/0".</p>
+
+      <h4 class="heading">4.1.2. FOR</h4>
+
+      <p>The FOR construct is also an important feature of many languages, templates included - it is used to support intra-row looping. There are two different syntaxes that are supported for this construct; the first allows you to specify a variable "VAR" and a comma separated list of data values, e.g. <code>"VAL1", "VAL2", ..., "VALn"</code>, the second allows you to specify a variable "VAR" and then use the <code>X TO Y [STEP N]</code> syntax for the values - if "STEP" is omitted then a default value of 1 or -1 will be used depending on the context. It will then duplicate the contents of the FOR block for every entry by substituting <code>{{VAR}}</code> for the value. If there are no entries within the list of data values then the block isn't displayed (white space is maintained at the beginning and end of FOR blocks, but not empty lines). To maintain performance and preserve memory, a maximum iteration limit of 1024 has been imposed.</p>
+
+      <pre><span class="for">&lt;FOR VAR = ["VAL1", "VAL2", ..., "VALn"]&gt;</span>
+<span class="for">{{VAR}}</span>
+<span class="for">&lt;/FOR&gt;</span>
+</pre>
+
+      <p>The following example demonstrates how this could be used to include a series of "ip helper-address" statements on an interface:
+
+      <pre>interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>
+ ip address <span class="field">&lt;&lt;IP&gt;&gt;</span> 255.255.255.252
+<span class="for">&lt;FOR H = ["192.0.2.129", "192.0.2.130"]&gt;</span>
+ ip helper-address <span class="for">{{H}}</span>
+<span class="for">&lt;/FOR&gt;</span>
+ no shutdown
+!</pre>
+
+      <p>Once you click on "Generate Output", the following output will be generated where you can see the "ip helper-address" has been duplicated for each entry within the list of data values:</p>
+      
+      <pre>interface Gi0/0/0
+ ip address 192.0.2.1 255.255.255.252
+ ip helper-address 192.0.2.129
+ ip helper-address 192.0.2.130
+ no shutdown
+!
+
+interface Gi0/0/1
+ ip address 192.0.2.5 255.255.255.252
+ ip helper-address 192.0.2.129
+ ip helper-address 192.0.2.130
+ no shutdown
+!
+
+interface Gi0/0/2
+ ip address 192.0.2.9 255.255.255.252
+ ip helper-address 192.0.2.129
+ ip helper-address 192.0.2.130
+ no shutdown
+!</pre>
+
+      <p>It should be noted that the above could have been easily done without the use of a FOR block as the values were already known. However, the real power comes when you provide the list from the data pane, where it could be different on a per line basis - this concept will be further explained within the "Scripting" section.</p>
+
+      <p>The second type of syntax allows you to do more conventional loops that go from a start value to an end value, with an optional step (where "X" and "Y" could be a number or a character with the smaller value on the left or the right):</p>
+
+      <pre><span class="for">&lt;FOR VAR = ["X" TO "Y" STEP N]&gt;</span>
+<span class="for">{{VAR}}</span>
+<span class="for">&lt;/FOR&gt;</span>
+</pre>
+
+      <p>You are permitted to nest FOR blocks as many times as you want while mixing and matching the syntax - the following primitive example demonstrates an example of this:</p>
+
+      <pre><span class="for">&lt;FOR I = [1 TO 5 STEP 2]&gt;</span>
+  <span class="for">&lt;FOR J = [B TO A]&gt;</span>
+R = <span class="for">{{I}}</span>:<span class="for">{{J}}</span>
+  <span class="for">&lt;/FOR&gt;</span>
+<span class="for">&lt;/FOR&gt;</span>
+</pre>
+
+      <p>Once you click on "Generate Output", the following output will be generated:</p>
+      
+      <pre>R = 1:B
+R = 1:A
+R = 3:B
+R = 3:A
+R = 5:B
+R = 5:A</pre>
+
+      <h4 class="heading">4.2. Snippets</h4>
+
+      <p>To allow the re-using of templating components, TemplateFx also supports the notion of including the contents of snippets into a template. This allows a common piece of text to be written once but used multiple times in the same template - any modifications to the common snippet is seen in all occurrences within the template. Snippets are defined in the snippet panel and can then be referenced in the main template using the following syntax:</p>
+
+      <pre>ipv4 access-list ACL-IN
+ permit tcp host 192.0.2.1 gt 1023 host 192.0.2.2 eq 179
+ permit tcp host 192.0.2.2 eq 179 host 192.0.2.1 gt 1023
+ <span class="at">%{ACL-STANDARD}%</span>
+ deny ip any any
+!</pre>
+
+      <p>The above <code>%{NAME}%</code> syntax tells TemplateFx to replace it with the contents of the snippet named "ACL-STANDARD". This directive is processed first before any substitutions have taken place which means any valid template syntax can be used within a snippet. The scope of snippets is within the DataTemplate and when the DataTemplate is saved or loaded then the snippets are included with it.</p>
+
+      <p>Snippets also support parsing of an optional parameter by specifying parenthesis after the snippet name (i.e. <code>%{NAME("&lt;string&gt;")}%</code>) when you reference it in your template, which can then be accessed in the snippet via the <code>{%}</code> markup. Any occurrences of <code>{%}</code> in the snippet will be replaced with "&lt;string&gt;" - this could be used to pass through a literal string which allows a different response to be produced depending on what is passed through. However, care should be taken when passing through special constructs (i.e. "&lt;?= ?&gt;") as they will be evaluated as part of the snippet body and thus need to be valid in the context they are being evaluated.</p>
+
+      <h4 class="heading">4.3. Including External Files</h4>
+
+      <p>As well as snippets, TemplateFx also supports including content from external text files that are located on a locally accessible file system. This approach might be used over snippets if you have content which is shared amongst multiple templates. External files are included using the following syntax:</p>
+
+      <pre><span class="at">%INCLUDE "\\uk\ukroot\templates\site-build-template.txt"</span>
+</pre>
+
+      <p>The above syntax instructs TemplateFx to include the contents of "\\uk\ukroot\templates\site-build-template.txt" into the template at this point. The current order of operation means that snippets are imported into the template before includes, which means snippets can include external files. A maximum filesize of 262,144 bytes is currently enforced per external file.</p>
+
+      <h4 class="heading">4.4. Comments</h4>
+
+      <p>There are two types of comments which can be used within a template (and snippets), both of which must be used at the beginning of a line as TemplateFx doesn't presently support end of line comments. The first is a template comment and uses the "#" syntax to comment out a line in a template - this results in the line being completely ignored and not appearing in your output. The second type of comment, which uses the "!" syntax is used to supplement your output with comments:</p>
+
+      <pre><span class="comment"># This comment won't appear in your output and ignores &lt;&lt;FIELDS&gt;&gt;, etc.</span>
+<span class="comment">! This comment will appear in your output and doesn't ignore <span class="field">&lt;&lt;FIELDS&gt;&gt;</span>, etc..</span>
+</pre>
+
+      <h4 class="heading">5. Grouping and Merging</h4>
+
+      <p>If you don't use the "Group By" or "Merge Rows" features then TemplateFx will generate a separate output per row within your data source. To demonstrate the difference between these two features, we are going to use the following data source as an example:</p>
+      
+      <pre><span class="comment">ROUTER, INTERFACE</span>
+UKPE-ABC-01, Gi0/1
+UKPE-ABC-01, Gi0/2
+UKPE-ABC-01, Gi0/3
+UKPE-ABC-02, Gi0/1
+UKPE-ABC-02, Gi0/2
+UKPE-ABC-03, Gi0/1</pre>
+
+      <p>Without either option selected, we will end up with 6 separate outputs (one per row). If we select "ROUTER" as our "Group By" field then TemplateFx will generate outputs in the same way as before, but it will combine outputs with the same value for "ROUTER" into a single output - this will result in 3 separate outputs (one per unique "ROUTER" value). As it is processing each row, it basically checks to see if we have generated an output with the same "ROUTER" value before, if we have then it appends it to the same output and if not then it starts a new output.</p>
+
+      <p>The "Merge Rows" feature goes a lot further and actually combines rows together in your data source where the "Group By" field has the same value. Using the example above, TemplateFx would merge rows where the "ROUTER" field was the same, which would result in 3 rows within our data source (any optional criteria specified in the "Generate Output" dialogue is processed before merging). When the rows are merged, TemplateFx will pick a delimiter (from a pre-defined list, which includes "<code>|;:%$?^+-_</code>") to separate the different rows - the first delimiter which it doesn't find in your data source is used (the actual value is accessible using the <code>templatefx.delimiter</code> internal variable, which is set to "null" if "Merge Rows" is disabled). Based on the above example, the merged data source would look like this:</p>
+
+      <pre><span class="comment">ROUTER, INTERFACE</span>
+UKPE-ABC-01|UKPE-ABC-01|UKPE-ABC-01, Gi0/1|Gi0/2|Gi0/3
+UKPE-ABC-02|UKPE-ABC-02, Gi0/1|Gi0/2
+UKPE-ABC-03, Gi0/1</pre>
+
+      <p>If you were to use the <code>&lt;&lt;ROUTER&gt;&gt;</code> field in your template then you would end up with the value "UKPE-ABC-01|UKPE-ABC-01|UKPE-ABC-01" being substituted in your output. You have two options, you can either use JavaScript to split out the different values manually using <code>templatefx.delimiter</code>, or you can use a TemplateFx function to assist you. To support the "Merge Rows" feature, TemplateFx now supports the <code>templatefx.mrows</code> internal variable which tells you how many rows have been merged into the current row and the <code>&lt;&lt;ROUTER&gt;&gt;[n]</code> syntax, where "n" is the index to the merged row. This syntax is actually a shortcut function and will get substitued for JavaScript during pre-processing, which splits the data on the delimiter, places it into a temporary array and then returns the array element at position "n".</p>
+      
+      <p>However, there is a big difference between <code>&lt;&lt;ROUTER&gt;&gt;</code> and <code>&lt;&lt;ROUTER&gt;&gt;[n]</code>, with the first being substituted for a string literal and the second being substituted for a JavaScript function - this is an important difference when they are being used in the context of a script block:</p>
+
+      <pre><span class="comment"># In this context, &lt;&lt;FIELD&gt;&gt; must be contained within quotes as it will be substituted for a string literal.</span>
+<span class="script">&lt;?= ip("<span class="field">&lt;&lt;FIELD&gt;&gt;</span>", +1) ?&gt;</span>
+
+<span class="comment"># In this context, &lt;&lt;FIELD&gt;&gt;[n] must not be contained within quotes as it will be substituted for a function.</span>
+<span class="script">&lt;?= ip(<span class="field">&lt;&lt;FIELD&gt;&gt;[n]</span>, +1) ?&gt;</span>
+</pre>
+
+      <p>With the confusing bit out of the way, the following hopefully demonstrates how you can elevate your templates by using "Merge Rows" to provide looping within a single output. The following example generates an output per router, but it uses the different interfaces contained on different rows within the configuration of a single router (we are using <code>templatefx.mrows</code> to loop through the different merged rows):</p>
+
+      <pre><span class="comment">! @ </span><span class="field">&lt;&lt;ROUTER&gt;&gt;[0]</span>
+router isis
+<span class="for">&lt;FOR I = [0 TO <span class="script">&lt;?= templatefx.mrows - 1 ?&gt;</span>]&gt;</span>
+ interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;[<span class="for">{{I}}</span>]</span>
+  bfd fast-detect ipv4
+ !
+<span class="for">&lt;/FOR&gt;</span>
+!
+</pre>
+
+      <p>With "Merge Rows" enabled, this would result in the following output, with each interface being included in the same output:</p>
+
+      <pre><span class="comment">! @ UKPE-ABC-01</span>
+router isis
+ interface Gi0/1
+  bfd fast-detect ipv4
+ !
+ interface Gi0/2
+  bfd fast-detect ipv4
+ !
+ interface Gi0/3
+  bfd fast-detect ipv4
+ !
+!
+
+
+<span class="comment">! @ UKPE-ABC-02</span>
+router isis
+ interface Gi0/1
+  bfd fast-detect ipv4
+ !
+ interface Gi0/2
+  bfd fast-detect ipv4
+ !
+! 
+
+
+<span class="comment">! @ UKPE-ABC-03</span>
+router isis
+ interface Gi0/1
+  bfd fast-detect ipv4
+ !
+!</pre>
+
+      <p>It should be noted that even without "Merge Rows" enabled, <code>templatefx.mrows</code> would still return "1" and the syntax <code>&lt;&lt;FIELD&gt;&gt;[0]</code> is still valid and would return the same value as <code>&lt;&lt;FIELD&gt;&gt;</code>. This is useful as it allows you to turn off the merging without changing your template. If we were to disable "Merge Rows" using the same data and template from the example above, we would end up with the following output instead:</p>
+
+      <pre><span class="comment">! @ UKPE-ABC-01</span>
+router isis
+ interface Gi0/1
+  bfd fast-detect ipv4
+ !
+!
+
+<span class="comment">! @ UKPE-ABC-01</span>
+router isis
+ interface Gi0/2
+  bfd fast-detect ipv4
+ !
+!
+
+<span class="comment">! @ UKPE-ABC-01</span>
+router isis
+ interface Gi0/3
+  bfd fast-detect ipv4
+ !
+!
+
+
+<span class="comment">! @ UKPE-ABC-02</span>
+router isis
+ interface Gi0/1
+  bfd fast-detect ipv4
+ !
+!
+
+...</pre>
+
+      <p>It should also be noted that neither of these features modify the order of the data source, the data is processed in the order provided - any sorting should be done before the data is entered into TemplateFx.</p>
+
+      <h4 class="heading">6. Scripting</h4>
+
+      <p>For the more advanced users who want to do more than just simple substitution, TemplateFx has the ability to interpret dynamic templates which are written using JavaScript. This User Guide assumes you have a basic understanding of JavaScript, but if this isn't the case then the web (<a href="http://lmgtfy.com/?q=JavaScript" target="_blank">http://lmgtfy.com/?q=JavaScript</a>) has a large amount of information on it.</p>
+
+      <p>TemplateFx supports the following different syntax within a template to support dynamic content:</p>
+
+      <dl>
+        <dt><strong>&lt;? ... ?&gt;</strong></dt>
+        <dd>
+          <p>This is used to define a dynamic content block where the contents of the block between the <code>&lt;? ... ?&gt;</code> will be evaluated through the JavaScript parser and any output will be substituted. For the purpose of this example we are going to modify our source data to demonstrate how we can use dynamic content to generate BGP configurations:</p>
+
+          <pre><span class="comment">ROUTER, LOCATION, INTERFACE, PEER_IP</span>
+PEXCD1A, DEV, Gi0/0/0/1, 192.0.2.2
+PEXCD1B, DEV, Gi0/0/0/1, 192.0.2.6
+PEXAY1A, PROD, Te0/7/0/1, 192.0.2.66
+PEXAY1B, PROD, Te0/7/0/1, 192.0.2.70</pre>
+       
+          <p>The below example will demonstrate how to generate some BGP configuration from the source data above. It will determine the BGP AS (Autonomous System) number based on the "LOCATION" field as well as working out the suffix for the RD (Route Distinguisher) based on the "ROUTER" field (it will look to see if the router name ends in "A" or not to determine the correct suffix):</p>
+
+          <pre><span class="comment">! </span><span class="field">&lt;&lt;ROUTER&gt;&gt;</span>
+<span class="script">&lt;?
+ var BGP_AS = ("<span class="field">&lt;&lt;LOCATION&gt;&gt;</span>" == "DEV") ? "64512" : "37119";
+ var RD_SUFFIX = ("<span class="field">&lt;&lt;ROUTER&gt;&gt;</span>".match(/A$/)) ? "01" : "02";
+?&gt;</span>
+
+router bgp <span class="script">&lt;? print(BGP_AS) ?&gt;</span>
+ vrf TEST
+  rd <span class="script">&lt;? print(BGP_AS) ?&gt;</span>:100<span class="script">&lt;? print(RD_SUFFIX) ?&gt;</span>
+  address-family ipv4 unicast
+  !
+  neighbor <span class="field">&lt;&lt;PEER_IP&gt;&gt;</span>
+   remote-as 65000
+   address-family ipv4 unicast
+    maximum-prefix 100 80 warning-only
+    soft-reconfiguration inbound always
+   !
+  !
+ !
+!</pre>
+
+          <p>Once you submit the data, it will produce the following output:</p>
+
+          <pre><span class="comment">! PEXCD1A</span>
+
+router bgp 64512
+ vrf TEST
+  rd 64512:10001
+  address-family ipv4 unicast
+  !
+  neighbor 192.0.2.2
+   remote-as 65000
+   address-family ipv4 unicast
+    maximum-prefix 100 80 warning-only
+    soft-reconfiguration inbound always
+   !
+  !
+ !
+!
+
+
+<span class="comment">! PEXCD1B</span>
+
+router bgp 64512
+ vrf TEST
+  rd 64512:10002
+  address-family ipv4 unicast
+  !
+  neighbor 192.0.2.6
+   remote-as 65000
+   address-family ipv4 unicast
+    maximum-prefix 100 80 warning-only
+    soft-reconfiguration inbound always
+   !
+  !
+ !
+!
+
+
+<span class="comment">! PEXAY1A</span>
+
+router bgp 37119
+ vrf TEST
+  rd 37119:10001
+  address-family ipv4 unicast
+  !
+  neighbor 192.0.2.66
+   remote-as 65000
+   address-family ipv4 unicast
+    maximum-prefix 100 80 warning-only
+    soft-reconfiguration inbound always
+   !
+  !
+ !
+!
+
+
+<span class="comment">! PEXAY1B</span>
+
+router bgp 37119
+ vrf TEST
+  rd 37119:10002
+  address-family ipv4 unicast
+  !
+  neighbor 192.0.2.70
+   remote-as 65000
+   address-family ipv4 unicast
+    maximum-prefix 100 80 warning-only
+    soft-reconfiguration inbound always
+   !
+  !
+ !
+!</pre>
+        </dd>
+        <dt><strong>&lt;?= ... ?&gt;</strong></dt>
+        <dd>
+          <p>This is used as shorthand to <code>&lt;? print(...) ?&gt;</code>, where the <code>&lt;?=</code> is used to tell TemplateFx that we want to use the value of the variable. We could write some of the example above using the following syntax instead of the print statements:</p>
+
+          <pre>router bgp <span class="script">&lt;?= BGP_AS ?&gt;</span>
+ vrf TEST
+  rd <span class="script">&lt;?= BGP_AS ?&gt;</span>:100<span class="script">&lt;?= RD_SUFFIX ?&gt;</span>
+ !
+!</pre>
+
+          <p>To demonstrate some of the more powerful uses of this construct, if we revisit our FOR example above and see how we can update it to allow the user to provide the list of values within the source data. For the purpose of this example we have updated our source data to include an additional column called "HELPERS" as well as changing our "IP" field to the base "IP_SUBNET":</p>
+
+          <pre><span class="comment">ROUTER, INTERFACE, IP_SUBNET, DEST, HELPERS</span>
+PE-1A, Gi0/0/0, 192.0.2.0, R1 (Gi0/0), 192.0.2.129; 192.0.2.130; 192.0.2.131
+PE-1A, Gi0/0/1, 192.0.2.4, R2 (Gi0/1)
+PE-1A, Gi0/0/2, 192.0.2.8, R3 (Gi0/2), 10.254.0.1</pre>
+
+          <p>If we now update our original template to use the <code>&lt;?= ... ?&gt;</code> syntax we can see how this becomes a much more powerful construct:</p>
+
+          <pre>interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>
+ ip address <span class="script">&lt;?= ip("<span class="field">&lt;&lt;IP_SUBNET&gt;&gt;</span>", +1) ?&gt;</span> 255.255.255.252
+<span class="for">&lt;FOR H = [<span class="script">&lt;?= "<span class="field">&lt;&lt;HELPERS&gt;&gt;</span>".split("; ") ?&gt;</span>]&gt;</span>
+ ip helper-address <span class="for">{{H}}</span>
+<span class="for">&lt;/FOR&gt;</span>
+ no shutdown
+!</pre>
+
+          <p>First off we are now using the built-in <code>ip()</code> function to derive the IP address of the interface - the <code>ip()</code> function is being used to add a single IP address to the base value. The JavaScript <code>split()</code> function is being used to derive the list of data from a variable provided within the data set. If we click on "Generate Output" we will get the following output:</p>
+
+          <pre>interface Gi0/0/0
+ ip address 192.0.2.1 255.255.255.252
+ ip helper-address 192.0.2.129
+ ip helper-address 192.0.2.130
+ ip helper-address 192.0.2.131
+ no shutdown
+!
+
+interface Gi0/0/1
+ ip address 192.0.2.5 255.255.255.252
+ no shutdown
+!
+
+interface Gi0/0/2
+ ip address 192.0.2.9 255.255.255.252
+ ip helper-address 10.254.0.1
+ no shutdown
+!</pre>
+        </dd>
+      </dl>
+
+      <h4 class="heading">6.1. Built-In JavaScript Variables</h4>
+
+      <p>As well as the standard JavaScript syntax there is also a series of built-in variables that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
+
+      <dl>
+        <dt><strong>globals[]</strong></dt>
+        <dd>
+          <p>This variable provides a mechanism to store persistent data across rows - it is an associative array with global scope, which you use by adding elements. The following example demonstrates how we can store the value of the field "XYZ" from the current row as <code>globals["xyz"]</code> so we can reference it when processing the next row.</p>
+<pre><span class="script">&lt;?
+  if (typeof globals["xyz"] !== "undefined") {
+    if ("<span class="field">&lt;&lt;XYZ&gt;&gt;</span>" !== globals["xyz"]) {
+      clog("values are different");
+    }
+  }
+  globals["xyz"] = "<span class="field">&lt;&lt;XYZ&gt;&gt;</span>";
+?&gt;</span>
+</pre>
+          <p>First we make sure it is defined and then we compare the stored value to the value of the current row. If the values are different then we log a message to the console.</p>
+        </dd>
+        <dt><strong>templatefx.version</strong></dt>
+        <dd>
+          <p>This variable returns the current TemplateFx version as a string (e.g. "2.38").</p>
+        </dd>
+        <dt><strong>templatefx.build</strong></dt>
+        <dd>
+          <p>This variable returns the current TemplateFx build number as a string (e.g. "14222").</p>
+        </dd>
+        <dt><strong>templatefx.group_start</strong></dt>
+        <dd>
+          <p>This variable will be set to true if the row is the first in the group. This allows you to add text to your template that would be included at the beginning of every output. An example is included below:</p>
+<pre><span class="if">&lt;IF (<span class="script">templatefx.group_start</span>)&gt;</span>
+<span class="comment">!-----</span>
+<span class="comment">! @ </span><span class="field">&lt;&lt;ROUTER&gt;&gt;</span>
+<span class="comment">!-----</span>
+<span class="if">&lt;/IF&gt;</span>
+</pre>
+        </dd>
+        <dt><strong>templatefx.group_end</strong></dt>
+        <dd>
+          <p>This variable is the opposite of the <code>templatefx.group_start</code> where it will be set to true if the row is the last in the group. This allows you to add text to your template that would be included at the end of every output.</p>
+        </dd>
+        <dt><strong>templatefx.row</strong></dt>
+        <dd>
+          <p>This variable returns the current row within the data set.</p>
+        </dd>
+        <dt><strong>templatefx.rows</strong></dt>
+        <dd>
+          <p>This variable returns the total amount of rows within the data set.</p>
+        </dd>
+        <dt><strong>templatefx.mrows</strong></dt>
+        <dd>
+          <p>When using "Merge Rows", this variable returns the number of rows merged into the current row of the data set.</p>
+        </dd>
+        <dt><strong>templatefx.delimiter</strong></dt>
+        <dd>
+          <p>When using "Merge Rows", this variable returns the character which is used as the delimiter between merged rows.</p>
+        </dd>
+        <dt><strong>templatefx.fields["field"]([index])</strong></dt>
+        <dd>
+          <p>This variable is a JavaScript array of functions and thus <b>must</b> be called with parenthesis at the end when accessing array members as they are functions - it provides an alternative (advanced) method of accessing the field values instead of using the <code>&lt;&lt;FIELD&gt;&gt;</code> syntax, however all "field" values <b>must</b> be passed as uppercase. This has been added for a specific use-case as there was no way to access a field value dynamically, the <code>&lt;&lt;FIELD&gt;&gt;</code> syntax doesn't support any variable or script section between the chevrons (i.e. <code>&lt;&lt;{{F}}&gt;&gt;</code>). To demonstrate this, the below example loops through all the fields in the header row and queries the specific field values of the row you are processing by dynamically passing the field name using the FOR looping variable <code>{{F}}</code>.</p>
+
+          <pre><span class="for">&lt;FOR F = [<span class="script">&lt;?= Object.keys(templatefx.fields) ?&gt;</span>]&gt;</span>
+<span class="for">{{F}}</span> has a value of <span class="script">&lt;?= templatefx.fields["<span class="for">{{F}}</span>"]() ?&gt;</span> - equivalent of <span class="field">&lt;&lt;{{F}}&gt;&gt;</span> which isn't supported.
+<span class="for">&lt;/FOR&gt;</span>
+</pre>
+          <p>The <code>templatefx.fields</code> variable is commonly referred to as an associative array (sometimes referred to as a Hash or Map in other languages) - it allows you to access array values via the syntax <code>value = array["key"]()</code> - the parenthesis are required as each value is actually a function in this instance. An associative array is an Object with "keys" (the field names) and "values" (the field values - or functions in this case) so we have to use <code>Object.keys()</code> to loop through the keys of the array.</p>
+
+          <p>To help in explaining this, the following data source will be used as an example:</p>
+
+          <pre><span class="comment">ROUTER, LOCATION, INTERFACE, PEER_IP</span>
+PEXAY1A, PROD, Te0/7/0/1, 192.0.2.66
+PEXAY1B, PROD, Te0/7/0/1, 192.0.2.70</pre>
+
+          <p>By combining the above data source and template together it would result in the following output, which has an entry per header field per row:</p>
+
+          <pre>ROUTER has a value of PEXAY1A
+LOCATION has a value of PROD
+INTERFACE has a value of Te0/7/0/1
+PEER_IP has a value of 192.0.2.66
+
+ROUTER has a value of PEXAY1B
+LOCATION has a value of PROD
+INTERFACE has a value of Te0/7/0/1
+PEER_IP has a value of 192.0.2.70</pre>
+          
+          <p>The other thing worth mentioning is how this method can be used in combination with "Merge Rows" - where multiple rows are combined into a single row and values are separated by a delimiter. In the same way that the <code>&lt;&lt;FIELD&gt;&gt;[x]</code> shortcut syntax can be used to access an individual merged value, we can do the same with <code>templatefx.fields</code> as demonstrated below.</p>
+
+<pre><span class="for">&lt;FOR F = [<span class="script">&lt;?= Object.keys(templatefx.fields) ?&gt;</span>]&gt;</span>
+<span class="for">{{F}}</span> has the following values:
+  <span class="for">&lt;FOR I = [0 TO <span class="script">&lt;?= templatefx.mrows - 1 ?&gt;</span>]&gt;</span>
+<span class="script">&lt;?= templatefx.fields["<span class="for">{{F}}</span>"](<span class="for">{{I}}</span>) ?&gt;</span> - equivalent of <span class="field">&lt;&lt;{{F}}&gt;&gt;[<span class="for">{{I}}</span>]</span> which isn't supported.
+  <span class="for">&lt;/FOR&gt;</span>
+<span class="for">&lt;/FOR&gt;</span>
+</pre>
+        </dd>
+      </dl>
+
+      <h4 class="heading">6.2. Built-In JavaScript Functions</h4>
+
+      <p>In addition to the built-in variables, there is also a series of built-in functions that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
+
+      <dl>
+        <dt><strong>counter ("key", [increment], [start])</strong></dt>
+        <dd>
+          <p>This function provides a persistent counter across rows. Every time you call the function with the same "key" then it will increment the counter and return the number. Different persistent counters can be created using different "key" values. There is an optional "increment" parameter which allows you to specify a different increment as opposed to the default of 1. There is also an optional "start" parameter which allows you to specify a different start number as opposed to the default of 1. The following example demonstrates both of these parameters to produce a positive and negative counter:</p>
+<pre><span class="comment"># This will produce a positive sequence of 0, 5, 10, 15, 20, etc</span>
+<span class="script">&lt;?= counter("", 5, 0) ?&gt;</span>
+
+<span class="comment"># This will produce a negative sequence of 0, -5, -10, -15, -20, etc</span>
+<span class="script">&lt;?= counter("", -5, 0) ?&gt;</span>
+</pre>
+        </dd>
+        <dt><strong>cancel (["message"])</strong></dt>
+        <dd>
+          <p>This function provides a way to cancel processing a template if something isn't right. This could be if an invalid value has been specified in the data source or if a key field hasn't been filled in correctly. An optional "message" can be provided to give the user more information about why processing was cancelled. The first time the function is executed, the whole processing is stopped.</p>
+        </dd>
+        <dt>
+          <strong>ip ("ip", number, [ipv6format])</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function takes an IPv4 or IPv6 address (doesn't support IPv4-mapped IPv6 addresses) and adds or subtracts a number of IP addresses from the value. If it is an IPv6 address then you can specify an optional third parameter which allows you to specify the presentation format of the returned IPv6 address, using one of the following values:</p>
+
+          <p><strong>ipv6format = 0 || null</strong><br />
+          This, or the default if omitted, will output the address using the <a href="http://tools.ietf.org/html/rfc4291" target="_blank">RFC4291</a> preferred format of "x:x:x:x:x:x:x:x" (i.e. 2001:db8:0:0:8:800:200c:417a), where the 'x's are one to four hexadecimal digits of the eight 16-bit pieces of the address with leading zeroes omitted.</p>
+
+          <p><strong>ipv6format = 1</strong><br />
+          This will output the address using a special compressed format (i.e. 2001:db8::8:800:200c:417a), which allows you to replace long strings of zero bits with "::". The use of "::" indicates one or more groups of 16 bits of zeroes. The "::" can only appear once in an address and should be the longest run of groups of zeroes. The "::" can also be used to compress leading or trailing zeroes in an address.</p>
+
+          <p><strong>ipv6format = 2</strong><br />
+          This will output the address using the full expanded format (i.e. 2001:0db8:0000:0000:0008:0800:200c:417a).</p>
+
+          <p>To demonstrate this function, some examples are provided below:</p>
+          
+<pre><span class="comment"># Obtain the IP address before "192.0.2.10" (i.e. 192.0.2.9)</span>
+<span class="script">&lt;?= ip("192.0.2.10", -1) ?&gt;</span>
+
+<span class="comment"># Convert the IPv6 address "2001:0db8:0000:0000:0008:0800:200c:417a" into compressed form (i.e. 2001:db8::8:800:200c:417a)</span>
+<span class="script">&lt;?= ip("2001:0db8:0000:0000:0008:0800:200c:417a", 0, 1) ?&gt;</span>
+
+<span class="comment"># Add 32 to the IPv6 address "2001:db8::" and output in preferred form (i.e. 2001:db8:0:0:0:0:0:20)</span>
+<span class="script">&lt;?= ip("2001:db8::", 32) ?&gt;</span></pre>
+        </dd>
+        <dt>
+          <strong>insubnet ("subnet", "ip")</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function takes a subnet in CIDR format (i.e. "address/mask") and returns true if the passed IPv4 or IPv6 address is in the subnet or false if it isn't. The following example verifies if "2001:db8::1" is contained within "2001:db8::/32":</p>
+<pre><span class="if">&lt;IF (<span class="script">insubnet("2001:db8::/32", "2001:db8::1")</span>)&gt;</span>
+  ...
+<span class="if">&lt;/IF&gt;</span>
+</pre>
+        </dd>
+        <dt>
+          <strong>ipsplit ("subnet", "cidr_mask" | min_subnets)</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function is used to split up a subnet into smaller subnets - the subnet parameter is provided in CIDR format (i.e. "192.0.2.0/24" or "2001:db8::/32") and the second parameter can be specified in one of two ways. The first way is by specifying a CIDR mask of the smaller subnets (e.g. "/mask") and the second is by specifying the minimum number of subnets you want (this number will be rounded up to the nearest power of 2 - e.g. 5 will become 8). The function will return "null" if an error occurs, the string "overflow" if you have used too many bits (you can't have more than 16 bites between subnet and mask) and an array of all the subnets on success. The following example will output all the "/29" subnets in "192.0.2.0/26" (i.e. 8 subnets) - one per row as we join the returned array using a newline character:</p>
+<pre><span class="script">&lt;?= ipsplit("192.0.2.0/26", "/29").join("\n") ?&gt;</span></pre>
+          <p>To demonstrate the same by specifying the minimum number of subnets, we can specify 8 as the second parameter, but using an IPv6 address this time - this will return "/35" subnets as there are 8 of them to a "/32" subnet:</p>
+<pre><span class="script">&lt;?= ipsplit("2001:db8::/32", 8).join("\n") ?&gt;</span></pre>
+          <p>To be able to split a subnet into smaller subnets the "cidr_mask" should be longer than the mask on the "subnet" (and have 16 bits or less between them). However, if you specify a shorter mask as your "cidr_mask" then it will return the supernet instead (i.e. using "192.0.2.0/24" with a "cidr_mask" of "/16" will return "192.0.0.0/16").</p>
+        </dd>
+        <dt>
+          <strong>network ("cidr")</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the network address. The function will return "null" if an error occurs, an invalid parameter is detected. In the above example it will return the string "192.0.2.0" for IPv4 and "2001:db8:0:0:0:0:0:0" for IPv6.</p>
+        </dd>
+        <dt>
+          <strong>ipfirst ("cidr")</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the first usable address of the subnet. The function will return "null" if an error occurs or an invalid parameter is detected.</p>
+        </dd>
+        <dt>
+          <strong>iplast ("cidr")</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the last usable address of the subnet. The function will return "null" if an error occurs or an invalid parameter is detected.</p>
+        </dd>
+        <dt>
+          <strong>broadcast ("cidr")</strong>
+          <span class="label label-danger">IPv4 Only</span>
+        </dt>
+        <dd>
+          <p>This function takes an IPv4 prefix (there is no concept of a broadcast in IPv6) in CIDR format (i.e. "192.0.2.13/24") and returns the broadcast address. The function will return "null" if an error occurs, an invalid parameter is detected or if the mask length doesn't support a broadcast address (i.e. /31 or /32).</p>
+        </dd>
+        <dt>
+          <strong>smask ("cidr", [inverse])</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the subnet mask (e.g. "255.255.255.0" or "ffff:ffff:ffff:ffff::") or for IPv4 addresses only, the inverse/wildcard mask (e.g. "0.0.0.255") if the optional parameter "inverse" is true. The function will return "null" if an error occurs or if an invalid parameter is detected.</p>
+        </dd>
+        <dt>
+          <strong>ip2long ("ip")</strong>
+          <span class="label label-danger">IPv4 Only</span>
+        </dt>
+        <dd>
+          <p>This function takes an IPv4 address and converts it into a long.</p>
+        </dd>
+        <dt>
+          <strong>long2ip (long)</strong>
+          <span class="label label-danger">IPv4 Only</span>
+        </dt>
+        <dd>
+          <p>This function takes a long and converts it into an IPv4 address.</p>
+        </dd>
+        <dt><strong>passwd ([length], ["chars"])</strong></dt>
+        <dd>
+          <p>This function generates a cryptographically strong random password using the following characters: a-z, A-Z, 0-9, unless a custom character set using the "chars" parameter has been provided. The length is determined by the passed "length" parameter or a length of 16 is used if the parameter is omitted.</p>
+<pre><span class="comment"># Generate a random 12 character password using the provided characters</span>
+<span class="script">&lt;?= passwd(12, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZZ") ?&gt;</span></pre>
+        </dd>
+        <dt><strong>timestamp (["format"])</strong></dt>
+        <dd>
+          <p>This function generates a timestamp based on the current date and time, either based on a provided format (using the same format as Java's <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class) or using a default pattern if omitted.</p>
+        </dd>
+        <dt><strong>clog ("message")</strong></dt>
+        <dd>
+          <p>This function is used for console logging to aid troubleshooting. It will write the passed message to the console (if the console has been enabled). This allows you to debug your templates to output the current value of a variable, etc in different places.</p>
+        </dd>
+      </dl>
+
+      <h4 class="heading">6.3. External JavaScript Libraries</h4>
+
+      <p>In addition to the built-in JavaScript variables and functions, TemplateFx also includes the "<a href="https://lodash.com/" target="_blank">lodash.js</a>" JavaScript library. This library is similar to "Underscore.js" and is a utility library delivering extra JavaScript functions for common tasks (using the "_" object) - full details on syntax and usage can be found in their <a href="https://lodash.com/docs" target="_blank">API Documentation</a> - the example below shows the version of the library that has been included.</p>
+
+<pre><span class="script">&lt;?= _.VERSION ?&gt;</span></pre>
+      
+      <p>In addition to including this library in TemplateFx, I have also added support for globally including other JavaScript libraries (and also disabling "lodash.js" if you wish). You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. If you have issues including some JavaScript libraries, I recommended you try with the latest version of the Java Runtime Environment - the JavaScript processing was greatly improved from Java 8 onwards with the Nashorn JavaScript Engine.</p>
+
+      <br />
+    </div>
+  </body>
+</html>
