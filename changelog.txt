@@ -1,0 +1,265 @@
+TemplateFx | Dynamic Templating Tool
+Copyright (c) 2011-2015 Chris Mason <chris@netnix.org>
+
+Version 2.45 - 21st July 2015
+	* Updated "lodash.js" to v3.10.0.
+	* Enhancements to the ip based JavaScript functions to add IPv6 support.
+	* Included an IPv4/IPv6 Subnet Calculator into TemplateFx.
+	* Implemented HTML based Copy & Cut for template text to maintain syntax highlighting.
+	* JavaScript ip functions now return "null" on error as opposed to "undefined".
+	* Fixed an issue where highlighted text wasn't shown to be selected on MacOS.
+	* Added support to the JavaScript function "ipsplit()" to determine the aggregate.
+	* Fixed a potential issue with JavaScript function "ipsplit()".
+
+Version 2.44 - 5th May 2015
+	* Updated "lodash.js" to v3.8.0.
+	* Added an output pane feature called "Copy Mode" which automatically highlights blocks on mouse over.
+	* Added an "Expand Pane" feature on the right click menu to expand/maximise the current pane.
+	* Improved the "Generate Output" dialog to disable the "OK" button and change cursor.
+	* Enhanced the "ipsplit()" function to allow you to specify minimum subnets.
+	* Added status bar to the bottom of the "DataTemplate" tab to indicate full path to DataTemplate.
+	* Added support for DataTemplate encryption using AES-128 and 100,000 PBKDF2 iterations.
+	* Bumped the DataTemplate file version to 4 to support encryption (older versions can't read newer files, etc).
+	* Added a toggle for "Maximise on Start" to preferences.
+	* Various wait cursor improvements.
+
+Version 2.43 - 31st March 2015
+	* Updated "lodash.js" to v3.6.0.
+	* The "templatefx.fields" array now accepts keys using either all uppercase or all lowercase.
+	* Fixed a bug with "templatefx.fields" where it was returning the last key - fixed with an IIFE.
+	* Added support for JavaScript "ipsplit()" function to split subnets into smaller ones.
+	* Added support for JavaScript "smask()" function to return the subnet masks.
+	* Updated "ip2long()" and "ip()" functions to ignore CIDR masks if passed.
+
+Version 2.42 - 4th January 2015
+	* Added support for globally including, enabling and disabling JavaScript libraries.
+	* Integrated Lo-Dash 2.4.1 into TemplateFx for use in templates as an internal JavaScript library.
+	* Updated JavaScript function "passwd()" to use Java's cryptographically strong "SecureRandom" class.
+	* Renamed "Options" to "Preferences" in the "File" menu.
+
+Version 2.41 - 24th November 2014
+	* Greatly improved the usability of "templatefx.fields" in the context of "Merge Rows".
+	* Added support for JavaScript variable "globals[]" to store persistent data between rows.
+	* Fixed a bug where the "Merge Rows" checkbox was staying selected after selecting "New".
+	* Added support for snippet parameters which allows you to pass through a literal string to a snippet.
+	* Fixed an "IndexOutOfBoundsException" when dealing with snippets and includes at the end of the template.
+	* Fixed a bug where it wasn't detecting a snippet was in use when trying to delete.
+	* The "Errors" pane isn't shown unless there is a specific error as it was misleading.
+	* Bookmarks which are based on network UNCs have a different icon.
+	* Added bookmark tooltips which now show the URI of the file.
+	* Added an error message about nested script blocks.
+
+Version 2.40 - 2nd October 2014
+	* Embedded the TemplateFx icon into the help file to fix an issue with packaging.
+	* Fixed an issue where it would continue to process the template after hitting "cancel()".
+	* Updated the MacOS App Bundle using AppBundler (https://bitbucket.org/infinitekind/appbundler).
+	* Signed the MacOS App Bundle with my Apple Developer ID so it works on 10.9.5 and beyond.
+	* Compiled the codebase with JDK 1.7 (as 1.6 is unsupported) - changed minimum requirements to Java 1.7.
+
+Version 2.39 - 17th September 2014
+	* Added support for "templatefx.fields", an associative array variable as an alternative to "<<X>>".
+	* Major performance improvements in parsing and generating templates.
+	* Added a warning about using double quotes (") or the escape character (\) in the data pane.
+	* Minor bug fix to the "ip()" function for validation of IPv6 addresses.
+	* Re-instated the right click JPopupMenu on the "Template Fields" pane.
+	* Introduced an "Edit" menu which mimics the JPopupMenu on right click.
+	* Added some additional JMenuItem graphical icons for common items.
+	* Included the name of the text area that Find is operating on in the Find dialogue.
+	* Set maximum width of all JOptionPane confirmation/warning and error messages.
+	* Updated titles of JOptionPane dialogues to be consistent.
+	* Exterminated 30 potential bugs/bad practices identified by FindBugs v3.0.0.
+	* Improvements to the help within the "Grouping and Merging" section.
+	* The help file icon is now extracted locally instead of relying on Internet access.
+	* Added "Generated at xx in xx seconds" banner to Output panes.
+
+Version 2.38 - 12th August 2014
+	* Added support for "Merge Rows" where rows with the same Group By value are merged together using a delimiter.
+	* Bumped the DataTemplate file version to 3 to support Merge Rows (older versions can't read newer files, etc).
+	* Added support for "templatefx.delimiter" and "templatefx.mrows" to support Merge Rows.
+	* Added support for "<<X>>[x]" shortcut syntax to access individual merged rows.
+	* Fixed a bug where an error was thrown if it detects an empty IF block.
+	* Group dropdown in the Output pane is now order agnostic - ordering is controlled by the order of the data.
+	* Added support for optional STEP keyword in FOR loops.
+	* Added a warning message if invalid syntax is used in IF or FOR constructs.
+	* Fixed a bug which meant the "ip()" function wasn't able to output using ipv6format 2.
+	* Fixed a bug where GUI updates from a SwingWorker thread weren't happening on the EDT thread.
+	* Deprecated FOREACH in favour of FOR, although both will continue to work for the foreseeable future.
+	* Added support for the "cancel()" JavaScript function to allow template processing to be cancelled.
+	* After the output has been generated all white space is now stripped from the end of lines.
+	* Added an error message if an exception is generated during generating outputs.
+	* Added support for "templatefx.version" and "templatefx.build" to display the current version/build string.
+	* Fixed a bug where "templatefx.rows" and "templatefx.row" weren't taking into consideration excluded rows.
+	* Fixed an issue where the window icon was being scaled to 16x16 and was blurred in task manager.
+	* Combined the output buttons into a single Save button which provides a popup menu in the output pane.
+	* Added support for combining all the outputs into a single text file.
+	* Fixed a bug where not all rows were being checked for exclusion and were being included.
+	* Set focus to main template window on load bookmark.
+	* Changed some WARNING messages to ERROR messages.
+
+Version 2.37 - 3rd June 2014
+	* Added initial support for IPv6 to the "ip()" function.
+	* Added support for intelligent Redo and Undo buffers for Snippets.
+	* Remembers caret position when switching between Snippets.
+	* Fixed a Find bug when matching zero-width results using regular expressions.
+
+Version 2.36 - 20th May 2014
+	* Removed the blue background on the About and Splash screens.
+	* Added support for creating bookmarks for frequently used DataTemplates.
+	* Comments are now stripped from templates before they are trimmed to ensure no whitespace at start or end.
+	* Fixed a bug where the "File -> Exit" menu action wasn't calling System.exit().
+
+Version 2.35 - 17th April 2014
+	* Added support for template comments (using #) which aren't seen in the output.
+	* Added support for including external files into a template.
+	* Changed a behaviour where snippet syntax wasn't being highlighted unless the snippet existed.
+	* Fixed a bug where the "timestamp()" js function wasn't working - bug introduced in 2.34.
+	* Fixed a bug where tabs weren't being stripped from snippets.
+	* Fixed a race condition where the previous pane wasn't being focused when switching between tabs.
+	* Cleaned up the Base64 encoding and decoding functions.
+	* Changed the default un-maximised size from 800x600 pixels to 960x640 pixels.
+	* Updated the JavaScript "passwd()" function to permit an optional character set.
+	* Updated the JavaScript "counter()" function to permit using different increments and a different starting point.
+	* Fixed a bug in the JavaScript "insubnet()" function as JavaScript doesn't handle bitwise operations on 32-bit numbers very well.
+	* Added some additional IP helper functions to output subnet information - network(), broadcast(), ipfirst() and iplast().
+	* Updated the "timestamp()" function to not rely on a custom Java "jsTimestamp()" function.
+	* Fixed a bug where I broke "Undo" and "Redo" when selecting them off the popup menu.
+	* An updated version of the User Guide has been included with the distribution.
+
+Version 2.34 - 6th March 2014
+	* Various code cleanups to streamline the code and reduce the amount of anonymous inner classes.
+	* Simplified the "Optional Criteria" section in the "Generate Output" dialog - no longer requires complicated JavaScript.
+	* Adjusted the size of the "+" and "-" buttons for adding and removing snippets.
+	* Fixed an issue where the progress bar wasn't relative to the number of data rows.
+	* Changed the highlight colour of IF blocks to highlight that the expression is JavaScript.
+	* Fixed a bug which permitted invalid characters to appear within filenames of ZIP files.
+	* Updated the style of the About screen to use a consistent font size across platforms.
+	* Updated the TemplateFx icon colour as part of the About screen updates.
+
+Version 2.33 - 9th February 2014
+	* Allowed comments to start with either a ! or # character.
+	* Added support for snippets which allow you to re-use template components multiple times.
+	* Added a hyperlink to the about box to make the email link clickable.
+	* Updated syntax highlighting colour of FOREACH blocks.
+	* For templates without data, the data pane can be empty if no template fields are referenced.
+	* Added support for intelligent selection of content on double click - it now selects up to whitespace.
+	* Provided a workaround for a JRE 8 bug that was discovered during testing on a preview build.
+	* Various cosmetic cleanups around background colours to identify editable areas.
+
+Version 2.32 - 17th October 2013
+	* Major performance improvement with syntax highlighting the template pane - from 1.5s to less than 50ms for a 500K file.
+	* Added support for the "Console" tab to aid in template troubleshooting.
+	* Introduced the "clog()" function to output messages to the console log from templates - use in combination with the "Console".
+	* Introduced the "insubnet()" function to verify if an IP address is within a subnet.
+	* Introduced the "timestamp()" function to output a timestamp in templates.
+	* Added support for "Clear All" on the popup menu to easily delete all contents.
+	* Fixed a bug with single column data sets where we used a comma or tab within subsequent rows.
+	* Changed the background colour of the output pane to differentiate it from the DataTemplate pane.
+	* Removed DataTemplate version check otherwise it will break backwards compatibility in the future.
+	* Added support for intelligent Redo and Undo buffers that group similar events together.
+	* Fixed an issue where focus was being reset to the data pane when you switched back to the DataTemplate tab.
+	* Added support for an "In Browser" button for HTML templates that launches the default browser with the output.
+	* Implemented a workaround for Java on Mac OS where the tab titles were going wrong when you tried to rename them.
+	* "Find and Replace" dialog automatically hides when it loses the focus.
+	* Output tabs now use a title of "null" if title is omitted.
+	* Added an "Options" item to the "File" menu to enable the toggling of persistent options.
+	* Fixed an issue with the JProgressBar when generating output that caused it to pause too long at 0%.
+	* Fixed an issue with an ever increasing build number as it was being regenerated on Jar extraction.
+	* Added the current Java Runtime Environment version to the About screen.
+	* Fixed a bug which permitted template fields to span across lines.
+	* Added an improvement to highlight the header row in the data pane.
+	* Enhancements to make it look more "Mac" like if run on a Mac based on Apple's recommendations.
+	* Various code cleanups to adhere to best practices and to remove legacy constructs.
+	* Added support for Redo to go hand in hand with Undo.
+
+Version 2.31 - 10th September 2013
+	* Added support to filter the data using criteria when generating output.
+	* Added support for an intelligent "Select Block" function on the right click menu to ease copying blocks based on indentation.
+	* Added support for "Select Line" on the right click menu to ease copying lines.
+	* Added support for "Select Paragraph" on the right click menu to ease copying paragraphs.
+	* Redesigned the "Generate Output" dialog to be a single window.
+	* Removed a rogue keyboard accerlerator (ALT-L) that was missed previously.
+	* Set a minimum width on all JButtons used in the same context.
+
+Version 2.30 - 29th August 2013
+	* Updated Find field to allow selection of previous entries.
+	* Added "Options" button on Find dialogue to allow multiple options to be set (added support for "Match Case").
+	* Updated pattern match for template fields so they can't contain just whitespace.
+	* Fixed a NullPointerException when hitting <enter> on an empty Data pane.
+	* Fixed an issue if there were empty lines at the beginning of the data pane.
+	* Added red highlighting to "Template Fields" if they aren't defined in the data pane.
+
+Version 2.29 - 16th May 2013
+	* Sorted out the shortcut/accelerator keys to be consistent with the native OS.
+	* Replaced the tacky looking red "X" on the output tabs with a "Close" button.
+	* Hitting escape on a confirmation dialogue now assumes a "No" response.
+	* Added a toggle for regular expression matches to "Find and Replace" to allow literal matches.
+	* Added text descriptions to toolbar buttons to remove confusion.
+	* Made the toolbar icons look ever so slightly less ugly on Mac OSX.
+	* Increased the size of the toolbar buttons to 20x20 instead of 16x16.
+	* Fixed an issue where the bottom panel in the "Output" tab is squashed inconsistently.
+	* Fixed an issue which caused "Find" to use "Whole Document" context instead of "Selection".
+	* The "Group By" JComboxBox can now be shrunk even with long contents.
+	* Added support for key accelerators on toolbar icons.
+	* Added support for labeling output tabs.
+
+Version 2.28 - 26th April 2013
+	* Completely re-written the dynamic parsing code due to an issue with parsing a specific construct.
+	* Completely re-written the Output class using a SwingWorker and a JProgressBar.
+	* Added support for "1 TO 10" and "A TO Z" syntax within FOREACH blocks.
+	* Added support for "ELSE IF" and "ELSE" construct within IF blocks.
+	* Auto-populates the file extension of ".html" if the output contains HTML.
+	* Fixed a bug where it wasn't parsing script syntax in IF blocks.
+	* Fixed a bug on IF blocks if the block was empty.
+	* Fixed a bug on FOREACH blocks if the block was empty.
+	* Fixed a bug where FOREACH blocks weren't working for single entry lists.
+
+Version 2.27 - 24th March 2013
+	* Changed the GUI so all output windows are now created in tabs instead of opening in a new window.
+	* Added support for FOREACH blocks within the template to allow intra-row looping.
+	* Improved "Find and Replace" so it doesn't use the last match as the bounds for the next search.
+	* Errors tab on "Output" is now disabled when errors present but not on current tab.
+	* Improved the output of ScriptExceptions in the "Errors" tab to include context.
+	* About window now closes on escape.
+
+Version 2.26 - 14th February 2013
+	* Introduced the "passwd()" function to generate random alphanumeric passwords.
+	* Introduced the "ip()" function to shorten the "long2ip(ip2long() +/- x)" syntax.
+	* Deprecated the use of numbered IF blocks - TemplateFx now supports fully nested IF blocks.
+	* Fixed an issue where "templatefx.group_start" and "templatefx.group_end" were always "true".
+	* Re-written the syntax highlighting code to be contained within a single function.
+	* Automatically detects tabs or commas as the delimeter based on the frequency within the header row.
+	* Processes child IF blocks even if the parent IF block has a syntax error.
+	* Undo buffer is now reset on "Load DataTemplate" and "New DataTemplate".
+	* Renamed the "incid()" function to "counter()".
+
+Version 2.25 - 26th January 2013
+	* Fixed an issue where template defined JavaScript variables couldn't be used in IF blocks.
+	* Added support for "Find and Replace" within a selection.
+	* Moved internal TemplateFx JavaScript variables into a "templatefx" object.
+	* The "Group By" dropdown now uses data fields as opposed to template fields.
+	* The Output screen no longer displays a drop down if the group is "null".
+	* Increased the size of the divider of the JSplitPane() so it is easier to click.
+	* Renamed "Load Data" to "Import Data" and "Load Template" to "Import Template".
+	* Fixed "File" menu mnemonics.
+
+Version 2.24 - 20th December 2012
+	* Introduced "row", "rows", "group_start" and "group_end" variables.
+	* Introduced the "incid()" function to allow persistent counters across rows.
+	* Fixed an issue when using boolean logic in IF blocks.
+	* Fixed an issue with IF blocks using greater then equations.
+	* Space is now maintained at the start or end of IF blocks.
+	* Now ignores blank lines in the data template.
+	* Renamed "Submit" to "Generate".
+
+Version 2.23 - 6th November 2012
+	* JFileChooser() now uses the Desktop instead of current directory.
+	* When passing a file argument to TemplateFx it will set the currentDirectory properly.
+	* Updated the main TemplateFx window to open maximised.
+	* Updated the field handling code to work better with missing fields.
+	* Fixed a performance issue with ReplaceAll being extremely slow.
+	* Find and Replace now uses Pattern.MULTILINE.
+	* Fixed an issue with duplicate or empty header fields.
+	* Numerous cosmetic enhancements.
+
+Version 2.22 - 8th October 2012
+	* First Public Release
