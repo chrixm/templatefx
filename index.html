@@ -152,6 +152,15 @@
         </tbody>
       </table>
 
+      <h4 class="heading">2.5. Command Line Options</h4>
+
+      <dl>
+        <dt><strong>/C</strong></dt>
+        <dd>
+          <p>This option disables the "Console" tab in the GUI and doesn't redirect STDOUT and STDERR. This option should be used in combination with running TemplateFx from a terminal where you wish the console messages to be printed in the terminal or redirected to a file.</p>
+        </dd>
+      </dl>
+
       <h4 class="heading">3. DataTemplates</h4>
 
       <p>A DataTemplate is a proprietary file format which uses the file extension ".dt" and is used to store a template along with the source data. Instead of having to distribute the template and source data in separate files, you can save it as a DataTemplate which combines them both together. Warning: The file format isn't text based and if you attempt to edit it outside of TemplateFx then you will screw up the checksum and it won't load.</p>
@@ -625,6 +634,10 @@ interface Gi0/0/2
         <dt><strong>templatefx.build</strong></dt>
         <dd>
           <p>This variable returns the current TemplateFx build number as a string (e.g. "14222").</p>
+        </dd>
+        <dt><strong>templatefx.jre_version</strong></dt>
+        <dd>
+          <p>This variable returns the current Java (JRE) version as a string (e.g. "1.7.0_79").</p>
         </dd>
         <dt><strong>templatefx.group_start</strong></dt>
         <dd>
