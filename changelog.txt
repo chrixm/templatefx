@@ -1,6 +1,14 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2015 Chris Mason <chris@netnix.org>
 
+Version 2.46 - 14th September 2015
+	* Updated "lodash.js" to v3.10.1.
+	* Added support for a "Visit Web Site" link in the Help menu.
+	* Fixed an issue when the IP Calc text box wasn't getting focus.
+	* Added support for "templatefx.jre_version" to return the current Java JRE version.
+	* Console tab is now always displayed unless using the "/C" argument to disable it.
+	* Added the ground work for a socket based REST API interface to TemplateFx.
+
 Version 2.45 - 21st July 2015
 	* Updated "lodash.js" to v3.10.0.
 	* Enhancements to the ip based JavaScript functions to add IPv6 support.
