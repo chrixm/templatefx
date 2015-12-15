@@ -72,6 +72,8 @@
 
       <p>A nice feature of TemplateFx is its ability to accept data from Microsoft Excel. If you construct your data within Excel then you are able to copy and paste it into the data pane. This is the preferred method of constructing source data as you are able to manipulate and sort the data before pasting it into TemplateFx - however be aware of Excel dropping leading zeroes and converting "x/x/x" syntax into dates by default.</p>
 
+      <p><span class="label label-info">NOTE</span>&nbsp;You will get a warning message if the data pane contains a <code>"</code>, <code>'</code> or <code>\</code> character. This is because TemplateFx doesn't keep track in which context the template fields are being inserted - it could be within the main body of the template or within a dynamic script block within an already quoted string. In some contexts, those characters may need to be escaped (e.g. <code>&lt;? print("&lt;&lt;FIELD&gt;&gt;") ?&gt;</code> when there is already a double quote in the value of <code>&lt;&lt;FIELD&gt;&gt;</code>), and in some they might not. If you aren't using those template fields in a scenario (generally a script block) which might cause a problem then you can ignore this warning.</p>
+      
       <h4 class="heading">2.2. Template Pane</h4>
 
       <p>The template pane is where you enter the text of your template that will be used as the basis for your output. TemplateFx fields are defined through the use of double chevrons (e.g. <code>&lt;&lt;FIELD&gt;&gt;</code>) and once you define them within the template pane, they are added to the "Template Fields" list (fields are highlighted in red if they don't exist in the data pane).</p>
@@ -158,6 +160,10 @@
         <dt><strong>/C</strong></dt>
         <dd>
           <p>This option disables the "Console" tab in the GUI and doesn't redirect STDOUT and STDERR. This option should be used in combination with running TemplateFx from a terminal where you wish the console messages to be printed in the terminal or redirected to a file.</p>
+        </dd>
+        <dt><strong>/M</strong></dt>
+        <dd>
+          <p>This option minimises TemplateFx on start-up and doesn't steal the focus - this allows TemplateFx to load in the background without interrupting what the user is doing.</p>
         </dd>
       </dl>
 
@@ -326,10 +332,10 @@ R = 5:A</pre>
 
       <h4 class="heading">4.4. Comments</h4>
 
-      <p>There are two types of comments which can be used within a template (and snippets), both of which must be used at the beginning of a line as TemplateFx doesn't presently support end of line comments. The first is a template comment and uses the "#" syntax to comment out a line in a template - this results in the line being completely ignored and not appearing in your output. The second type of comment, which uses the "!" syntax is used to supplement your output with comments:</p>
+      <p>There are two types of comments which can be used within a template (and snippets), both of which must be used at the beginning of a line as TemplateFx doesn't presently support end of line comments. The first is a template comment and uses the "#" syntax to comment out a line in a template - this results in the line being completely ignored and not appearing in your output (if you require a "#" at the start of a line then you can escape it using "## " instead). The second type of comment, which uses the "!" syntax is used to supplement your output with comments:</p>
 
       <pre><span class="comment"># This comment won't appear in your output and ignores &lt;&lt;FIELDS&gt;&gt;, etc.</span>
-<span class="comment">! This comment will appear in your output and doesn't ignore <span class="field">&lt;&lt;FIELDS&gt;&gt;</span>, etc..</span>
+<span class="comment">! This comment will appear in your output and doesn't ignore <span class="field">&lt;&lt;FIELDS&gt;&gt;</span>, etc.</span>
 </pre>
 
       <h4 class="heading">5. Grouping and Merging</h4>
@@ -608,25 +614,13 @@ interface Gi0/0/2
         </dd>
       </dl>
 
+      <p><span class="label label-info">NOTE</span>&nbsp;The JavaScript parser allows you to reference Java classes (e.g. <code>java.math.BigInteger</code>) from within JavaScript - this is called Live Connect. Although JavaScript doesn't permit access to the local file system, Java does and could allow a malicious user to send you a template that did naughty things - this is the same principal as someone sending you an Excel sheet with a malicious macro. Some care has been taken to try and restrict access to all Java classes from within script blocks in templates, however this shouldn't be considered a security sandbox. In the event that you do wish to access Java classes, then you will need to create a function in an external JavaScript library and include it in TemplateFx - you can then call the JavaScript function from the script block in your template.</p>
+
       <h4 class="heading">6.1. Built-In JavaScript Variables</h4>
 
       <p>As well as the standard JavaScript syntax there is also a series of built-in variables that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
 
       <dl>
-        <dt><strong>globals[]</strong></dt>
-        <dd>
-          <p>This variable provides a mechanism to store persistent data across rows - it is an associative array with global scope, which you use by adding elements. The following example demonstrates how we can store the value of the field "XYZ" from the current row as <code>globals["xyz"]</code> so we can reference it when processing the next row.</p>
-<pre><span class="script">&lt;?
-  if (typeof globals["xyz"] !== "undefined") {
-    if ("<span class="field">&lt;&lt;XYZ&gt;&gt;</span>" !== globals["xyz"]) {
-      clog("values are different");
-    }
-  }
-  globals["xyz"] = "<span class="field">&lt;&lt;XYZ&gt;&gt;</span>";
-?&gt;</span>
-</pre>
-          <p>First we make sure it is defined and then we compare the stored value to the value of the current row. If the values are different then we log a message to the console.</p>
-        </dd>
         <dt><strong>templatefx.version</strong></dt>
         <dd>
           <p>This variable returns the current TemplateFx version as a string (e.g. "2.38").</p>
@@ -714,14 +708,17 @@ PEER_IP has a value of 192.0.2.70</pre>
       <p>In addition to the built-in variables, there is also a series of built-in functions that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
 
       <dl>
-        <dt><strong>counter ("key", [increment], [start])</strong></dt>
+        <dt><strong>counter (["key"], [increment], [start])</strong></dt>
         <dd>
-          <p>This function provides a persistent counter across rows. Every time you call the function with the same "key" then it will increment the counter and return the number. Different persistent counters can be created using different "key" values. There is an optional "increment" parameter which allows you to specify a different increment as opposed to the default of 1. There is also an optional "start" parameter which allows you to specify a different start number as opposed to the default of 1. The following example demonstrates both of these parameters to produce a positive and negative counter:</p>
-<pre><span class="comment"># This will produce a positive sequence of 0, 5, 10, 15, 20, etc</span>
-<span class="script">&lt;?= counter("", 5, 0) ?&gt;</span>
+          <p>This function provides a counter which will produce a series of numbers in the given sequence. If the "key" is omitted or passed as "null" then the counter is reset back to 0 (or "start") for every row. If a "key" is provided then the counter is persistent across rows, but as rows are processed in parallel, the number might not be sequential across rows (i.e. 1, 4, 5 on row 1 and 2, 3, 6 on row 2), but it is thread safe. Every time you call the function with the same "key" then it will increment the counter and return the number. Different persistent counters can be created using different "key" values. There is an optional "increment" parameter which allows you to specify a different increment as opposed to the default of 1. There is also an optional "start" parameter which allows you to specify a different start number as opposed to the default of 1. The following example demonstrates both of these parameters to produce a positive and negative counter:</p>
+<pre><span class="comment"># This will produce a positive sequence of 0, 5, 10, 15, 20, etc - it will persist across rows using key "id"</span>
+<span class="script">&lt;?= counter("id", 5, 0) ?&gt;</span>
 
-<span class="comment"># This will produce a negative sequence of 0, -5, -10, -15, -20, etc</span>
-<span class="script">&lt;?= counter("", -5, 0) ?&gt;</span>
+<span class="comment"># This will produce a negative sequence of 0, -5, -10, -15, -20, etc - it will be reset to 0 for every row</span>
+<span class="script">&lt;?= counter(null, -5, 0) ?&gt;</span>
+
+<span class="comment"># This will produce a positive sequence of 1, 2, 3, 4, 5, etc - it will be reset to 1 for every row</span>
+<span class="script">&lt;?= counter() ?&gt;</span>
 </pre>
         </dd>
         <dt><strong>cancel (["message"])</strong></dt>
@@ -771,11 +768,11 @@ PEER_IP has a value of 192.0.2.70</pre>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
         </dt>
         <dd>
-          <p>This function is used to split up a subnet into smaller subnets - the subnet parameter is provided in CIDR format (i.e. "192.0.2.0/24" or "2001:db8::/32") and the second parameter can be specified in one of two ways. The first way is by specifying a CIDR mask of the smaller subnets (e.g. "/mask") and the second is by specifying the minimum number of subnets you want (this number will be rounded up to the nearest power of 2 - e.g. 5 will become 8). The function will return "null" if an error occurs, the string "overflow" if you have used too many bits (you can't have more than 16 bites between subnet and mask) and an array of all the subnets on success. The following example will output all the "/29" subnets in "192.0.2.0/26" (i.e. 8 subnets) - one per row as we join the returned array using a newline character:</p>
+        <p>This function is used to split up a subnet into smaller subnets - the subnet parameter is provided in CIDR format (i.e. "192.0.2.0/24" or "2001:db8::/32") and the second parameter can be specified in one of two ways. The first way is by specifying a CIDR mask of the smaller subnets (e.g. "/mask") and the second is by specifying the minimum number of subnets you want (this number will be rounded up to the nearest power of 2 - e.g. 5 will become 8). The function will return "null" if an error occurs, the string "{mask overflow}" if you have used too many bits between the masks (you can't have more than 10 bits between subnet and mask), "{number overflow}" if you have used too many bits when specifying a minimum number of subnets, or an array of all the subnets on success. The following example will output all the "/29" subnets in "192.0.2.0/26" (i.e. 8 subnets) - one per row as we join the returned array using a newline character:</p>
 <pre><span class="script">&lt;?= ipsplit("192.0.2.0/26", "/29").join("\n") ?&gt;</span></pre>
           <p>To demonstrate the same by specifying the minimum number of subnets, we can specify 8 as the second parameter, but using an IPv6 address this time - this will return "/35" subnets as there are 8 of them to a "/32" subnet:</p>
 <pre><span class="script">&lt;?= ipsplit("2001:db8::/32", 8).join("\n") ?&gt;</span></pre>
-          <p>To be able to split a subnet into smaller subnets the "cidr_mask" should be longer than the mask on the "subnet" (and have 16 bits or less between them). However, if you specify a shorter mask as your "cidr_mask" then it will return the supernet instead (i.e. using "192.0.2.0/24" with a "cidr_mask" of "/16" will return "192.0.0.0/16").</p>
+          <p>To be able to split a subnet into smaller subnets the "cidr_mask" should be longer than the mask on the "subnet" (and have 10 bits or less between them). However, if you specify a shorter mask as your "cidr_mask" then it will return the supernet instead (i.e. using "192.0.2.0/24" with a "cidr_mask" of "/16" will return "192.0.0.0/16"). In the same sense you can specify a negative number to provide a supernet (i.e. using "192.0.2.0/28" with the minimum number of subnets as -8 will return "192.0.2.0/25").</p>
         </dd>
         <dt>
           <strong>network ("cidr")</strong>
@@ -849,6 +846,8 @@ PEER_IP has a value of 192.0.2.70</pre>
 <pre><span class="script">&lt;?= _.VERSION ?&gt;</span></pre>
       
       <p>In addition to including this library in TemplateFx, I have also added support for globally including other JavaScript libraries (and also disabling "lodash.js" if you wish). You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. If you have issues including some JavaScript libraries, I recommended you try with the latest version of the Java Runtime Environment - the JavaScript processing was greatly improved from Java 8 onwards with the Nashorn JavaScript Engine.</p>
+
+      <p><span class="label label-warning">WARNING</span>&nbsp;All external JavaScript libraries have global scope and aren't thread safe by default - TemplateFx processes rows in parallel using multiple threads, which means two JavaScript blocks from different rows may be executed at the same - any global variables will be shared across all rows (and threads).</p>
 
       <br />
     </div>
