@@ -1,6 +1,27 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2015 Chris Mason <chris@netnix.org>
 
+Version 2.47 - 15th December 2015
+	* Speed improvements via threading - rows are now processed up to 8 in parallel.
+	* Updated "ipsplit" function to limit the output to 1024 entries.
+	* Updates to IP Calc for aggregating and deaggregating subnets.
+	* Mask improvements to the IP helper functions.
+	* Added support for "Copy List" functions on right click in the IP Calc.
+	* Fixed a bug with JavaScript function "long2ip", where n > 2^32 was allowed.
+	* The "Errors" pane will now tell you which row the error occurred on.
+	* Fixed a bug which caused an exception when using invalid splits for IP Calc.
+	* Fixed a bug with the IPv6 "ipsplit" function.
+	* Fixed a bug where IPv6 addresses were being returned as IPv4 addresses.
+	* Fixed a bug where errors associated with <IF> blocks were generating exceptions.
+	* Progress bar improvements to be a lot smoother while generating outputs.
+	* Removed support for JavaScript variable "globals[]" due to threading.
+	* Slightly changed the behaviour of the "counter()" JavaScript function.
+	* Added another warning about using single quotes (') in the data pane.
+	* Added support for including '#' at start of line in the output by using '## '.
+	* Fixed a casting issue which caused an Exception in the IP Calc.
+	* Added command line option "/M" to minimise and background on start-up.
+	* Updated HMAC comparison for decryption to mitigate timing attacks.
+
 Version 2.46 - 14th September 2015
 	* Updated "lodash.js" to v3.10.1.
 	* Added support for a "Visit Web Site" link in the Help menu.
