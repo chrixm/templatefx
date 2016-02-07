@@ -1,5 +1,13 @@
 TemplateFx | Dynamic Templating Tool
-Copyright (c) 2011-2015 Chris Mason <chris@netnix.org>
+Copyright (c) 2011-2016 Chris Mason <chris@netnix.org>
+
+Version 2.48 - 7th February 2016
+	* Added support for a JavaScript "nslookup" function.
+	* Added support for large scale DNS lookups in the IP Calc.
+	* IP Calc is now a background thread so it doesn't disrupt the UI.
+	* Removed the default output space between rows - output is only trimmed of empty lines.
+	* Console tab is now shown when generating to show messages in real time.
+	* Deprecated "clog" in favour of "console.log".
 
 Version 2.47 - 15th December 2015
 	* Speed improvements via threading - rows are now processed up to 8 in parallel.
