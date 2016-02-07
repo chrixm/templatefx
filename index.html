@@ -823,6 +823,22 @@ PEER_IP has a value of 192.0.2.70</pre>
         <dd>
           <p>This function takes a long and converts it into an IPv4 address.</p>
         </dd>
+                <dt>
+          <strong>nslookup ("query", [response_type])</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function performs a forward or reverse DNS lookup - for reverse DNS lookups it takes an IPv4 or IPv6 address (doesn't support IPv4-mapped IPv6 addresses), converts it to a PTR record, then attempts to resolve it and returns the hostname as a string on success or null on failure - the "response_type" field is ignored on these type of requests. For forward DNS lookups it takes a hostname and attempts to resolve it - this may result in multiple IP addresses so is returned as an array of addresses on success or null on failure (the locally configured DNS search list isn't checked, so you will need to specify the domain part as well). The optional second parameter allows you to control what records are returned on forward DNS lookups and can be one of the following values:</p>
+
+          <p><strong>response_type = 0 || null</strong><br />
+          This, or the default if omitted, will return both AAAA and A records (AAAA before A) when performing a forward DNS lookup.</p>
+
+          <p><strong>response_type = 1</strong><br />
+          This will return only A records and omit any AAAA records returned - this may result in a null response if no A records exist.</p>
+
+          <p><strong>response_type = 2</strong><br />
+          This will return only AAAA records and omit any A records returned - this may result in a null response if no AAAA records exist.</p>
+        </dd>
         <dt><strong>passwd ([length], ["chars"])</strong></dt>
         <dd>
           <p>This function generates a cryptographically strong random password using the following characters: a-z, A-Z, 0-9, unless a custom character set using the "chars" parameter has been provided. The length is determined by the passed "length" parameter or a length of 16 is used if the parameter is omitted.</p>
@@ -833,9 +849,9 @@ PEER_IP has a value of 192.0.2.70</pre>
         <dd>
           <p>This function generates a timestamp based on the current date and time, either based on a provided format (using the same format as Java's <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class) or using a default pattern if omitted.</p>
         </dd>
-        <dt><strong>clog ("message")</strong></dt>
+        <dt><strong>console.log ("message")</strong></dt>
         <dd>
-          <p>This function is used for console logging to aid troubleshooting. It will write the passed message to the console (if the console has been enabled). This allows you to debug your templates to output the current value of a variable, etc in different places.</p>
+          <p>This function is used for console logging to aid troubleshooting. It will write the passed message to the console. This allows you to debug your templates to output the current value of a variable, etc in different places.</p>
         </dd>
       </dl>
 
