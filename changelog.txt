@@ -1,6 +1,21 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2016 Chris Mason <chris@netnix.org>
 
+Version 2.49 - 13th March 2016
+	* IP Calc now supports abbreviated forms of "nslookup" (e.g. "ns", "n" or "nlookup").
+	* Fixed a bug where not all script exceptions were being caught.
+	* IP Calc now includes an "[N]" or "[B]" flag when resolving subnets to indicate expected NETWORK and BROADCAST.
+	* Added the ability to export and import all components of a DataTemplate in plain text.
+	* Improvements to the IP Calc with regards to the output layout for DNS lookups.
+	* Aligned the JTextArea paste events so they all call a common function and support a wait cursor.
+	* Added support for JavaScript variable "templatefx.output" - check the output as it is being generated.
+	* Added a banner to the Console tab when an output is generated as a marker for different messages.
+	* Added support for enabling line wrap on Template and Snippets panes.
+	* Fixed a bug where the correct DataFlavor wasn't being set on data from the Template pane.
+	* Fixed some cosmetic sizing issues around the Snippets pane.
+	* Updated selectWord() to also consider "," as a word delimiter in addition to whitespace.
+	* Template pane now takes the focus if no template is detected.
+
 Version 2.48 - 7th February 2016
 	* Added support for a JavaScript "nslookup" function.
 	* Added support for large scale DNS lookups in the IP Calc.
