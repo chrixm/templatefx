@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="http://templatefx.netnix.org/images/templatefx.png">    
+    <title>TemplateFx | Dynamic Templating Tool</title>
+    <style type="text/css">
+      html { margin: 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 11pt; color: #333 }
+      div.title { display: table; height: 48px; float: left; margin-left: 10px }
+      div.link { display: table; height: 20px; float: left; margin-left: 10px }
+      span.valign { display: table-cell; vertical-align: middle }
+      a { color: #428bca; text-decoration: none }
+      a:hover, a:focus { color:#2a6496; text-decoration: underline }
+      .xsmall-margin { margin: 2px }
+      .small-margin { margin: 5px }
+      .no-bold { font-weight: normal }
+      p#status { font-weight: bold; font-size: 12pt }
+    </style>
+  </head>
+  <body>
+    <div style="margin-bottom: 20px">
+      <img style="float: left" width="48" height="48" src="http://templatefx.netnix.org/images/templatefx.png" />
+      <div class="title">
+        <span class="valign">
+          <h3 class="xsmall-margin">TemplateFx | Dynamic Templating Tool</h3>
+          <h4 class="xsmall-margin">&nbsp;&nbsp;by Chris Mason &lt;<a href="mailto:chris@netnix.org">chris@netnix.org</a>&gt;</h4>
+        </span>
+      </div>
+      <div style="clear: both"></div>
+    </div>
+
+    <h4 class="small-margin">Latest Version: <span class="no-bold">2.49 (Build <span id="build">16073</span>)</span></h4>
+    <h4 class="small-margin">Released: <span class="no-bold">13th March 2016</span></h4>
+
+    <p id="status">&nbsp;</p>
+
+    <img style="float: left" width="20" height="20" src="http://templatefx.netnix.org/images/windows.png" />
+    <div class="link">
+      <span class="valign">
+        <a href="https://github.com/chrixm/templatefx/releases/download/v2.49/TemplateFx_v249_Windows.zip">Download TemplateFx v2.49 for Windows</a>
+      </span>
+    </div>
+    <div style="clear: both"></div><br />
+
+    <img style="float: left" width="20" height="20" src="http://templatefx.netnix.org/images/macos.png" />
+    <div class="link">
+      <span class="valign">
+        <a href="https://github.com/chrixm/templatefx/releases/download/v2.49/TemplateFx_v249_MacOS.dmg">Download TemplateFx v2.49 for MacOS</a>
+      </span>
+    </div>
+    <div style="clear: both"></div>
+
+    <script>
+      <!--
+      var lbuild = parseInt(document.getElementById('build').innerHTML);
+      var smsg = document.getElementById('status');
+
+      if (window.location.href.toLowerCase().indexOf('?build=') > -1) {
+        var qbuild = window.location.href.substr(window.location.href.indexOf('?') + 7);
+
+        if (qbuild.match(/[1-9][0-9]{4}/)) {
+          if (parseInt(qbuild) < lbuild) {
+            smsg.style.color = 'red';
+            smsg.innerHTML = 'There is a newer version available - download links below';
+          }
+          else if (parseInt(qbuild) > lbuild) {
+            smsg.style.color = 'green';
+            smsg.innerHTML = 'Great Scott! You are using a release in the future - do you own a time machine?';
+          }
+          else {
+            smsg.style.color = 'green';
+            smsg.innerHTML = 'You are up to date - no update necessary';
+          }
+        }
+        else {
+          smsg.style.color = 'orange';
+          smsg.innerHTML = 'Sorry, I don\'t recognise your build number';
+        }
+      }
+      else {
+        smsg.style.color = 'orange';
+        smsg.innerHTML = 'Sorry, I don\'t recognise your build number';
+       }
+      //-->
+    </script>
+  </body>
+</html>
