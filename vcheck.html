@@ -60,7 +60,7 @@
         if (qbuild.match(/[1-9][0-9]{4}/)) {
           if (parseInt(qbuild) < lbuild) {
             smsg.style.color = 'red';
-            smsg.innerHTML = 'There is a newer version available - download links below';
+            smsg.innerHTML = 'There is a newer version/build available - download links below';
           }
           else if (parseInt(qbuild) > lbuild) {
             smsg.style.color = 'green';
