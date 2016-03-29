@@ -35,7 +35,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@netnix.org">chris@netnix.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.49 (Build 16073)<br />Released: 13th March 2016</h4>
+        <h4>Latest Version: 2.50 (Build 16089)<br />Released: 29th March 2016</h4>
         
         <a href="https://twitter.com/share" class="twitter-share-button" data-text="#TemplateFx - A Dynamic, Scriptable and Platform Independent Templating Tool with IPv4/6 Calc" data-url="http://templatefx.netnix.org" data-via="TemplateFx" data-lang="en">Tweet</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
@@ -690,7 +690,7 @@ interface Gi0/0/2
         </dd>
         <dt><strong>templatefx.output</strong></dt>
         <dd>
-          <p>This variable contains the output from the template as it is being generated - as the template is processed, the contents of this variable will dynamically change. If you check this variable at the end of your template then it will contain the finished output. This is useful if you want to validate anything in the output (i.e. search through the output and find all the IP addresses to check they all have a valid host entry in DNS).</p>
+          <p>This variable contains the output from the template as it is being generated - as the template is processed, the contents of this variable will dynamically change. If you check this variable at the end of your template then it will contain the finished output. This is useful if you want to validate anything in the output (i.e. search through the output and find all the IP addresses to check they all have a valid host entry in DNS). Please refrain from trying to update the output using this variable as bad things could happen - please see the <code>add_output_mutation()</code> function for changing the output post generation.</p>
         </dd>
         <dt><strong>templatefx.fields["field"]([index])</strong></dt>
         <dd>
@@ -739,7 +739,7 @@ PEER_IP has a value of 192.0.2.70</pre>
       <dl>
         <dt><strong>counter (["key"], [increment], [start])</strong></dt>
         <dd>
-          <p>This function provides a counter which will produce a series of numbers in the given sequence. If the "key" is omitted or passed as "null" then the counter is reset back to 0 (or "start") for every row. If a "key" is provided then the counter is persistent across rows, but as rows are processed in parallel, the number might not be sequential across rows (i.e. 1, 4, 5 on row 1 and 2, 3, 6 on row 2), but it is thread safe. Every time you call the function with the same "key" then it will increment the counter and return the number. Different persistent counters can be created using different "key" values. There is an optional "increment" parameter which allows you to specify a different increment as opposed to the default of 1. There is also an optional "start" parameter which allows you to specify a different start number as opposed to the default of 1. The following example demonstrates both of these parameters to produce a positive and negative counter:</p>
+          <p>This function provides a counter which will produce a series of numbers in the given sequence. If the "key" is omitted or passed as "null" then the counter is reset back to 0 (or "start") for every row. If a "key" is provided then the counter is persistent across rows. Every time you call the function with the same "key" then it will increment the counter and return the number. Different persistent counters can be created using different "key" values. There is an optional "increment" parameter which allows you to specify a different increment as opposed to the default of 1. There is also an optional "start" parameter which allows you to specify a different start number as opposed to the default of 1. The following example demonstrates both of these parameters to produce a positive and negative counter:</p>
 <pre><span class="comment"># This will produce a positive sequence of 0, 5, 10, 15, 20, etc - it will persist across rows using key "id"</span>
 <span class="script">&lt;?= counter("id", 5, 0) ?&gt;</span>
 
@@ -857,7 +857,7 @@ PEER_IP has a value of 192.0.2.70</pre>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
         </dt>
         <dd>
-          <p>This function performs a forward or reverse DNS lookup - for reverse DNS lookups it takes an IPv4 or IPv6 address (doesn't support IPv4-mapped IPv6 addresses), converts it to a PTR record, then attempts to resolve it and returns the hostname as a string on success or null on failure - the "response_type" field is ignored on these type of requests. For forward DNS lookups it takes a hostname and attempts to resolve it - this may result in multiple IP addresses so is returned as an array of addresses on success or null on failure (the locally configured DNS search list isn't checked, so you will need to specify the domain part as well). The optional second parameter allows you to control what records are returned on forward DNS lookups and can be one of the following values:</p>
+          <p>This function performs a forward or reverse DNS lookup - for reverse DNS lookups it takes an IPv4 or IPv6 address (doesn't support IPv4-mapped IPv6 addresses), converts it to a PTR record, then attempts to resolve it and returns the hostname as a string on success or null on failure - the "response_type" field is ignored on these type of requests. For forward DNS lookups it takes a hostname and attempts to resolve it (it will follow CNAME records if they exist until it finds an IP address) - this may result in multiple IP addresses so is returned as an array of addresses on success or null on failure (the locally configured DNS search list isn't checked, so you will need to specify the domain part as well). By default it will use the system DNS servers, but it will respect the "Custom Name Servers" field in the "IP Calc" pane, but will ignore the "DNS Search List". The optional second parameter allows you to control what records are returned on forward DNS lookups and can be one of the following values:</p>
 
           <p><strong>response_type = 0 || null</strong><br />
           This, or the default if omitted, will return both AAAA and A records (AAAA before A) when performing a forward DNS lookup.</p>
@@ -878,6 +878,25 @@ PEER_IP has a value of 192.0.2.70</pre>
         <dd>
           <p>This function generates a timestamp based on the current date and time, either based on a provided format (using the same format as Java's <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class) or using a default pattern if omitted.</p>
         </dd>
+        <dt><strong>date ("date", "format", amount, ["dest_format"], ["field"])</strong></dt>
+        <dd>
+          <p>This function is used to manipulate dates by adding or subtracting a duration from a given date, or by converting one date format to another. The "date" field is used to pass a particular date string and the "format" field is used to specify the format of that given date (using the same format as Java's <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class). The "amount" field specifies the number of days (by default) to add or subtract from the given date - to subtract days, a negative number can be provided. On success it will return the manipulated date in the same format that was provided - you can specify a different output format using the "dest_format" optional parameter (using the same formatting rules). By default this function operates using days, but by specifying either "d" for days, "w" for weeks, "m" for months or "y" for years as the "field" parameter, the default behaviour can be changed.</p>
+<pre><span class="comment"># Add 5 days to 27/04/2016 and output using dd/MMMM/yyyy (i.e. 02 May 2016)</span>
+<span class="script">&lt;?= date("27/04/2016", "dd/MM/yyyy", 5, "dd MMMM yyyy") ?&gt;</span>
+
+<span class="comment"># Subtract 7 days from 03/JAN/2016 and output using the same format (i.e. 25/Dec/2015)</span>
+<span class="script">&lt;?= date("01/Jan/2016", "dd/MMM/yyyy", -7) ?&gt;</span>
+
+<span class="comment"># Convert date 29/02/16 from dd/MM/yy to dd/MMM/yyyy (i.e. 29/Feb/2016)</span>
+<span class="script">&lt;?= date("29/02/16", "dd/MM/yy", 0, "dd/MMM/yyyy") ?&gt;</span>
+
+<span class="comment"># Add 5 weeks to 18/OCT/2014 and output using the same format (i.e. 22/Nov/2014)</span>
+<span class="script">&lt;?= date("18/Oct/2014", "dd/MMM/yyyy", 5, null, "w") ?&gt;</span></pre>
+        </dd>
+        <dt><strong>add_output_mutation ("regex", "replacement")</strong></dt>
+        <dd>
+          <p>This function allows you to make changes to the output post generation before it is displayed. This function can be called at any point in your template, but it won't perform the changes until after the output has finished being generated. The replacements will be performed in the order they are added. This function could be used to insert information into your template that isn't known at the point where you want it inserted. As an example, you might want to add a section to your output which lists all the IP addresses which have been used in your output, however you won't being able to produce this list until after the output has been generated. You could leave a placeholder (i.e. "[PLACEHOLDER]") in the template and then use this function to update it at the end with the list of IP addresses that have been found by searching through the output using <code>templatefx.output</code>.</p>
+        </dd>
         <dt><strong>console.log ("message")</strong></dt>
         <dd>
           <p>This function is used for console logging to aid troubleshooting. It will write the passed message to the console. This allows you to debug your templates to output the current value of a variable, etc in different places.</p>
@@ -890,9 +909,7 @@ PEER_IP has a value of 192.0.2.70</pre>
 
 <pre><span class="script">&lt;?= _.VERSION ?&gt;</span></pre>
       
-      <p>In addition to including this library in TemplateFx, I have also added support for globally including other JavaScript libraries (and also disabling "lodash.js" if you wish). You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. If you have issues including some JavaScript libraries, I recommended you try with the latest version of the Java Runtime Environment - the JavaScript processing was greatly improved from Java 8 onwards with the Nashorn JavaScript Engine.</p>
-
-      <p><span class="label label-warning">WARNING</span>&nbsp;All external JavaScript libraries have global scope and aren't thread safe by default - TemplateFx processes rows in parallel using multiple threads, which means two JavaScript blocks from different rows may be executed at the same - any global variables will be shared across all rows (and threads).</p>
+      <p>In addition to including this library in TemplateFx, I have also added support for globally including other JavaScript libraries (and also disabling "lodash.js" if you wish). You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. If you have issues including some JavaScript libraries, I recommended you try with the latest version of the Java Runtime Environment - the JavaScript processing was greatly improved from Java 8 onwards with the Nashorn JavaScript Engine. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
 
       <br />
     </div>
