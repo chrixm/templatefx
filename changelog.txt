@@ -1,6 +1,19 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2016 Chris Mason <chris@netnix.org>
 
+Version 2.50 - 29th March 2016
+	* MAJOR BUG: Disabled threading globally as it was causing data corruption - Java's ScriptEngine isn't thread safe.
+	* Added support for a JavaScript "date" function for adding or subtracting days, weeks, months or years.
+	* Added support for a JavaScript "add_output_mutation" function for changing template output post generation.
+	* Removed deprecated JavaScript function "clog" in favour of "console.log".
+	* New option "Cache JavaScript Libraries" to toggle cacheing of internal and external libs on first run (enabled by default).
+	* Removed support for using the system DNS search list - it used an internal API which is no longer available in Java 9.
+	* Added support for "Prev Network" and "Next Network" in the "IP Calc" pane.
+	* Enhanced the "IP Calc" pane with respect to DNS lookups - now supports specifying name servers and a DNS search list.
+	* The "nslookup" function now follows CNAME records when resolving hostnames.
+	* TemplateFx now reports more status information when generating outputs.
+	* Added a "Check for Updates" option on the "Help" menu.
+
 Version 2.49 - 13th March 2016
 	* IP Calc now supports abbreviated forms of "nslookup" (e.g. "ns", "n" or "nlookup").
 	* Fixed a bug where not all script exceptions were being caught.
