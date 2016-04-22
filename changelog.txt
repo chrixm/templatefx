@@ -1,6 +1,11 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2016 Chris Mason <chris@netnix.org>
 
+Version 2.51 - 22nd April 2016
+	* Added support to the IP Calc for converting ranges into CIDR subnets.
+	* Added support for a JavaScript "range2cidr" IP manipulation function.
+	* Fixed an issue with the Mac version trying to use fonts only on Windows.
+
 Version 2.50 - 29th March 2016
 	* MAJOR BUG: Disabled threading globally as it was causing data corruption - Java's ScriptEngine isn't thread safe.
 	* Added support for a JavaScript "date" function for adding or subtracting days, weeks, months or years.
