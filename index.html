@@ -35,7 +35,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@netnix.org">chris@netnix.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.50 (Build 16089)<br />Released: 29th March 2016</h4>
+        <h4>Latest Version: 2.51 (Build 16113)<br />Released: 22nd April 2016</h4>
         
         <a href="https://twitter.com/share" class="twitter-share-button" data-text="#TemplateFx - A Dynamic, Scriptable and Platform Independent Templating Tool with IPv4/6 Calc" data-url="http://templatefx.netnix.org" data-via="TemplateFx" data-lang="en">Tweet</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
@@ -802,6 +802,22 @@ PEER_IP has a value of 192.0.2.70</pre>
           <p>To demonstrate the same by specifying the minimum number of subnets, we can specify 8 as the second parameter, but using an IPv6 address this time - this will return "/35" subnets as there are 8 of them to a "/32" subnet:</p>
 <pre><span class="script">&lt;?= ipsplit("2001:db8::/32", 8).join("\n") ?&gt;</span></pre>
           <p>To be able to split a subnet into smaller subnets the "cidr_mask" should be longer than the mask on the "subnet" (and have 10 bits or less between them). However, if you specify a shorter mask as your "cidr_mask" then it will return the supernet instead (i.e. using "192.0.2.0/24" with a "cidr_mask" of "/16" will return "192.0.0.0/16"). In the same sense you can specify a negative number to provide a supernet (i.e. using "192.0.2.0/28" with the minimum number of subnets as -8 will return "192.0.2.0/25").</p>
+        </dd>
+        <dt>
+          <strong>range2cidr ("range")</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+        <p>This function is used to convert an IP address range into the smallest number of CIDR subnets to cover the entire range. The "range" parameter specifies a start and end address (e.g. "192.0.2.1-192.0.2.137" or "2001:db8::-2001:db8::ABC") and will return an array of subnets or null if you have tried to do something stupid. The following example will output all the subnets between "192.0.2.87" and "192.0.2.177" - one per row as we join the returned array using a newline character:</p>
+<pre><span class="script">&lt;?= range2cidr("192.0.2.87-192.0.2.177").join("\n") ?&gt;</span></pre>
+        <p>This results in the following output:</p>
+<pre>192.0.2.87/32
+192.0.2.88/29
+192.0.2.96/27
+192.0.2.128/27
+192.0.2.160/28
+192.0.2.176/31
+</pre>
         </dd>
         <dt>
           <strong>network ("cidr")</strong>
