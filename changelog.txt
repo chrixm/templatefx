@@ -1,6 +1,13 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2016 Chris Mason <chris@netnix.org>
 
+Version 2.52 - 7th June 2016
+	* Removed sandbox security violation checking as it provided a false sense of security.
+	* Added support for advanced dynamic output groups using GROUP blocks.
+	* Updated how syntax errors are handled - now sent to the "Console" tab for better visibility.
+	* Removed the command line option "/C" - the "Console" tab is now mandatory.
+	* Added new preference - "Clear Console on Generation" for clearing the console every time.
+
 Version 2.51 - 22nd April 2016
 	* Added support to the IP Calc for converting ranges into CIDR subnets.
 	* Added support for a JavaScript "range2cidr" IP manipulation function.
