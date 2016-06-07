@@ -35,7 +35,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@netnix.org">chris@netnix.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.51 (Build 16113)<br />Released: 22nd April 2016</h4>
+        <h4>Latest Version: 2.52 (Build 16159)<br />Released: 7th June 2016</h4>
         
         <a href="https://twitter.com/share" class="twitter-share-button" data-text="#TemplateFx - A Dynamic, Scriptable and Platform Independent Templating Tool with IPv4/6 Calc" data-url="http://templatefx.netnix.org" data-via="TemplateFx" data-lang="en">Tweet</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
@@ -159,10 +159,6 @@
       <h4 class="heading">2.5. Command Line Options</h4>
 
       <dl>
-        <dt><strong>/C</strong></dt>
-        <dd>
-          <p>This option disables the "Console" tab in the GUI and doesn't redirect STDOUT and STDERR. This option should be used in combination with running TemplateFx from a terminal where you wish the console messages to be printed in the terminal or redirected to a file.</p>
-        </dd>
         <dt><strong>/M</strong></dt>
         <dd>
           <p>This option minimises TemplateFx on start-up and doesn't steal the focus - this allows TemplateFx to load in the background without interrupting what the user is doing.</p>
@@ -365,7 +361,7 @@ R = 5:A</pre>
 
       <h4 class="heading">5. Grouping and Merging</h4>
 
-      <p>If you don't use the "Group By" or "Merge Rows" features then TemplateFx will generate a separate output per row within your data source. To demonstrate the difference between these two features, we are going to use the following data source as an example:</p>
+      <p>There are three features which allow you to control how the outputs are generated: "Group By", "Merge Rows" and Advanced Dynamic Grouping. By default TemplateFx will generate a single output with each row's output one after another. To demonstrate the difference between these features, we are going to use the following data source as an example:</p>
       
       <pre><span class="comment">ROUTER, INTERFACE</span>
 UKPE-ABC-01, Gi0/1
@@ -375,7 +371,23 @@ UKPE-ABC-02, Gi0/1
 UKPE-ABC-02, Gi0/2
 UKPE-ABC-03, Gi0/1</pre>
 
-      <p>Without either option selected, we will end up with 6 separate outputs (one per row). If we select "ROUTER" as our "Group By" field then TemplateFx will generate outputs in the same way as before, but it will combine outputs with the same value for "ROUTER" into a single output - this will result in 3 separate outputs (one per unique "ROUTER" value). As it is processing each row, it basically checks to see if we have generated an output with the same "ROUTER" value before, if we have then it appends it to the same output and if not then it starts a new output.</p>
+      <p>With none of the features used, we will end up with one large output, with the template output for each of the 6 rows. If we select "ROUTER" as our "Group By" field then TemplateFx will generate outputs in the same way as before, but it will combine outputs with the same value for "ROUTER" into a single output - this will result in 3 separate outputs (one per unique "ROUTER" value). As it is processing each row, it basically checks to see if we have generated an output with the same group value before, if we have then it appends it to the same output and if not then it starts a new output.</p>
+
+      <p>The Advanced Dynamic Grouping feature allows you to expand rows into multiple outputs by defining different outputs in the same template as well as using dynamic values for group names. Let's take the following template as an example:</p>
+
+      <pre><span class="group">&lt;GROUP = <span class="script">&lt;?= "<span class="field">&lt;&lt;ROUTER&gt;&gt;</span>-A".toLowerCase() ?&gt;</span>&gt;</span>
+interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>
+ shutdown
+!
+<span class="group">&lt;/GROUP&gt;</span>
+
+<span class="group">&lt;GROUP = <span class="field">&lt;&lt;ROUTER&gt;&gt;</span>-B&gt;</span>
+interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>
+ shutdown
+!
+<span class="group">&lt;/GROUP&gt;</span></pre>
+
+      <p>The above example will result in two outputs for each unique device (six in total) - one for the "-A" device based on the ROUTER column (but dynamically converted to lowercase first) and one for the "-B" device, also derived from the "ROUTER" column. Anything outside of those <code>GROUP</code> sections will remain in the original output - the purpose of <code>GROUP</code> sections is to move output from the original output into a new output. TemplateFx doesn't support nested <code>GROUP</code> sections as they don't make a lot of sense.</p>
 
       <p>The "Merge Rows" feature goes a lot further and actually combines rows together in your data source where the "Group By" field has the same value. Using the example above, TemplateFx would merge rows where the "ROUTER" field was the same, which would result in 3 rows within our data source (any optional criteria specified in the "Generate Output" dialogue is processed before merging). When the rows are merged, TemplateFx will pick a delimiter (from a pre-defined list, which includes "<code>|;:%$?^+-_</code>") to separate the different rows - the first delimiter which it doesn't find in your data source is used (the actual value is accessible using the <code>templatefx.delimiter</code> internal variable, which is set to "null" if "Merge Rows" is disabled). Based on the above example, the merged data source would look like this:</p>
 
@@ -639,7 +651,7 @@ interface Gi0/0/2
         </dd>
       </dl>
 
-      <p><span class="label label-info">NOTE</span>&nbsp;The JavaScript parser allows you to reference Java classes (e.g. <code>java.math.BigInteger</code>) from within JavaScript - this is called Live Connect. Although JavaScript doesn't permit access to the local file system, Java does and could allow a malicious user to send you a template that did naughty things - this is the same principal as someone sending you an Excel sheet with a malicious macro. Some care has been taken to try and restrict access to all Java classes from within script blocks in templates, however this shouldn't be considered a security sandbox. In the event that you do wish to access Java classes, then you will need to create a function in an external JavaScript library and include it in TemplateFx - you can then call the JavaScript function from the script block in your template.</p>
+      <p><span class="label label-warning">WARNING</span>&nbsp;The JavaScript parser allows you to reference Java classes (e.g. <code>java.math.BigInteger</code>) from within JavaScript - this is called Live Connect. Although JavaScript doesn't permit access to the local file system, Java does and could allow a malicious user to send you a template that did naughty things - this is the same principal as someone sending you an Excel sheet with a malicious macro. You need to be aware of this and be cautious if you ever receive a template or DataTemplate from someone you don't know or trust.</p>
 
       <h4 class="heading">6.1. Built-In JavaScript Variables</h4>
 
@@ -661,16 +673,25 @@ interface Gi0/0/2
         <dt><strong>templatefx.group_start</strong></dt>
         <dd>
           <p>This variable will be set to true if the row is the first in the group. This allows you to add text to your template that would be included at the beginning of every output. An example is included below:</p>
-<pre><span class="if">&lt;IF (<span class="script">templatefx.group_start</span>)&gt;</span>
+          <pre><span class="if">&lt;IF (<span class="script">templatefx.group_start</span>)&gt;</span>
 <span class="comment">!-----</span>
 <span class="comment">! @ </span><span class="field">&lt;&lt;ROUTER&gt;&gt;</span>
 <span class="comment">!-----</span>
 <span class="if">&lt;/IF&gt;</span>
 </pre>
+          <p><span class="label label-info">NOTE</span>&nbsp;This is only applicable for "Group By" groups and doesn't work with Advanced Dynamic Grouping where <code>GROUP</code> sections have been added to the template. In this scenario you could use the <code>counter()</code> function as follows:</p>
+          <pre><span class="group">&lt;GROUP = "<span class="field">&lt;&lt;ROUTER&gt;&gt;</span>"&gt;</span>
+<span class="if">&lt;IF (<span class="script">counter ("<span class="field">&lt;&lt;ROUTER&gt;&gt;</span>") == 1</span>)&gt;</span>
+<span class="comment">! @ </span><span class="field">&lt;&lt;ROUTER&gt;&gt;</span>
+<span class="if">&lt;/IF&gt;</span>
+DATA
+<span class="group">&lt;/GROUP&gt;</span>
+</pre>
         </dd>
         <dt><strong>templatefx.group_end</strong></dt>
         <dd>
           <p>This variable is the opposite of the <code>templatefx.group_start</code> where it will be set to true if the row is the last in the group. This allows you to add text to your template that would be included at the end of every output.</p>
+          <p><span class="label label-info">NOTE</span>&nbsp;This is only applicable for "Group By" groups and doesn't work with Advanced Dynamic Grouping where <code>GROUP</code> sections have been added to the template.</p>
         </dd>
         <dt><strong>templatefx.row</strong></dt>
         <dd>
