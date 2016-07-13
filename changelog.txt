@@ -1,6 +1,14 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2016 Chris Mason <chris@netnix.org>
 
+Version 2.53 - 13th July 2016
+	* Added better handling of out of heap memory errors when processing output.
+	* Increased maximum heap size to 75% of system memory in Windows binary.
+	* Added support for ^T shortcut for selecting the DataTemplate pane.
+	* Added support for full width highlighting of comments using $- and #- syntax.
+	* Fixed an issue with Undo/Redo operations not working correctly.
+	* Fixed an issue with GROUP blocks if you used the same group name as the default.
+
 Version 2.52 - 7th June 2016
 	* Removed sandbox security violation checking as it provided a false sense of security.
 	* Added support for advanced dynamic output groups using GROUP blocks.
