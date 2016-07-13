@@ -134,6 +134,11 @@
             <td>Option-I</td>
           </tr>
           <tr>
+            <td class="inline-left">Show DataTemplate Pane</td>
+            <td>^T</td>
+            <td>Option-T</td>
+          </tr>
+          <tr>
             <td class="inline-left">Generate Output</td>
             <td>^G</td>
             <td>Option-G</td>
@@ -353,10 +358,15 @@ R = 5:A</pre>
 
       <h4 class="heading">4.4. Comments</h4>
 
-      <p>There are two types of comments which can be used within a template (and snippets), both of which must be used at the beginning of a line as TemplateFx doesn't presently support end of line comments. The first is a template comment and uses the "#" syntax to comment out a line in a template - this results in the line being completely ignored and not appearing in your output (if you require a "#" at the start of a line then you can escape it using "## " instead). The second type of comment, which uses the "!" syntax is used to supplement your output with comments:</p>
+      <p>There are two types of comments which can be used within a template (and snippets), both of which must be used at the beginning of a line as TemplateFx doesn't presently support end of line comments. The first is a template comment and uses the <code>#</code> syntax to comment out a line in a template - this results in the line being completely ignored and not appearing in your output (if you require a <code>#</code> at the start of a line then you can escape it using <code>##</code> instead). The second type of comment, which uses the <code>!</code> syntax is used to supplement your output with comments:</p>
 
       <pre><span class="comment"># This comment won't appear in your output and ignores &lt;&lt;FIELDS&gt;&gt;, etc.</span>
 <span class="comment">! This comment will appear in your output and doesn't ignore <span class="field">&lt;&lt;FIELDS&gt;&gt;</span>, etc.</span>
+</pre>
+
+      <p>You can also indicate that you want to highlight the entire row, which is done by using <code>#-</code> and <code>!-</code> respectively:</p>
+
+      <pre><span style="display: inline-block; width: 100%;" class="comment">#- Using a hyphen (-) after the comment symbol will highlight the entire row.</span>
 </pre>
 
       <h4 class="heading">5. Grouping and Merging</h4>
