@@ -11,6 +11,7 @@ Version 2.54 - 30th August 2016
 	* Fixed an issue where JDialog's didn't have the correct owner set - impacted icon in tab switcher.
 	* Updated documentation as I was using Option instead of Command for shortcut keys on MacOS.
 	* Added support for separate "Copy as Rich Text" option for template pane - ^C is now normal copy.
+	* Improvements to the TemplateFx icon.
 
 Version 2.53 - 13th July 2016
 	* Added better handling of out of heap memory errors when processing output.
