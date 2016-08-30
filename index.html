@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TemplateFx | Dynamic Templating Tool</title>
-    <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAN4SURBVHhe7dyxjcJQFEVBe7tyW3Ydbssu62/yU1YrBAGcmYSbgqWjFwDrsl9jAZJ+5isQJAAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQ9rZ/BR7nNhefbD3uufhGLgAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIW5f9GnO/1Di3ufhk63HP9dg3Puv/vO9v4AKAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAMAGAsHXZrzE3EOMCgDABgDABgDABgDABgDABgDABgDABgLDsF4HGuc3FX9bjnusxn+X7/ec5PMMFAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGHrsl9jbnjKOLe5eJf1uOd6LRcAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhPk5MIS5ACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBrWX4BzZwje50jRbsAAAAASUVORK5CYII=">
+    <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAABmJLR0QAAAByAMbcMWDEAAACkklEQVR42u3b0Q2AIAxAQWs6sUO6Fq6ABkThbgAT2uSlP8Z2nBuwpt0IQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAA4F3Z8dvFeKcQRuACAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAgNvSCGigTPimcAEAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAyXHb8dxrsMu3YBAAIACAAgAIAAAAIACAAgAMBgufDbi/VXCbP8zR5cAIAAAAIACAAgAIAAAAIACAAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgACYAQgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACADwTC789rB+XACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAADflkZAA36tdgEAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAANS5DZwdINbt8ygAAAABJRU5ErkJggg==">
     <style type="text/css">
       html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:bold}dfn{font-style:italic}h1{font-size:2em;margin:0.67em 0}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-0.5em}sub{bottom:-0.25em}img{border:0}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}pre{overflow:auto}code,kbd,pre,samp{font-family:monospace, monospace;font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input{line-height:normal}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}fieldset{border:1px solid #c0c0c0;margin:0 2px;padding:0.35em 0.625em 0.75em}legend{border:0;padding:0}textarea{overflow:auto}optgroup{font-weight:bold}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}*:before,*:after{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}html{font-size:62.5%;-webkit-tap-highlight-color:rgba(0,0,0,0)}body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#333;background-color:#fff}input,button,select,textarea{font-family:inherit;font-size:inherit;line-height:inherit}a{color:#428bca;text-decoration:none}a:hover,a:focus{color:#2a6496;text-decoration:underline}a:focus{outline:thin dotted;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}figure{margin:0}img{vertical-align:middle}.img-responsive{display:block;max-width:100%;height:auto}.img-rounded{border-radius:6px}.img-thumbnail{padding:4px;line-height:1.42857143;background-color:#fff;border:1px solid #ddd;border-radius:4px;-webkit-transition:all .2s ease-in-out;transition:all .2s ease-in-out;display:inline-block;max-width:100%;height:auto}.img-circle{border-radius:50%}hr{margin-top:20px;margin-bottom:20px;border:0;border-top:1px solid #eee}.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);border:0}
       code,kbd,pre,samp{font-family:Menlo,Monaco,Consolas,"Courier New",monospace}code{padding:2px 4px;font-size:90%;color:#c7254e;background-color:#f9f2f4;white-space:nowrap;border-radius:4px}kbd{padding:2px 4px;font-size:90%;color:#fff;background-color:#333;border-radius:3px;box-shadow:inset 0 -1px 0 rgba(0,0,0,0.25)}pre{display:block;padding:9.5px;margin:0 0 10px;font-size:13px;line-height:1.42857143;word-break:break-all;word-wrap:break-word;color:#333;background-color:#f5f5f5;border:1px solid #ccc;border-radius:4px}pre code{padding:0;font-size:inherit;color:inherit;white-space:pre-wrap;background-color:transparent;border-radius:0}.pre-scrollable{max-height:340px;overflow-y:scroll}
       .label{display:inline;padding:.2em .6em .3em;font-size:75%;font-weight:bold;line-height:1;color:#fff;text-align:center;white-space:nowrap;vertical-align:baseline;border-radius:.25em}.label[href]:hover,.label[href]:focus{color:#fff;text-decoration:none;cursor:pointer}.label:empty{display:none}.btn .label{position:relative;top:-1px}.label-default{background-color:#999}.label-default[href]:hover,.label-default[href]:focus{background-color:#808080}.label-primary{background-color:#428bca}.label-primary[href]:hover,.label-primary[href]:focus{background-color:#3071a9}.label-success{background-color:#5cb85c}.label-success[href]:hover,.label-success[href]:focus{background-color:#449d44}.label-info{background-color:#5bc0de}.label-info[href]:hover,.label-info[href]:focus{background-color:#31b0d5}.label-warning{background-color:#f0ad4e}.label-warning[href]:hover,.label-warning[href]:focus{background-color:#ec971f}.label-danger{background-color:#d9534f}.label-danger[href]:hover,.label-danger[href]:focus{background-color:#c9302c}
       html { margin: 10px; font-family: Calibri, Geneva, sans-serif; text-align: justify }
       div.content { width: 90% }
-      div.title h3 { margin-bottom: 0px }
+      div.title h3 { margin-top: 5px; margin-bottom: 0px }
       div.title h4 { margin-top: 0px }
       th, td { white-space: nowrap; padding: 2px }
       img.screenshot { width: 30% }
@@ -22,6 +22,7 @@
       span.field { background: #adff2f }
       span.script { background: #ffc800 }
       span.comment { background: #99ccff }
+      span.group { background: #11ccaa }
       span.at { background: #ff7f50 }
       .inline-left { text-align: left }
       .inline-center { text-align: center }
@@ -35,7 +36,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@netnix.org">chris@netnix.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.53 (Build 16195)<br />Released: 13th July 2016</h4>
+        <h4>Latest Version: 2.54 (Build 16243)<br />Released: 30th August 2016</h4>
         
         <a href="https://twitter.com/share" class="twitter-share-button" data-text="#TemplateFx - A Dynamic, Scriptable and Platform Independent Templating Tool with IPv4/6 Calc" data-url="http://templatefx.netnix.org" data-via="TemplateFx" data-lang="en">Tweet</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
@@ -51,7 +52,7 @@
 
       <h4 class="heading">2. User Interface</h4>
 
-      <p>The TemplateFx user interface consists of the "IP Calc" and "DataTemplate" tabs and multiple "Output" tabs. The "IP Calc" tab provides easy access to an IPv4/IPv6 Subnet Calculator, the "DataTemplate" tab is the main tab where you compose your template and the "Output" tabs are where you see your merged data after clicking on the "Generate Output" button on the toolbar.</p>
+      <p>The TemplateFx user interface consists of the "Console", "IP Calc" and "DataTemplate" tabs and multiple "Output" tabs. The "Console" tab is where STDOUT/STDERR goes and where all console logging is sent. The "IP Calc" tab provides easy access to an IPv4/IPv6 Subnet Calculator with support for DNS resolution of subnets, the "DataTemplate" tab is the main tab where you compose your template and the "Output" tabs are where you see your merged data after clicking on the "Generate Output" button on the toolbar.</p>
 
       <div class="inline-center">
         <a href="/images/templatefx-screenshot1.png" target="_blank"><img class="screenshot" src="/images/templatefx-screenshot1.png" alt="templatefx-screenshot1.png"></a>&nbsp;&nbsp;&nbsp;
@@ -105,53 +106,53 @@
         <tbody>
           <tr>
             <td class="inline-left">New</td>
-            <td>^N</td>
-            <td>Option-N</td>
+            <td title="Control+N">^N</td>
+            <td title="Command+N">&#8984;N</td>
           </tr>
           <tr>
             <td class="inline-left">Load DataTemplate</td>
-            <td>^L</td>
-            <td>Option-L</td>
+            <td title="Control+L">^L</td>
+            <td title="Command+L">&#8984;L</td>
           </tr>
           <tr>
             <td class="inline-left">Save DataTemplate</td>
-            <td>^S</td>
-            <td>Option-S</td>
+            <td title="Control+S">^S</td>
+            <td title="Command+S">&#8984;S</td>
           </tr>
           <tr>
             <td class="inline-left">Find and Replace</td>
-            <td>^F</td>
-            <td>Option-F</td>
+            <td title="Control+F">^F</td>
+            <td title="Command+F">&#8984;F</td>
           </tr>
           <tr>
             <td class="inline-left">Bookmark DataTemplate</td>
-            <td>^D</td>
-            <td>Option-D</td>
+            <td title="Control+D">^D</td>
+            <td title="Command+D">&#8984;D</td>
           </tr>
           <tr>
             <td class="inline-left">IP Calculator</td>
-            <td>^I</td>
-            <td>Option-I</td>
+            <td title="Control+I">^I</td>
+            <td title="Command+I">&#8984;I</td>
           </tr>
           <tr>
             <td class="inline-left">Show DataTemplate Pane</td>
-            <td>^T</td>
-            <td>Option-T</td>
+            <td title="Control+T">^T</td>
+            <td title="Command+T">&#8984;T</td>
           </tr>
           <tr>
             <td class="inline-left">Generate Output</td>
-            <td>^G</td>
-            <td>Option-G</td>
+            <td title="Control+G">^G</td>
+            <td title="Command+G">&#8984;G</td>
           </tr>
           <tr>
             <td class="inline-left">JavaScript Libraries</td>
-            <td>^J</td>
-            <td>Option-J</td>
+            <td title="Control+J">^J</td>
+            <td title="Command+J">&#8984;J</td>
           </tr>
           <tr>
             <td class="inline-left">Close Tab</td>
-            <td>^W</td>
-            <td>Option-W</td>
+            <td title="Control+W">^W</td>
+            <td title="Command+W">&#8984;W</td>
           </tr>
           <tr>
             <td class="inline-left">Help</td>
@@ -197,7 +198,7 @@ SNIPPET 2
 TEMPLATE
 <strong>&lt;/templatefx:template&gt;</strong></pre>
 
-      <p>TemplateFx also supports encrypted DataTemplates by selecting "Encrypt DataTemplate" from the "File" menu. After prompting for a password, the DataTemplate will be fully encrypted when it is saved using AES (Advanced Encryption Standard) encryption in CTR mode and with an SHA-256 HMAC for integrity. The key size is 128 bits and is generated by combining a pseudorandom salt with the password using the PBKDF2 key derivation function with 100,000 iterations. Please ensure you don't forget the password as there is no way to decrypt the DataTemplate without it!</p>
+      <p>TemplateFx also supports encrypted DataTemplates by selecting "Encrypt DataTemplate" from the "File" menu. After prompting for a password, the DataTemplate will be fully encrypted when it is saved using AES (Advanced Encryption Standard) encryption in CTR mode using a pseudorandom 16 byte IV and a SHA-256 HMAC for integrity which is performed over the salt, IV and ciphertext. The key size is 128 bits (or you can select 256 bits if you have installed the "Java Cryptography Extension Unlimited Strength Jurisdiction Policy Files") and is generated by combining a pseudorandom 64 byte salt with the password using the PBKDF2 (HMAC-SHA-512) key derivation function with 50,000 iterations. Please ensure you don't forget the password as there is no way to decrypt the DataTemplate without it!</p>
 
       <h4 class="heading">4. Templates</h4>
 
@@ -865,6 +866,13 @@ PEER_IP has a value of 192.0.2.70</pre>
           <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the first usable address of the subnet. The function will return "null" if an error occurs or an invalid parameter is detected.</p>
         </dd>
         <dt>
+          <strong>iphosts ("cidr", [nwbc])</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns (as an array) all the usable addresses of the subnet. The function will return "null" if an error occurs or an invalid parameter is detected. By default it doesn't return the "network" and "broadcast" address of IPv4 subnets, but there is an optional parameter "nwbc", which if set to "true" will return them.</p>
+        </dd>
+        <dt>
           <strong>iplast ("cidr")</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
         </dt>
@@ -914,12 +922,27 @@ PEER_IP has a value of 192.0.2.70</pre>
 
           <p><strong>response_type = 2</strong><br />
           This will return only AAAA records and omit any A records returned - this may result in a null response if no AAAA records exist.</p>
+
+          <p>In addition to being able to lookup a single address, it also supports being passed a list of IP addresses to resolve, with an array being returned with the results - on failure a single null will be returned. This could be used in the following way to lookup all usable hosts within a subnet by combining it with the <code>iphosts()</code> function (with a result per line):</p>
+
+          <pre><span class="script">&lt;?= nslookup(iphosts("192.0.2.0/28")).join("\n") ?&gt;</span></pre>
+
+          <p>An alternative way of doing the same thing, but with more control on the output would be using a FOR loop as follows:</p>
+
+<pre><span class="for">&lt;FOR H = [<span class="script">&lt;?= iphosts("192.0.2.0/28") ?&gt;</span>]&gt;</span>
+<span class="for">{{H}}</span> = <span class="script">&lt;?= nslookup("<span class="for">{{H}}</span>") ?&gt;</span>
+<span class="for">&lt;/FOR&gt;</span>
+</pre>
         </dd>
         <dt><strong>passwd ([length], ["chars"])</strong></dt>
         <dd>
           <p>This function generates a cryptographically strong random password using the following characters: a-z, A-Z, 0-9, unless a custom character set using the "chars" parameter has been provided. The length is determined by the passed "length" parameter or a length of 16 is used if the parameter is omitted.</p>
 <pre><span class="comment"># Generate a random 12 character password using the provided characters</span>
 <span class="script">&lt;?= passwd(12, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZZ") ?&gt;</span></pre>
+        </dd>
+        <dt><strong>rot13 ("string")</strong></dt>
+        <dd>
+          <p>This function encodes (or decodes) a "string" using "rot13". Not to be confused with any sort of encryption as it is a very basic substitution cipher which can be easily reversed. It could be used to encode strings to stop the casual passer-by from gleaning passwords from looking at your screen, if you feel it necessary to hard code them into your templates.</span>
         </dd>
         <dt><strong>timestamp (["format"])</strong></dt>
         <dd>
