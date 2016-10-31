@@ -1,5 +1,13 @@
 TemplateFx | Dynamic Templating Tool
-Copyright (c) 2011-2016 Chris Mason <chris@netnix.org>
+Copyright (c) 2011-2016 Chris Mason <chris@templatefx.org>
+
+Version 2.55 - 31st October 2016
+	* Fixed a bug when trying to use two script blocks within a FOR block TO clause.
+	* Improved the handling of importing files - now detects binary files and rejects them.
+	* The "nslookup" function now returns multiple PTR entries (if applicable) - semi-colon separated.
+	* Improved Drag and Drop to support loading of dropped ".dt" files.
+	* Updated documentation to reference "templatefx.org" instead of "templatefx.netnix.org".
+	* Increased the "ipsplit" and "nslookup" limit from 10 bits to 16 bits.
 
 Version 2.54 - 30th August 2016
 	* Added support for a JavaScript "iphosts" function to return the usable hosts of a subnet.
