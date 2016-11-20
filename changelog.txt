@@ -1,6 +1,19 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2016 Chris Mason <chris@templatefx.org>
 
+Version 2.56 - 20th November 2016
+	* Under the hood improvements to the way Copy & Paste happens.
+	* Fixed a bug with "add_output_mutation" as it wasn't working with ^ and $ regex anchors.
+	* Added support for a JavaScript "curl" function to retrieve content using HTTP or HTTPS.
+	* Disabled "lodash.js" by default due to Java's JavaScript performance impact on first run.
+	* Console now stays in view if any errors or exceptions occur during generation.
+	* Further improvements to DNS lookups in "IP Calc" to indicate if a subnet is empty.
+	* Added support for performing DNS "ANY" queries in "IP Calc" for cached records.
+	* Added support for "_START_" and "_END_" Snippets which are automatically added to the output.
+	* Added support for "<[ ]>" input blocks to request input from the user on output generation.
+	* If a Snippet named "-PROMPT" exists then it skips the prompt on output generation.
+	* Fixed a bug which failed to perform a DNS lookup with hostnames containing a "-".
+
 Version 2.55 - 31st October 2016
 	* Fixed a bug when trying to use two script blocks within a FOR block TO clause.
 	* Improved the handling of importing files - now detects binary files and rejects them.
