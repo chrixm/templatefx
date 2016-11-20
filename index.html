@@ -20,6 +20,8 @@
       span.if { background: #ee82ee }
       span.for { background: #c0a172 }
       span.field { background: #adff2f }
+      span.input { background: #c3adff }
+      span.input_type { background: #ee82ee }
       span.script { background: #ffc800 }
       span.comment { background: #99ccff }
       span.group { background: #11ccaa }
@@ -36,7 +38,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.55 (Build 16305)<br />Released: 31st October 2016</h4>
+        <h4>Latest Version: 2.56 (Build 16325)<br />Released: 20th November 2016</h4>
       </div>
 
       <h4 class="heading">1. Introduction</h4>
@@ -59,7 +61,7 @@
 
       <p>You have the ability to right click on the various panes to allow you to copy and paste or perform other normal operations. As well as the "File" menu to load and save content, you also have the ability to drag and drop data files and template files into the respective panes.</p>
 
-      <p>The "Group By" drop down allows you to select one of your data fields to allow grouping of your output data. As an example, if you have configuration that needs to be applied to different interfaces on a series of routers, then you could use this to group by your router identifier, to allow you to group interfaces for the same router in the same output. The "Merge Rows" checkbox is slightly different and is used in conjunction with the "Group By" drop down and it allows you to merge rows together which are grouped together. Using the same example, you would only have a single row per router with all the interfaces merged together using a delimiter.</p>
+      <p>The "Group By" drop down allows you to select one of your data fields to allow grouping of your output data. As an example, if you have configuration that needs to be applied to different interfaces on a series of routers, then you could use this to group by your router identifier, to allow you to group interfaces for the same router in the same output. There is also support for splitting an output into multiple outputs using advanced <code>GROUP</code> syntax that is explained in the "Grouping and Merging" section. The "Merge Rows" checkbox is slightly different and is used in conjunction with the "Group By" drop down and it allows you to merge rows together which are grouped together. Using the same example, you would only have a single row per router with all the interfaces merged together using a delimiter.</p>
 
       <h4 class="heading">2.1. Data Pane</h4>
 
@@ -341,7 +343,7 @@ R = 5:A</pre>
  deny ip any any
 !</pre>
 
-      <p>The above <code>%{NAME}%</code> syntax tells TemplateFx to replace it with the contents of the snippet named "ACL-STANDARD". This directive is processed first before any substitutions have taken place which means any valid template syntax can be used within a snippet. The scope of snippets is within the DataTemplate and when the DataTemplate is saved or loaded then the snippets are included with it.</p>
+      <p>The above <code>%{NAME}%</code> syntax tells TemplateFx to replace it with the contents of the snippet named "ACL-STANDARD". This directive is processed first before any substitutions have taken place which means any valid template syntax can be used within a snippet. The scope of snippets is within the DataTemplate and when the DataTemplate is saved or loaded then the snippets are included with it. There are two Snippets which have a special meaning ("_START_" and "_END_"), which can't be referenced within your template, but are automatically added to either the start or the end of your template.</p>
 
       <p>Snippets also support parsing of an optional parameter by specifying parenthesis after the snippet name (i.e. <code>%{NAME("&lt;string&gt;")}%</code>) when you reference it in your template, which can then be accessed in the snippet via the <code>{%}</code> markup. Any occurrences of <code>{%}</code> in the snippet will be replaced with "&lt;string&gt;" - this could be used to pass through a literal string which allows a different response to be produced depending on what is passed through. However, care should be taken when passing through special constructs (i.e. "&lt;?= ?&gt;") as they will be evaluated as part of the snippet body and thus need to be valid in the context they are being evaluated.</p>
 
@@ -354,7 +356,35 @@ R = 5:A</pre>
 
       <p>The above syntax instructs TemplateFx to include the contents of "\\uk\ukroot\templates\site-build-template.txt" into the template at this point. The current order of operation means that snippets are imported into the template before includes, which means snippets can include external files. A maximum filesize of 262,144 bytes is currently enforced per external file.</p>
 
-      <h4 class="heading">4.4. Comments</h4>
+      <h4 class="heading">4.4. User Input</h4>
+
+      <p>There might be some situations where you don't want to store dynamic or sensitive data within the actual DataTemplate. In these situations, TemplateFx provides the ability to request data from the user as the output is being generated through the use of input blocks using the <code>&lt;[ ... ]&gt;</code> or <code>&lt;[ ... ][0|1|2]&gt;</code> syntax. By default it will present the user with a multi-line input box, which allows you to enter data which would normally be difficult to do so using the "Data" pane. The second format of syntax allows a numerical type to be specified as per the list below:</p>
+
+      <p><strong>0</strong><br />
+      This is the default and indicates that a multi-line input box will be presented to the user.
+
+      <p><strong>1</strong><br />
+      This indicates a single-line input box will be presented to the user - the input will be accepted when the user clicks "OK" or presses "&lt;ENTER&gt;".
+
+      <p><strong>2</strong><br />
+      This indicates a single-line password input box will be presented to the user - the input will be masked and it will be accepted when the user clicks "OK" or presses "&lt;ENTER&gt;".
+
+      <pre><span class="comment"># Use Multi-Line Input Box (Implicit Type 0)</span>
+<span class="input">&lt;[ Enter Data: ]&gt;</span>
+
+<span class="comment"># Use Multi-Line Input Box (Explicit Type 0)</span>
+<span class="input">&lt;[ Enter Data: ][<span class="input_type">0</span>]&gt;</span>
+
+<span class="comment"># Use Single-Line Input Box (Explicit Type 1)</span>
+<span class="input">&lt;[ Enter Username: ][<span class="input_type">1</span>]&gt;</span>
+
+<span class="comment"># Use Single-Line Password Input Box (Explicit Type 2)</span>
+<span class="input">&lt;[ Enter Password: ][<span class="input_type">2</span>]&gt;</span>
+</pre>
+
+      <p>Regardless of how many data rows you have, the user will be prompted once per input before output generation commences (if the same input is requested multiple times then the value is cached). The value provided by the user will then replace the <code>&lt;[ ... ]&gt;</code> block.</p>
+
+      <h4 class="heading">4.5. Comments</h4>
 
       <p>There are two types of comments which can be used within a template (and snippets), both of which must be used at the beginning of a line as TemplateFx doesn't presently support end of line comments. The first is a template comment and uses the <code>#</code> syntax to comment out a line in a template - this results in the line being completely ignored and not appearing in your output (if you require a <code>#</code> at the start of a line then you can escape it using <code>##</code> instead). The second type of comment, which uses the <code>!</code> syntax is used to supplement your output with comments:</p>
 
@@ -366,6 +396,9 @@ R = 5:A</pre>
 
       <pre><span style="display: inline-block; width: 100%;" class="comment">#- Using a hyphen (-) after the comment symbol will highlight the entire row.</span>
 </pre>
+
+
+
 
       <h4 class="heading">5. Grouping and Merging</h4>
 
@@ -826,7 +859,7 @@ PEER_IP has a value of 192.0.2.70</pre>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
         </dt>
         <dd>
-          <p>This function is used to split up a subnet into smaller subnets - the subnet parameter is provided in CIDR format (i.e. "192.0.2.0/24" or "2001:db8::/32") and the second parameter can be specified in one of two ways. The first way is by specifying a CIDR mask of the smaller subnets (e.g. "/mask") and the second is by specifying the minimum number of subnets you want (this number will be rounded up to the nearest power of 2 - e.g. 5 will become 8). The function will return "null" if an error occurs, the string "{mask overflow}" if you have used too many bits between the masks (you can't have more than 16 bits between subnet and mask), "{number overflow}" if you have used too many bits when specifying a minimum number of subnets, or an array of all the subnets on success. The following example will output all the "/29" subnets in "192.0.2.0/26" (i.e. 8 subnets) - one per row as we join the returned array using a newline character:</p>
+        <p>This function is used to split up a subnet into smaller subnets - the subnet parameter is provided in CIDR format (i.e. "192.0.2.0/24" or "2001:db8::/32") and the second parameter can be specified in one of two ways. The first way is by specifying a CIDR mask of the smaller subnets (e.g. "/mask") and the second is by specifying the minimum number of subnets you want (this number will be rounded up to the nearest power of 2 - e.g. 5 will become 8). The function will return "null" if an error occurs, the string "{mask overflow}" if you have used too many bits between the masks (you can't have more than 16 bits between subnet and mask), "{number overflow}" if you have used too many bits when specifying a minimum number of subnets, or an array of all the subnets on success. The following example will output all the "/29" subnets in "192.0.2.0/26" (i.e. 8 subnets) - one per row as we join the returned array using a newline character:</p>
 <pre><span class="script">&lt;?= ipsplit("192.0.2.0/26", "/29").join("\n") ?&gt;</span></pre>
           <p>To demonstrate the same by specifying the minimum number of subnets, we can specify 8 as the second parameter, but using an IPv6 address this time - this will return "/35" subnets as there are 8 of them to a "/32" subnet:</p>
 <pre><span class="script">&lt;?= ipsplit("2001:db8::/32", 8).join("\n") ?&gt;</span></pre>
@@ -837,7 +870,7 @@ PEER_IP has a value of 192.0.2.70</pre>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
         </dt>
         <dd>
-        <p>This function is used to convert an IP address range into the smallest number of CIDR subnets to cover the entire range. The "range" parameter specifies a start and end address (e.g. "192.0.2.1-192.0.2.137" or "2001:db8::-2001:db8::ABC") and will return an array of subnets or null if you have tried to do something stupid. The following example will output all the subnets between "192.0.2.87" and "192.0.2.177" - one per row as we join the returned array using a newline character:</p>
+        <p>This function is used to convert an IP address range into the smallest number of CIDR subnets to cover the entire range. The "range" parameter specifies a start and end address (e.g. "192.0.2.1-192.0.2.137" or "2001:db8::-2001:db8::ABC") and will return an array of subnets or "null" if you have tried to do something stupid. The following example will output all the subnets between "192.0.2.87" and "192.0.2.177" - one per row as we join the returned array using a newline character:</p>
 <pre><span class="script">&lt;?= range2cidr("192.0.2.87-192.0.2.177").join("\n") ?&gt;</span></pre>
         <p>This results in the following output:</p>
 <pre>192.0.2.87/32
@@ -909,18 +942,18 @@ PEER_IP has a value of 192.0.2.70</pre>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
         </dt>
         <dd>
-          <p>This function performs a forward or reverse DNS lookup - for reverse DNS lookups it takes an IPv4 or IPv6 address (doesn't support IPv4-mapped IPv6 addresses), converts it to a PTR record, then attempts to resolve it and returns the hostname as a string (entries are separated using a semi-colon if multiple entries exist) on success or null on failure - the "response_type" field is ignored on these type of requests. For forward DNS lookups it takes a hostname and attempts to resolve it (it will follow CNAME records if they exist until it finds an IP address) - this may result in multiple IP addresses so is returned as an array of addresses on success or null on failure (the locally configured DNS search list isn't checked, so you will need to specify the domain part as well). By default it will use the system DNS servers, but it will respect the "Custom Name Servers" field in the "IP Calc" pane, but will ignore the "DNS Search List". The optional second parameter allows you to control what records are returned on forward DNS lookups and can be one of the following values:</p>
-          
+          <p>This function performs a forward or reverse DNS lookup - for reverse DNS lookups it takes an IPv4 or IPv6 address (doesn't support IPv4-mapped IPv6 addresses), converts it to a PTR record, then attempts to resolve it and returns the hostname as a string (entries are separated using a semi-colon if multiple entries exist) on success or "null" on failure - the "response_type" field is ignored on these type of requests. For forward DNS lookups it takes a hostname and attempts to resolve it (it will follow CNAME records if they exist until it finds an IP address) - this may result in multiple IP addresses so is returned as an array of addresses on success or "null" on failure (the locally configured DNS search list isn't checked, so you will need to specify the domain part as well). By default it will use the system DNS servers, but it will respect the "Custom Name Servers" field in the "IP Calc" pane, but will ignore the "DNS Search List". The optional second parameter allows you to control what records are returned on forward DNS lookups and can be one of the following values:</p>
+
           <p><strong>response_type = 0 || null</strong><br />
           This, or the default if omitted, will return both AAAA and A records (AAAA before A) when performing a forward DNS lookup.</p>
 
           <p><strong>response_type = 1</strong><br />
-          This will return only A records and omit any AAAA records returned - this may result in a null response if no A records exist.</p>
+          This will return only A records and omit any AAAA records returned - this may result in a "null" response if no A records exist.</p>
 
           <p><strong>response_type = 2</strong><br />
-          This will return only AAAA records and omit any A records returned - this may result in a null response if no AAAA records exist.</p>
+          This will return only AAAA records and omit any A records returned - this may result in a "null" response if no AAAA records exist.</p>
 
-          <p>In addition to being able to lookup a single address, it also supports being passed a list of IP addresses to resolve, with an array being returned with the results - on failure a single null will be returned. This could be used in the following way to lookup all usable hosts within a subnet by combining it with the <code>iphosts()</code> function (with a result per line):</p>
+          <p>In addition to being able to lookup a single address, it also supports being passed a list of IP addresses to resolve, with an array being returned with the results - on failure a single "null" will be returned. This could be used in the following way to lookup all usable hosts within a subnet by combining it with the <code>iphosts()</code> function (with a result per line):</p>
 
           <pre><span class="script">&lt;?= nslookup(iphosts("192.0.2.0/28")).join("\n") ?&gt;</span></pre>
 
@@ -930,6 +963,39 @@ PEER_IP has a value of 192.0.2.70</pre>
 <span class="for">{{H}}</span> = <span class="script">&lt;?= nslookup("<span class="for">{{H}}</span>") ?&gt;</span>
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
+        </dd>
+        <dt><strong>curl ("url", ["basic_auth_string"], [ignore_ssl_cert], [timeout])</strong></dt>
+        <dd>
+          <p>This function can be used to download http/https based content using the HTTP GET method. The only mandatory argument is "url" which is the same as what you would enter into your web browser (e.g. "https://www.google.com"). It supports HTTP Basic Authentication and if required can be invoked by providing a Base64 encoded string in the format of "username:password" as the "basic_auth_string" argument. HTTP Cookies are also supported and will persist for subsequent requests to the same server. If a HTTPS URL has been provided then it will check to ensure a valid trusted SSL certificate is being presented - you can override this behaviour by passing a value of "true" to the "ignore_ssl_cert" argument which will permit self-signed certificates to be accepted and bypass other security checks (this isn't advisable or recommended, but is provided out of necessity). The "timeout" argument can be used to specify a connection timeout in milliseconds - the default timeout is 5000 ms (5 seconds). At the moment this function only supports direct connections - the use of a proxy server isn't supported.</p>
+
+          <p>On success this function will return the contents of the HTTP response as a string and on failure it will return one of following numerical error codes:</p>
+          
+          <p><strong>0</strong><br />
+          An error occurred when trying to connect - the error message will be printed to the "Console" tab.</p>
+
+          <p><strong>1</strong><br />
+          A timeout occurred when trying to connect - this might be temporary and if you try again it might succeed, if not then try increasing the "timeout" value. </p>
+
+          <p><strong>100 to 599</strong><br />
+          The web server responded with a HTTP response code that wasn't 200.</p>
+
+          <pre><span class="script">&lt;?
+  var r = curl("http://templatefx.org");
+  if (isNaN(r)) {
+    // r = HTTP CONTENT
+  }
+  else if (r === 0) {
+    // ERROR - SEE CONSOLE
+  }
+  else if (r === 1) {
+    // TIMEOUT
+  }
+  else {
+    // r = HTTP RESPONSE CODE
+  }
+?&gt;</span></pre>
+
+          <p>The above example demonstrates how you can check for success or failure when using this function. We use the <code>isNaN()</code> function to determine if we have a numerical or textual response - it assumes any numerical only response is some sort of error.</p>
         </dd>
         <dt><strong>passwd ([length], ["chars"])</strong></dt>
         <dd>
