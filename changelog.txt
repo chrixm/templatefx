@@ -1,5 +1,27 @@
 TemplateFx | Dynamic Templating Tool
-Copyright (c) 2011-2016 Chris Mason <chris@templatefx.org>
+Copyright (c) 2011-2017 Chris Mason <chris@templatefx.org>
+
+Version 2.57 - 31st December 2016
+	* MAY BREAK THINGS WARNING: I have had a spring clean to remove complicated/limited use stuff to make a few things simpler.
+	* Removed "Merge Rows" as it massively increases complexity for limited use cases - please email me if you actually use it.
+	* Replaced "templatefx.fields[]" with "templatefx.field()" - a much simpler function now "Merge Rows" is removed.
+	* Added support for "templatefx.first()" and "templatefx.last()" - neat functions which are explained in the docs.
+	* Added support for selecting multiple "Group By" fields and changed the UI to support this.
+	* Renamed snippet "_START_" to "~HEADER" and "_END_" to "~FOOTER".
+	* Re-Added support for JavaScript variable "globals[]" to store persistent data between rows.
+	* Removed "Optional Criteria" and replaced it with an advanced "~FILTER" special Snippet which also supports sorting.
+	* Added support for JavaScript variable "templatefx.data[][]" to access the raw data.
+	* When importing an exported DataTemplate it will now always treat it as a DataTemplate.
+	* Added support for a JavaScript "banner" function to output Unix style ASCII banners.
+	* Updated "network" JavaScript function to return mask if required.
+	* Expand Pane is now persistent across window resize events.
+	* Fixed an issue when importing a DataTemplate with empty Snippets.
+	* You can now load a text based exported DataTemplate on the command line and by using "Load DataTemplate".
+	* Removed the "/M" command line option as it had no valid use case.
+	* Renamed special Snippet "-PROMPT" to "~NOPROMPT" and included special Snippets in documentation.
+	* Added support for special Snippet "~GENONLOAD" which starts output generation as soon as the DataTemplate is loaded.
+	* The Windows binary will now look for a bundled JRE in "jre/" of the launch directory if it can't find one installed.
+	* Cosmetic updates to the splash screen - it now includes the version and is regenerated on build.
 
 Version 2.56 - 20th November 2016
 	* Under the hood improvements to the way Copy & Paste happens.
