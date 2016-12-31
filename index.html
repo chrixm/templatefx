@@ -38,7 +38,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.56 (Build 16325)<br />Released: 20th November 2016</h4>
+        <h4>Latest Version: 2.57 (Build 16366)<br />Released: 31st December 2017</h4>
       </div>
 
       <h4 class="heading">1. Introduction</h4>
@@ -61,7 +61,7 @@
 
       <p>You have the ability to right click on the various panes to allow you to copy and paste or perform other normal operations. As well as the "File" menu to load and save content, you also have the ability to drag and drop data files and template files into the respective panes.</p>
 
-      <p>The "Group By" drop down allows you to select one of your data fields to allow grouping of your output data. As an example, if you have configuration that needs to be applied to different interfaces on a series of routers, then you could use this to group by your router identifier, to allow you to group interfaces for the same router in the same output. There is also support for splitting an output into multiple outputs using advanced <code>GROUP</code> syntax that is explained in the "Grouping and Merging" section. The "Merge Rows" checkbox is slightly different and is used in conjunction with the "Group By" drop down and it allows you to merge rows together which are grouped together. Using the same example, you would only have a single row per router with all the interfaces merged together using a delimiter.</p>
+      <p>The "Group By" list allows you to select one or more of your data fields (using CTRL/&#8984; while clicking to select or deselect entries) to allow grouping of your output data. As an example, if you have configuration that needs to be applied to different interfaces on a series of routers, then you could use this to group by your router identifier and interface identifier, to allow you to group interfaces for the same router in the same output. There is also support for splitting an output into multiple outputs using advanced <code>GROUP</code> syntax that is explained in the "Grouping and Merging" section.</p>
 
       <h4 class="heading">2.1. Data Pane</h4>
 
@@ -78,9 +78,7 @@
       
       <h4 class="heading">2.2. Template Pane</h4>
 
-      <p>The template pane is where you enter the text of your template that will be used as the basis for your output. TemplateFx fields are defined through the use of double chevrons (e.g. <code>&lt;&lt;FIELD&gt;&gt;</code>) and once you define them within the template pane, they are added to the "Template Fields" list (fields are highlighted in red if they don't exist in the data pane).</p>
-
-      <p>When you click on the "Generate Output" button, the fields will be substituted for the values in the source data. In the "Generate Output" dialog you have the option of specifying a label for the output tab as well as some optional criteria which allows you to limit which entries within the data pane are processed. When limiting which entries are processed you can select rows where a field "contains (=~)", "does not contain (!~)", "equals (==)" or "does not equal (!=)" a certain string, with the "contains" and "does not contain" operands supporting a regular expression.</p>
+      <p>The template pane is where you enter the text of your template that will be used as the basis for your output. TemplateFx fields are defined through the use of double chevrons (e.g. <code>&lt;&lt;FIELD&gt;&gt;</code>) and once you define them within the template pane, they are added to the "Template Fields" list (fields are highlighted in red if they don't exist in the data pane). When you click on the "Generate Output" button, the fields will be substituted for the values in the source data. In the "Generate Output" dialog you have the option of specifying a label for the output tab.</p>
       
       <p>In the event that a template field hasn't been defined within the source data then you will get a warning message as well as it being highlighted in the output to allow you to easily identify it.</p>
 
@@ -161,15 +159,6 @@
         </tbody>
       </table>
 
-      <h4 class="heading">2.5. Command Line Options</h4>
-
-      <dl>
-        <dt><strong>/M</strong></dt>
-        <dd>
-          <p>This option minimises TemplateFx on start-up and doesn't steal the focus - this allows TemplateFx to load in the background without interrupting what the user is doing.</p>
-        </dd>
-      </dl>
-
       <h4 class="heading">3. DataTemplates</h4>
 
       <p>A DataTemplate is a proprietary file format which uses the file extension ".dt" and is used to store a template along with the source data. Instead of having to distribute the template and source data in separate files, you can save it as a DataTemplate, which combines them both together. Warning: The file format isn't text based and if you attempt to edit it outside of TemplateFx then you will screw up the checksum and it won't load.</p>
@@ -182,8 +171,7 @@
 DATA
 <strong>&lt;/templatefx:data&gt;</strong>
 
-<strong>&lt;templatefx:group_by = </strong>FIELD<strong> /&gt;</strong>
-<strong>&lt;templatefx:merge_rows = </strong>0 || 1<strong> /&gt;</strong>
+<strong>&lt;templatefx:group_by = </strong>FIELD_1[ || FIELD_2][ || ...]<strong> /&gt;</strong>
       
 <strong>&lt;templatefx:snippet = </strong>NAME_1<strong>&gt;</strong>
 SNIPPET 1
@@ -343,9 +331,19 @@ R = 5:A</pre>
  deny ip any any
 !</pre>
 
-      <p>The above <code>%{NAME}%</code> syntax tells TemplateFx to replace it with the contents of the snippet named "ACL-STANDARD". This directive is processed first before any substitutions have taken place which means any valid template syntax can be used within a snippet. The scope of snippets is within the DataTemplate and when the DataTemplate is saved or loaded then the snippets are included with it. There are two Snippets which have a special meaning ("_START_" and "_END_"), which can't be referenced within your template, but are automatically added to either the start or the end of your template.</p>
+      <p>The above <code>%{NAME}%</code> syntax tells TemplateFx to replace it with the contents of the snippet named "ACL-STANDARD". This directive is processed first before any substitutions have taken place which means any valid template syntax can be used within a snippet. The scope of snippets is within the DataTemplate and when the DataTemplate is saved or loaded then the snippets are included with it. There are two Snippets which have a special meaning (<code>~HEADER</code> and <code>~FOOTER</code>), which are automatically added to either the start or the end of your template - hopefully self-explanatory.</p>
 
-      <p>Snippets also support parsing of an optional parameter by specifying parenthesis after the snippet name (i.e. <code>%{NAME("&lt;string&gt;")}%</code>) when you reference it in your template, which can then be accessed in the snippet via the <code>{%}</code> markup. Any occurrences of <code>{%}</code> in the snippet will be replaced with "&lt;string&gt;" - this could be used to pass through a literal string which allows a different response to be produced depending on what is passed through. However, care should be taken when passing through special constructs (i.e. "&lt;?= ?&gt;") as they will be evaluated as part of the snippet body and thus need to be valid in the context they are being evaluated.</p>
+      <p>Snippets also support parsing of an optional parameter by specifying parenthesis after the snippet name (i.e. <code>%{NAME("&lt;string&gt;")}%</code>) when you reference it in your template, which can then be accessed in the snippet via the <code>{%}</code> markup. Any occurrences of <code>{%}</code> in the snippet will be replaced with "&lt;string&gt;" - this could be used to pass through a literal string which allows a different response to be produced depending on what is passed through. However, care should be taken when passing through special constructs (i.e. <code>&lt;?= ?&gt;</code>) as they will be evaluated as part of the snippet body and thus need to be valid in the context they are being evaluated.</p>
+
+      <p>The final use of snippets is a bit of a hack, but allows DataTemplate specific options to be defined and saved within the DataTemplate. The following "special" snippets are currently supported:</p>
+
+      <ul>
+        <li><code>~HEADER</code> - The contents of this snippet are automatically added to the start of your template on output generation.</li><br />
+        <li><code>~NOPROMPT</code> - If this snippet exists then TemplateFx won't prompt you when you click on "Generate" - it will assume the defaults and begin output generation.</li><br />
+        <li><code>~GENONLOAD</code> - If this snippet exists then it will automatically start output generation when the DataTemplate is loaded. A specific use case is using TemplateFx via another tool, which could generate a temporary file containing a DataTemplate export that was specified on the command line when starting TemplateFx - the output would then be automatically generated and presented to the user.</li><br />
+        <li><code>~FILTER</code> - This snippet is used to specify the filtering and sorting criteria that should be applied to the data before generation - see the section "Filtering and Sorting".</li><br />
+        <li><code>~FOOTER</code> - The contents of this snippet are automatically added to the end of your template on output generation.</li>
+      </ul>
 
       <h4 class="heading">4.3. Including External Files</h4>
 
@@ -397,12 +395,44 @@ R = 5:A</pre>
       <pre><span style="display: inline-block; width: 100%;" class="comment">#- Using a hyphen (-) after the comment symbol will highlight the entire row.</span>
 </pre>
 
+      <h4 class="heading">5. Filtering and Sorting</h4>
 
+      <p>TemplateFx provides the capability to filter and sort the data before an output is generated. To use this feature you need to create a snippet called <code>~FILTER</code> and fill it with your filtering and sorting criteria based on the following syntax (case insensitive comparison is performed):</p>
 
+      <pre>FIELD =~ REGEX    <span class="comment"># FIELD CONTAINS REGEX</span>
+FIELD !~ REGEX    <span class="comment"># FIELD DOESN'T CONTAIN REGEX</span>
+FIELD == [VALUE]  <span class="comment"># FIELD EQUALS VALUE</span>
+FIELD != [VALUE]  <span class="comment"># FIELD DOESN'T EQUAL VALUE</span></pre>
 
-      <h4 class="heading">5. Grouping and Merging</h4>
+      <p>Multiple criteria on different lines will be treated as "AND" and multiple criteria on the same line separated by commas will be treated as "OR". As well as filtering, it also supports the ability to sort the data using one or more fields:</p>
 
-      <p>There are three features which allow you to control how the outputs are generated: "Group By", "Merge Rows" and Advanced Dynamic Grouping. By default TemplateFx will generate a single output with each row's output one after another. To demonstrate the difference between these features, we are going to use the following data source as an example:</p>
+      <pre>SORT FIELD_1[ ASC| DESC][, FIELD_2[ ASC| DESC]][, ...]</pre>
+     
+      <p>By default it will sort the data in ascending order but allows you to specify "ASC" for ascending or "DESC" for descending at the end of every sort field. Multiple sort fields can be specified by adding them onto the same line separated by commas.</p>
+
+      <pre><span class="comment">A, B, C</span>
+1, 1, X
+Y, 3, Z
+2, 1,
+1, F, Y
+Z, A, W</pre>
+
+      <p>Using the above data as an example with the following <code>~FILTER</code> snippet:</p>
+
+      <pre>C != 
+A =~ [0-9], B =~ [A-Z]
+SORT A DESC, C</pre>
+
+      <p>The above is the equivalent of ("C" doesn't equal "") AND (("A" contains a number) OR ("B" contains a letter)) and then sort by "A" in descending order and then by "C" in ascending order, which results in the following data being used when generating outputs:</p>
+
+      <pre><span class="comment">A, B, C</span>
+Z, A, W
+1, 1, X
+1, F, Y</pre>
+
+      <h4 class="heading">6. Grouping</h4>
+
+      <p>There are two features which allow you to control how the outputs are generated: "Group By" and Advanced Dynamic Grouping. By default TemplateFx will generate a single output with each row's output one after another. To demonstrate the difference between these features, we are going to use the following data source as an example:</p>
       
       <pre><span class="comment">ROUTER, INTERFACE</span>
 UKPE-ABC-01, Gi0/1
@@ -430,106 +460,9 @@ interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>
 
       <p>The above example will result in two outputs for each unique device (six in total) - one for the "-A" device based on the ROUTER column (but dynamically converted to lowercase first) and one for the "-B" device, also derived from the "ROUTER" column. Anything outside of those <code>GROUP</code> sections will remain in the original output - the purpose of <code>GROUP</code> sections is to move output from the original output into a new output. TemplateFx doesn't support nested <code>GROUP</code> sections as they don't make a lot of sense.</p>
 
-      <p>The "Merge Rows" feature goes a lot further and actually combines rows together in your data source where the "Group By" field has the same value. Using the example above, TemplateFx would merge rows where the "ROUTER" field was the same, which would result in 3 rows within our data source (any optional criteria specified in the "Generate Output" dialogue is processed before merging). When the rows are merged, TemplateFx will pick a delimiter (from a pre-defined list, which includes "<code>|;:%$?^+-_</code>") to separate the different rows - the first delimiter which it doesn't find in your data source is used (the actual value is accessible using the <code>templatefx.delimiter</code> internal variable, which is set to "null" if "Merge Rows" is disabled). Based on the above example, the merged data source would look like this:</p>
-
-      <pre><span class="comment">ROUTER, INTERFACE</span>
-UKPE-ABC-01|UKPE-ABC-01|UKPE-ABC-01, Gi0/1|Gi0/2|Gi0/3
-UKPE-ABC-02|UKPE-ABC-02, Gi0/1|Gi0/2
-UKPE-ABC-03, Gi0/1</pre>
-
-      <p>If you were to use the <code>&lt;&lt;ROUTER&gt;&gt;</code> field in your template then you would end up with the value "UKPE-ABC-01|UKPE-ABC-01|UKPE-ABC-01" being substituted in your output. You have two options, you can either use JavaScript to split out the different values manually using <code>templatefx.delimiter</code>, or you can use a TemplateFx function to assist you. To support the "Merge Rows" feature, TemplateFx now supports the <code>templatefx.mrows</code> internal variable which tells you how many rows have been merged into the current row and the <code>&lt;&lt;ROUTER&gt;&gt;[n]</code> syntax, where "n" is the index to the merged row. This syntax is actually a shortcut function and will get substitued for JavaScript during pre-processing, which splits the data on the delimiter, places it into a temporary array and then returns the array element at position "n".</p>
-      
-      <p>However, there is a big difference between <code>&lt;&lt;ROUTER&gt;&gt;</code> and <code>&lt;&lt;ROUTER&gt;&gt;[n]</code>, with the first being substituted for a string literal and the second being substituted for a JavaScript function - this is an important difference when they are being used in the context of a script block:</p>
-
-      <pre><span class="comment"># In this context, &lt;&lt;FIELD&gt;&gt; must be contained within quotes as it will be substituted for a string literal.</span>
-<span class="script">&lt;?= ip("<span class="field">&lt;&lt;FIELD&gt;&gt;</span>", +1) ?&gt;</span>
-
-<span class="comment"># In this context, &lt;&lt;FIELD&gt;&gt;[n] must not be contained within quotes as it will be substituted for a function.</span>
-<span class="script">&lt;?= ip(<span class="field">&lt;&lt;FIELD&gt;&gt;[n]</span>, +1) ?&gt;</span>
-</pre>
-
-      <p>With the confusing bit out of the way, the following hopefully demonstrates how you can elevate your templates by using "Merge Rows" to provide looping within a single output. The following example generates an output per router, but it uses the different interfaces contained on different rows within the configuration of a single router (we are using <code>templatefx.mrows</code> to loop through the different merged rows):</p>
-
-      <pre><span class="comment">! @ </span><span class="field">&lt;&lt;ROUTER&gt;&gt;[0]</span>
-router isis
-<span class="for">&lt;FOR I = [0 TO <span class="script">&lt;?= templatefx.mrows - 1 ?&gt;</span>]&gt;</span>
- interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;[<span class="for">{{I}}</span>]</span>
-  bfd fast-detect ipv4
- !
-<span class="for">&lt;/FOR&gt;</span>
-!
-</pre>
-
-      <p>With "Merge Rows" enabled, this would result in the following output, with each interface being included in the same output:</p>
-
-      <pre><span class="comment">! @ UKPE-ABC-01</span>
-router isis
- interface Gi0/1
-  bfd fast-detect ipv4
- !
- interface Gi0/2
-  bfd fast-detect ipv4
- !
- interface Gi0/3
-  bfd fast-detect ipv4
- !
-!
-
-
-<span class="comment">! @ UKPE-ABC-02</span>
-router isis
- interface Gi0/1
-  bfd fast-detect ipv4
- !
- interface Gi0/2
-  bfd fast-detect ipv4
- !
-! 
-
-
-<span class="comment">! @ UKPE-ABC-03</span>
-router isis
- interface Gi0/1
-  bfd fast-detect ipv4
- !
-!</pre>
-
-      <p>It should be noted that even without "Merge Rows" enabled, <code>templatefx.mrows</code> would still return "1" and the syntax <code>&lt;&lt;FIELD&gt;&gt;[0]</code> is still valid and would return the same value as <code>&lt;&lt;FIELD&gt;&gt;</code>. This is useful as it allows you to turn off the merging without changing your template. If we were to disable "Merge Rows" using the same data and template from the example above, we would end up with the following output instead:</p>
-
-      <pre><span class="comment">! @ UKPE-ABC-01</span>
-router isis
- interface Gi0/1
-  bfd fast-detect ipv4
- !
-!
-
-<span class="comment">! @ UKPE-ABC-01</span>
-router isis
- interface Gi0/2
-  bfd fast-detect ipv4
- !
-!
-
-<span class="comment">! @ UKPE-ABC-01</span>
-router isis
- interface Gi0/3
-  bfd fast-detect ipv4
- !
-!
-
-
-<span class="comment">! @ UKPE-ABC-02</span>
-router isis
- interface Gi0/1
-  bfd fast-detect ipv4
- !
-!
-
-...</pre>
-
       <p>It should also be noted that neither of these features modify the order of the data source, the data is processed in the order provided - any sorting should be done before the data is entered into TemplateFx.</p>
 
-      <h4 class="heading">6. Scripting</h4>
+      <h4 class="heading">7. Scripting</h4>
 
       <p>For the more advanced users who want to do more than just simple substitution, TemplateFx has the ability to interpret dynamic templates which are written using JavaScript. This User Guide assumes you have a basic understanding of JavaScript, but if this isn't the case then the web (<a href="http://lmgtfy.com/?q=JavaScript" target="_blank">http://lmgtfy.com/?q=JavaScript</a>) has a large amount of information on it.</p>
 
@@ -694,11 +627,25 @@ interface Gi0/0/2
 
       <p><span class="label label-warning">WARNING</span>&nbsp;The JavaScript parser allows you to reference Java classes (e.g. <code>java.math.BigInteger</code>) from within JavaScript - this is called Live Connect. Although JavaScript doesn't permit access to the local file system, Java does and could allow a malicious user to send you a template that did naughty things - this is the same principal as someone sending you an Excel sheet with a malicious macro. You need to be aware of this and be cautious if you ever receive a template or DataTemplate from someone you don't know or trust.</p>
 
-      <h4 class="heading">6.1. Built-In JavaScript Variables</h4>
+      <h4 class="heading">7.1. Built-In JavaScript Variables</h4>
 
       <p>As well as the standard JavaScript syntax there is also a series of built-in variables that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
 
       <dl>
+        <dt><strong>globals[]</strong></dt>
+        <dd>
+          <p>This variable provides a mechanism to store persistent data across rows - it is an associative array with global scope, which you use by adding elements. The following example demonstrates how we can store the value of the field "XYZ" from the current row as <code>globals["xyz"]</code> so we can reference it when processing the next row.</p>
+<pre><span class="script">&lt;?
+  if (typeof globals["xyz"] !== "undefined") {
+    if ("<span class="field">&lt;&lt;XYZ&gt;&gt;</span>" !== globals["xyz"]) {
+      console.log("values are different");
+    }
+  }
+  globals["xyz"] = "<span class="field">&lt;&lt;XYZ&gt;&gt;</span>";
+?&gt;</span>
+</pre>
+          <p>First we make sure it is defined and then we compare the stored value to the value of the current row. If the values are different then we log a message to the console.</p>
+        </dd>
         <dt><strong>templatefx.version</strong></dt>
         <dd>
           <p>This variable returns the current TemplateFx version as a string (e.g. "2.38").</p>
@@ -720,9 +667,9 @@ interface Gi0/0/2
 <span class="comment">!-----</span>
 <span class="if">&lt;/IF&gt;</span>
 </pre>
-          <p><span class="label label-info">NOTE</span>&nbsp;This is only applicable for "Group By" groups and doesn't work with Advanced Dynamic Grouping where <code>GROUP</code> sections have been added to the template. In this scenario you could use the <code>counter()</code> function as follows:</p>
+          <p><span class="label label-info">NOTE</span>&nbsp;This is only applicable for "Group By" groups and doesn't work with Advanced Dynamic Grouping where <code>GROUP</code> sections have been added to the template. In this scenario you could use the <code>templatefx.first()</code> function (syntax further down) to determine whether this is the first occurrence of this "ROUTER" field:</p>
           <pre><span class="group">&lt;GROUP = "<span class="field">&lt;&lt;ROUTER&gt;&gt;</span>"&gt;</span>
-<span class="if">&lt;IF (<span class="script">counter ("<span class="field">&lt;&lt;ROUTER&gt;&gt;</span>") == 1</span>)&gt;</span>
+<span class="if">&lt;IF (<span class="script">templatefx.first("ROUTER")</span>)&gt;</span>
 <span class="comment">! @ </span><span class="field">&lt;&lt;ROUTER&gt;&gt;</span>
 <span class="if">&lt;/IF&gt;</span>
 DATA
@@ -732,7 +679,14 @@ DATA
         <dt><strong>templatefx.group_end</strong></dt>
         <dd>
           <p>This variable is the opposite of the <code>templatefx.group_start</code> where it will be set to true if the row is the last in the group. This allows you to add text to your template that would be included at the end of every output.</p>
-          <p><span class="label label-info">NOTE</span>&nbsp;This is only applicable for "Group By" groups and doesn't work with Advanced Dynamic Grouping where <code>GROUP</code> sections have been added to the template.</p>
+          <p><span class="label label-info">NOTE</span>&nbsp;This is only applicable for "Group By" groups and doesn't work with Advanced Dynamic Grouping where <code>GROUP</code> sections have been added to the template. In this scenario you could use the <code>templatefx.last()</code> function (syntax further down) to determine whether this is the last occurrence of these "ROUTER" and "INTERFACE" fields:</p>
+          <pre><span class="group">&lt;GROUP = "<span class="field">&lt;&lt;ROUTER&gt;&gt;</span>-<span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>"&gt;</span>
+<span class="if">&lt;IF (<span class="script">templatefx.last("ROUTER||INTERFACE")</span>)&gt;</span>
+<span class="comment">! ...</span>
+<span class="if">&lt;/IF&gt;</span>
+DATA
+<span class="group">&lt;/GROUP&gt;</span>
+</pre>
         </dd>
         <dt><strong>templatefx.row</strong></dt>
         <dd>
@@ -742,59 +696,34 @@ DATA
         <dd>
           <p>This variable returns the total amount of rows within the data set.</p>
         </dd>
-        <dt><strong>templatefx.mrows</strong></dt>
-        <dd>
-          <p>When using "Merge Rows", this variable returns the number of rows merged into the current row of the data set.</p>
-        </dd>
-        <dt><strong>templatefx.delimiter</strong></dt>
-        <dd>
-          <p>When using "Merge Rows", this variable returns the character which is used as the delimiter between merged rows.</p>
-        </dd>
         <dt><strong>templatefx.output</strong></dt>
         <dd>
           <p>This variable contains the output from the template as it is being generated - as the template is processed, the contents of this variable will dynamically change. If you check this variable at the end of your template then it will contain the finished output. This is useful if you want to validate anything in the output (i.e. search through the output and find all the IP addresses to check they all have a valid host entry in DNS). Please refrain from trying to update the output using this variable as bad things could happen - please see the <code>add_output_mutation()</code> function for changing the output post generation.</p>
         </dd>
-        <dt><strong>templatefx.fields["field"]([index])</strong></dt>
+        <dt><strong>templatefx.data[row][column]</strong></dt>
         <dd>
-          <p>This variable is a JavaScript array of functions and thus <b>must</b> be called with parenthesis at the end when accessing array members as they are functions - it provides an alternative (advanced) method of accessing the field values instead of using the <code>&lt;&lt;FIELD&gt;&gt;</code> syntax, however all "field" values <b>must</b> be passed as uppercase. This has been added for a specific use-case as there was no way to access a field value dynamically, the <code>&lt;&lt;FIELD&gt;&gt;</code> syntax doesn't support any variable or script section between the chevrons (i.e. <code>&lt;&lt;{{F}}&gt;&gt;</code>). To demonstrate this, the below example loops through all the fields in the header row and queries the specific field values of the row you are processing by dynamically passing the field name using the FOR looping variable <code>{{F}}</code>.</p>
+          <p>This variable is a multi-dimensional array of the actual data with the headers in row "0". This allows you to access the raw data from whatever row you are currently processing.</p>
+        </dd>
+        <dt><strong>templatefx.first("field_1[ || field_2]")</strong></dt>
+        <dd>
+          <p>This variable is actually a JavaScript function and has a similar purpose to <code>templatefx.group_start</code>. It allows you to determine if this is the first time you have seen this particular field value. It will return true if this row of data is the first time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the first time you have seen this specific combination of values together.</p>
+        </dd>
+        <dt><strong>templatefx.last("field_1[ || field_2]")</strong></dt>
+        <dd>
+          <p>This variable is actually a JavaScript function and has a similar purpose to <code>templatefx.group_end</code>. It allows you to determine if this is the last time you will see this particular field value. It will return true if this row of data is the last time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the last time you have seen this specific combination of values together.</p>
+        </dd>
+        <dt><strong>templatefx.field("field")</strong></dt>
+        <dd>
+          <p>This function provides an alternative method of accessing the field values (the "field" variable is case insensitive) instead of using the <code>&lt;&lt;FIELD&gt;&gt;</code> syntax. This has been added for a specific use-case as there was no way to access a field value dynamically, the <code>&lt;&lt;FIELD&gt;&gt;</code> syntax doesn't support any variable or script section between the chevrons (i.e. <code>&lt;&lt;{{F}}&gt;&gt;</code>). By using this function the following is now possible:</p>
 
-          <pre><span class="for">&lt;FOR F = [<span class="script">&lt;?= Object.keys(templatefx.fields) ?&gt;</span>]&gt;</span>
-<span class="for">{{F}}</span> has a value of <span class="script">&lt;?= templatefx.fields["<span class="for">{{F}}</span>"]() ?&gt;</span> - equivalent of <span class="field">&lt;&lt;{{F}}&gt;&gt;</span> which isn't supported.
-<span class="for">&lt;/FOR&gt;</span>
-</pre>
-          <p>The <code>templatefx.fields</code> variable is commonly referred to as an associative array (sometimes referred to as a Hash or Map in other languages) - it allows you to access array values via the syntax <code>value = array["key"]()</code> - the parenthesis are required as each value is actually a function in this instance. An associative array is an Object with "keys" (the field names) and "values" (the field values - or functions in this case) so we have to use <code>Object.keys()</code> to loop through the keys of the array.</p>
-
-          <p>To help in explaining this, the following data source will be used as an example:</p>
-
-          <pre><span class="comment">ROUTER, LOCATION, INTERFACE, PEER_IP</span>
-PEXAY1A, PROD, Te0/7/0/1, 192.0.2.66
-PEXAY1B, PROD, Te0/7/0/1, 192.0.2.70</pre>
-
-          <p>By combining the above data source and template together it would result in the following output, which has an entry per header field per row:</p>
-
-          <pre>ROUTER has a value of PEXAY1A
-LOCATION has a value of PROD
-INTERFACE has a value of Te0/7/0/1
-PEER_IP has a value of 192.0.2.66
-
-ROUTER has a value of PEXAY1B
-LOCATION has a value of PROD
-INTERFACE has a value of Te0/7/0/1
-PEER_IP has a value of 192.0.2.70</pre>
-          
-          <p>The other thing worth mentioning is how this method can be used in combination with "Merge Rows" - where multiple rows are combined into a single row and values are separated by a delimiter. In the same way that the <code>&lt;&lt;FIELD&gt;&gt;[x]</code> shortcut syntax can be used to access an individual merged value, we can do the same with <code>templatefx.fields</code> as demonstrated below.</p>
-
-<pre><span class="for">&lt;FOR F = [<span class="script">&lt;?= Object.keys(templatefx.fields) ?&gt;</span>]&gt;</span>
-<span class="for">{{F}}</span> has the following values:
-  <span class="for">&lt;FOR I = [0 TO <span class="script">&lt;?= templatefx.mrows - 1 ?&gt;</span>]&gt;</span>
-<span class="script">&lt;?= templatefx.fields["<span class="for">{{F}}</span>"](<span class="for">{{I}}</span>) ?&gt;</span> - equivalent of <span class="field">&lt;&lt;{{F}}&gt;&gt;[<span class="for">{{I}}</span>]</span> which isn't supported.
-  <span class="for">&lt;/FOR&gt;</span>
+          <pre><span class="for">&lt;FOR F = ["ROUTER", "INTERFACE", "STATE"]&gt;</span>
+<span class="for">{{F}}</span> has a value of <span class="script">&lt;?= templatefx.field("<span class="for">{{F}}</span>") ?&gt;</span> - equivalent of <span class="field">&lt;&lt;{{F}}&gt;&gt;</span> which isn't supported.
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
         </dd>
       </dl>
 
-      <h4 class="heading">6.2. Built-In JavaScript Functions</h4>
+      <h4 class="heading">7.2. Built-In JavaScript Functions</h4>
 
       <p>In addition to the built-in variables, there is also a series of built-in functions that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
 
@@ -882,11 +811,11 @@ PEER_IP has a value of 192.0.2.70</pre>
 </pre>
         </dd>
         <dt>
-          <strong>network ("cidr")</strong>
+          <strong>network ("cidr", [return_mask])</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
         </dt>
         <dd>
-          <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the network address. The function will return "null" if an error occurs, an invalid parameter is detected. In the above example it will return the string "192.0.2.0" for IPv4 and "2001:db8:0:0:0:0:0:0" for IPv6.</p>
+          <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the network address. The function will return "null" if an error occurs, an invalid parameter is detected. In the above example it will return the string "192.0.2.0" for IPv4 and "2001:db8:0:0:0:0:0:0" for IPv6. By default it doesn't return the CIDR mask, but there is an optional parameter "return_mask", which if set to "true" will return it using CIDR notation.</p>
         </dd>
         <dt>
           <strong>ipfirst ("cidr")</strong>
@@ -1007,6 +936,23 @@ PEER_IP has a value of 192.0.2.70</pre>
         <dd>
           <p>This function encodes (or decodes) a "string" using "rot13". Not to be confused with any sort of encryption as it is a very basic substitution cipher which can be easily reversed. It could be used to encode strings to stop the casual passer-by from gleaning passwords from looking at your screen, if you feel it necessary to hard code them into your templates.</span>
         </dd>
+        <dt><strong>banner ("text", ["pre_char"], ["fill_char"], ["charset"], ["post_char"])</strong></dt>
+        <dd>
+          <p>This function generates an ASCII banner with the provided "text" - this mimics the Unix "banner" utility which is found in some distributions. It currently supports two character sets: "regular" and "small" with "regular" being the default which provides 7x7 upper case characters and 6x6 lower case characters. The "small" character set provides a subset (<code>A-Z</code>, <code>0-9</code> and <code>-+.</code>) of characters in a slightly smaller 5x5 form factor.</p>
+
+          <p>The "pre_char" argument is optional and allows you to specify a start of line character. In the same sense the "post_char" argument is also optional and allows you to specify an end of line character - both options can be specified as an empty string or null to use the default (nothing). The "fill_char" argument is also optional and will default to "#", but any character can be specified (even Unicode as per the example below). The "charset" argument allows you to switch between the two character sets. The following example demonstrates a banner using the text "TemplateFx" using the "FULL BLOCK (2588 in Hex)" UTF-8 character:</p>
+
+          <pre><span class="script">&lt;?= banner("TemplateFx", null, "\u2588", "small") ?&gt;</span></pre>
+
+          <p>The above syntax will be translated into the following banner in your output:</p>
+
+          <pre>&#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;  &#9608;&#9608;&#9608;&#9608;   &#9608;       &#9608;&#9608;&#9608;   &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;
+  &#9608;    &#9608;      &#9608;&#9608; &#9608;&#9608;  &#9608;   &#9608;  &#9608;      &#9608;   &#9608;    &#9608;    &#9608;      &#9608;       &#9608; &#9608;
+  &#9608;    &#9608;&#9608;&#9608;    &#9608; &#9608; &#9608;  &#9608;&#9608;&#9608;&#9608;   &#9608;      &#9608;&#9608;&#9608;&#9608;&#9608;    &#9608;    &#9608;&#9608;&#9608;    &#9608;&#9608;&#9608;      &#9608;
+  &#9608;    &#9608;      &#9608;   &#9608;  &#9608;      &#9608;      &#9608;   &#9608;    &#9608;    &#9608;      &#9608;       &#9608; &#9608;
+  &#9608;    &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;  &#9608;      &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;    &#9608;    &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;      &#9608;   &#9608;</pre>
+        </dd>
+
         <dt><strong>timestamp (["format"])</strong></dt>
         <dd>
           <p>This function generates a timestamp based on the current date and time, either based on a provided format (using the same format as Java's <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class) or using a default pattern if omitted.</p>
@@ -1036,13 +982,13 @@ PEER_IP has a value of 192.0.2.70</pre>
         </dd>
       </dl>
 
-      <h4 class="heading">6.3. External JavaScript Libraries</h4>
+      <h4 class="heading">7.3. External JavaScript Libraries</h4>
 
-      <p>In addition to the built-in JavaScript variables and functions, TemplateFx also includes version 3.10.1 of the "<a href="https://lodash.com/" target="_blank">lodash.js</a>" JavaScript library. This library is similar to "Underscore.js" and is a utility library delivering extra JavaScript functions for common tasks (using the "_" object) - full details on syntax and usage can be found in their <a href="https://github.com/lodash/lodash/blob/3.10.1/doc/README.md" target="_blank">API Documentation</a> - the example below shows the version of the library that has been included is as stated above.</p>
+      <p>In addition to the built-in JavaScript variables and functions, TemplateFx also includes version 3.10.1 of the "<a href="https://lodash.com/" target="_blank">lodash.js</a>" JavaScript library - not enabled by default. This library is similar to "Underscore.js" and is a utility library delivering extra JavaScript functions for common tasks (using the "_" object) - full details on syntax and usage can be found in their <a href="https://github.com/lodash/lodash/blob/3.10.1/doc/README.md" target="_blank">API Documentation</a> - the example below shows the version of the library that has been included is as stated above.</p>
 
 <pre><span class="script">&lt;?= _.VERSION ?&gt;</span></pre>
       
-      <p>In addition to including this library in TemplateFx, I have also added support for globally including other JavaScript libraries (and also disabling "lodash.js" if you wish). You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. If you have issues including some JavaScript libraries, I recommended you try with the latest version of the Java Runtime Environment - the JavaScript processing was greatly improved from Java 8 onwards with the Nashorn JavaScript Engine. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
+      <p>In addition to including this library in TemplateFx, I have also added support for globally including other JavaScript libraries. You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. If you have issues including some JavaScript libraries, I recommended you try with the latest version of the Java Runtime Environment - the JavaScript processing was greatly improved from Java 8 onwards with the Nashorn JavaScript Engine. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
 
       <br />
     </div>
