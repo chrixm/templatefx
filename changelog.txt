@@ -1,6 +1,12 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2017 Chris Mason <chris@templatefx.org>
 
+Version 2.58 - 20th January 2017
+	* Added support for a "/DoI" command line argument to delete the imported DataTemplate - useful for automation with temporary files.
+	* Fixed a bug where it was taking ages in some cases to show the menu on right click.
+	* Added support for positioning different group blocks in a different order in the output.
+	* Added support for filtering output groups using ~FILTER to only show certain outputs.
+
 Version 2.57 - 31st December 2016
 	* MAY BREAK THINGS WARNING: I have had a spring clean to remove complicated/limited use stuff to make a few things simpler.
 	* Removed "Merge Rows" as it massively increases complexity for limited use cases - please email me if you actually use it.
