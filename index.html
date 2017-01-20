@@ -38,7 +38,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.57 (Build 16366)<br />Released: 31st December 2016</h4>
+        <h4>Latest Version: 2.58 (Build 17020)<br />Released: 20th January 2017</h4>
       </div>
 
       <h4 class="heading">1. Introduction</h4>
@@ -159,6 +159,15 @@
         </tbody>
       </table>
 
+      <h4 class="heading">2.5. Command Line Options</h4>
+
+      <dl>
+        <dt><strong>/DoI</strong></dt>
+        <dd>
+          <p>If you have passed TemplateFx an exported DataTemplate as well as this parameter then TemplateFx will treat the file as a temporary file and delete it once it has been loaded (DoI = Delete on Import). This is useful in scenarios where another tool is generating a DataTemplate in a textual format using a temporary file and is then launching TemplateFx in an automated way - this parameter allows TemplateFx to clean up the temporary file once it has been loaded.</>
+        </dd>
+      </dl>
+      
       <h4 class="heading">3. DataTemplates</h4>
 
       <p>A DataTemplate is a proprietary file format which uses the file extension ".dt" and is used to store a template along with the source data. Instead of having to distribute the template and source data in separate files, you can save it as a DataTemplate, which combines them both together. Warning: The file format isn't text based and if you attempt to edit it outside of TemplateFx then you will screw up the checksum and it won't load.</p>
@@ -430,6 +439,8 @@ Z, A, W
 1, 1, X
 1, F, Y</pre>
 
+      <p>It also supports the ability to filter which output groups are shown by using a special "~GROUP" field in the same way - however, you can't mix the "~GROUP" syntax with normal header fields in the same "OR" clause.</p>
+            
       <h4 class="heading">6. Grouping</h4>
 
       <p>There are two features which allow you to control how the outputs are generated: "Group By" and Advanced Dynamic Grouping. By default TemplateFx will generate a single output with each row's output one after another. To demonstrate the difference between these features, we are going to use the following data source as an example:</p>
@@ -460,7 +471,43 @@ interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>
 
       <p>The above example will result in two outputs for each unique device (six in total) - one for the "-A" device based on the ROUTER column (but dynamically converted to lowercase first) and one for the "-B" device, also derived from the "ROUTER" column. Anything outside of those <code>GROUP</code> sections will remain in the original output - the purpose of <code>GROUP</code> sections is to move output from the original output into a new output. TemplateFx doesn't support nested <code>GROUP</code> sections as they don't make a lot of sense.</p>
 
-      <p>It should also be noted that neither of these features modify the order of the data source, the data is processed in the order provided - any sorting should be done before the data is entered into TemplateFx.</p>
+      <p>It also supports the ability to change the position of where certain <code>GROUP</code> sections appear in the output by specifying an optional number to determine the order - if we take the following as an example:</p>
+
+      <pre><span class="group">&lt;GROUP = OUTPUT&gt;</span>
+FIRST
+<span class="group">&lt;/GROUP&gt;</span>
+      
+<span class="group">&lt;GROUP = OUTPUT&gt;</span>
+SECOND
+<span class="group">&lt;/GROUP&gt;</span></pre>
+
+      <p>If you have multiple rows (e.g. 3) of data then you will end up with the following output:
+
+      <pre>FIRST
+SECOND
+FIRST
+SECOND
+FIRST
+SECOND</pre>
+
+      <p>However, if you use the following instead and specify an order (any positive number starting from 0) for the specific <code>GROUP</code> section - then it will order the sections based on the numbers in ascending order (any <code>GROUP</code> section without a number will assume "0" - which means it will be output first):</p>
+
+      <pre><span class="group">&lt;GROUP = OUTPUT&gt;[<span class="field">0</span>]</span>
+FIRST
+<span class="group">&lt;/GROUP&gt;</span>
+      
+<span class="group">&lt;GROUP = OUTPUT&gt;[<span class="field">1</span>]</span>
+SECOND
+<span class="group">&lt;/GROUP&gt;</span></pre>
+
+      <p>This will result in the following output:</p>
+
+      <pre>FIRST
+FIRST
+FIRST
+SECOND
+SECOND
+SECOND</pre>
 
       <h4 class="heading">7. Scripting</h4>
 
