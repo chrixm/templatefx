@@ -10,7 +10,7 @@ Version 2.58 - 20th January 2017
 Version 2.57 - 31st December 2016
 	* MAY BREAK THINGS WARNING: I have had a spring clean to remove complicated/limited use stuff to make a few things simpler.
 	* Removed "Merge Rows" as it massively increases complexity for limited use cases - please email me if you actually use it.
-	* Replaced "templatefx.fields[]" with "templatefx.field()" - a much simpler function now "Merge Rows" is removed.
+	* Replaced "templatefx.fields[]()" with "templatefx.field()" - a much simpler function now "Merge Rows" is removed.
 	* Added support for "templatefx.first()" and "templatefx.last()" - neat functions which are explained in the docs.
 	* Added support for selecting multiple "Group By" fields and changed the UI to support this.
 	* Renamed snippet "_START_" to "~HEADER" and "_END_" to "~FOOTER".
