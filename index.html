@@ -38,7 +38,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.58 (Build 17020)<br />Released: 20th January 2017</h4>
+        <h4>Latest Version: 2.59 (Build 17050)<br />Released: 19th February 2017</h4>
       </div>
 
       <h4 class="heading">1. Introduction</h4>
@@ -162,7 +162,7 @@
       <h4 class="heading">2.5. Command Line Options</h4>
 
       <dl>
-        <dt><strong>/DoI</strong></dt>
+        <dt><strong>-DoI</strong></dt>
         <dd>
           <p>If you have passed TemplateFx an exported DataTemplate as well as this parameter then TemplateFx will treat the file as a temporary file and delete it once it has been loaded (DoI = Delete on Import). This is useful in scenarios where another tool is generating a DataTemplate in a textual format using a temporary file and is then launching TemplateFx in an automated way - this parameter allows TemplateFx to clean up the temporary file once it has been loaded.</>
         </dd>
@@ -672,7 +672,7 @@ interface Gi0/0/2
         </dd>
       </dl>
 
-      <p><span class="label label-warning">WARNING</span>&nbsp;The JavaScript parser allows you to reference Java classes (e.g. <code>java.math.BigInteger</code>) from within JavaScript - this is called Live Connect. Although JavaScript doesn't permit access to the local file system, Java does and could allow a malicious user to send you a template that did naughty things - this is the same principal as someone sending you an Excel sheet with a malicious macro. You need to be aware of this and be cautious if you ever receive a template or DataTemplate from someone you don't know or trust.</p>
+      <p><span class="label label-warning">WARNING</span>&nbsp;The JavaScript parser allows you to reference Java classes (e.g. <code>java.math.BigInteger</code>) from within JavaScript - this is called Live Connect. Although JavaScript doesn't permit access to the local file system, Java does and could allow a malicious user to send you a template that did naughty things - this is the same principal as someone sending you an Excel sheet with a malicious macro. To protect you from this, the Java SecurityManager is now enabled to stop any access to local resources by scripts. However, you should always be cautious if you ever receive a template or DataTemplate from someone you don't know or trust.</p>
 
       <h4 class="heading">7.1. Built-In JavaScript Variables</h4>
 
@@ -751,13 +751,13 @@ DATA
         <dd>
           <p>This variable is a multi-dimensional array of the actual data with the headers in row "0". This allows you to access the raw data from whatever row you are currently processing.</p>
         </dd>
-        <dt><strong>templatefx.first("field_1[ || field_2]")</strong></dt>
+        <dt><strong>templatefx.first(["field_1[ || field_2]"])</strong></dt>
         <dd>
-          <p>This variable is actually a JavaScript function and has a similar purpose to <code>templatefx.group_start</code>. It allows you to determine if this is the first time you have seen this particular field value. It will return true if this row of data is the first time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the first time you have seen this specific combination of values together.</p>
+          <p>This variable is actually a JavaScript function and has a similar purpose to <code>templatefx.group_start</code>. It allows you to determine if this is the first time you have seen this particular field value. It will return true if this row of data is the first time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the first time you have seen this specific combination of values together. If you omit the "field" variable then it will return true for the first row of data.</p>
         </dd>
-        <dt><strong>templatefx.last("field_1[ || field_2]")</strong></dt>
+        <dt><strong>templatefx.last(["field_1[ || field_2]"])</strong></dt>
         <dd>
-          <p>This variable is actually a JavaScript function and has a similar purpose to <code>templatefx.group_end</code>. It allows you to determine if this is the last time you will see this particular field value. It will return true if this row of data is the last time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the last time you have seen this specific combination of values together.</p>
+          <p>This variable is actually a JavaScript function and has a similar purpose to <code>templatefx.group_end</code>. It allows you to determine if this is the last time you will see this particular field value. It will return true if this row of data is the last time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the last time you have seen this specific combination of values together. if you omit the "field" variable then it will return true for the last row of data.</p>
         </dd>
         <dt><strong>templatefx.field("field")</strong></dt>
         <dd>
