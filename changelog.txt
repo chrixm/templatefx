@@ -1,6 +1,17 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2017 Chris Mason <chris@templatefx.org>
 
+Version 2.59 - 19th February 2017
+	* Enabled the Java SecurityManager to protect users against malicious JavaScript blocks.
+	* Major changes to start to modulise the codebase - lots and lots of changes to code paths.
+	* Fixed a bug that stopped people being able to paste data from Excel into TemplateFx on MacOS.
+	* Added the ability to comment out lines within ~FILTER snippets using "#".
+	* Added syntax highlighting to the snippets pane for commented out lines using "#".
+	* ~FILTER snippet is automatically selected on load and import if it exists.
+	* Updated "templatefx.first()" and "templatefx.last()" to work with first and last rows.
+	* Updated JavaScript functions so they don't use Reflection.
+	* Changed command line argument "/DoI" to "-DoI".
+	
 Version 2.58 - 20th January 2017
 	* Added support for a "/DoI" command line argument to delete the imported DataTemplate - useful for automation with temporary files.
 	* Fixed a bug where it was taking ages in some cases to show the menu on right click.
