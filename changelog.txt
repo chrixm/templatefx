@@ -1,6 +1,16 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2017 Chris Mason <chris@templatefx.org>
 
+Version 2.60 - 11th April 2017
+	* Added support for JavaScript function "templatefx.fields()" to return all row values for a specific field with optional filter.
+	* Added support for JavaScript function "pad()" to provide left, right or middle alignment of text.
+	* The JavaScript IP manipulation functions now use the same codepath for both IPv4 and IPv6 - just use different bit lengths.
+	* The IPv6 JavaScript functions now accept a full subnet mask as well as CIDR representation.
+	* Fixed an issue which caused a security violation if the current directory didn't match the working directory.
+	* Deprecated "templatefx.group_start" in favour of "templatefx.first()".
+	* Deprecated "templatefx.group_end" in favour of "templatefx.last()".
+	* Removed the bundled "lodash.js" JavaScript library from the distribution - can still be manually included by downloading.
+
 Version 2.59 - 19th February 2017
 	* Enabled the Java SecurityManager to protect users against malicious JavaScript blocks.
 	* Major changes to start to modulise the codebase - lots and lots of changes to code paths.
