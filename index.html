@@ -38,7 +38,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.59 (Build 17050)<br />Released: 19th February 2017</h4>
+        <h4>Latest Version: 2.60 (Build 17101)<br />Released: 11th April 2017</h4>
       </div>
 
       <h4 class="heading">1. Introduction</h4>
@@ -708,6 +708,7 @@ interface Gi0/0/2
         </dd>
         <dt><strong>templatefx.group_start</strong></dt>
         <dd>
+          <p><span class="label label-warning">DEPRECATED</span>&nbsp;Use <code>templatefx.first()</code></p>
           <p>This variable will be set to true if the row is the first in the group. This allows you to add text to your template that would be included at the beginning of every output. An example is included below:</p>
           <pre><span class="if">&lt;IF (<span class="script">templatefx.group_start</span>)&gt;</span>
 <span class="comment">!-----</span>
@@ -726,6 +727,7 @@ DATA
         </dd>
         <dt><strong>templatefx.group_end</strong></dt>
         <dd>
+          <p><span class="label label-warning">DEPRECATED</span>&nbsp;Use <code>templatefx.last()</code></p>
           <p>This variable is the opposite of the <code>templatefx.group_start</code> where it will be set to true if the row is the last in the group. This allows you to add text to your template that would be included at the end of every output.</p>
           <p><span class="label label-info">NOTE</span>&nbsp;This is only applicable for "Group By" groups and doesn't work with Advanced Dynamic Grouping where <code>GROUP</code> sections have been added to the template. In this scenario you could use the <code>templatefx.last()</code> function (syntax further down) to determine whether this is the last occurrence of these "ROUTER" and "INTERFACE" fields:</p>
           <pre><span class="group">&lt;GROUP = "<span class="field">&lt;&lt;ROUTER&gt;&gt;</span>-<span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>"&gt;</span>
@@ -752,15 +754,15 @@ DATA
         <dd>
           <p>This variable is a multi-dimensional array of the actual data with the headers in row "0". This allows you to access the raw data from whatever row you are currently processing.</p>
         </dd>
-        <dt><strong>templatefx.first(["field_1[ || field_2]"])</strong></dt>
+        <dt><strong>templatefx.first (["field_1[ || field_2]"])</strong></dt>
         <dd>
           <p>This variable is actually a JavaScript function and has a similar purpose to <code>templatefx.group_start</code>. It allows you to determine if this is the first time you have seen this particular field value. It will return true if this row of data is the first time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the first time you have seen this specific combination of values together. If you omit the "field" variable then it will return true for the first row of data.</p>
         </dd>
-        <dt><strong>templatefx.last(["field_1[ || field_2]"])</strong></dt>
+        <dt><strong>templatefx.last (["field_1[ || field_2]"])</strong></dt>
         <dd>
           <p>This variable is actually a JavaScript function and has a similar purpose to <code>templatefx.group_end</code>. It allows you to determine if this is the last time you will see this particular field value. It will return true if this row of data is the last time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the last time you have seen this specific combination of values together. if you omit the "field" variable then it will return true for the last row of data.</p>
         </dd>
-        <dt><strong>templatefx.field("field")</strong></dt>
+        <dt><strong>templatefx.field ("field")</strong></dt>
         <dd>
           <p>This function provides an alternative method of accessing the field values (the "field" variable is case insensitive) instead of using the <code>&lt;&lt;FIELD&gt;&gt;</code> syntax. This has been added for a specific use-case as there was no way to access a field value dynamically, the <code>&lt;&lt;FIELD&gt;&gt;</code> syntax doesn't support any variable or script section between the chevrons (i.e. <code>&lt;&lt;{{F}}&gt;&gt;</code>). By using this function the following is now possible:</p>
 
@@ -769,6 +771,35 @@ DATA
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
         </dd>
+        <dt><strong>templatefx.fields ("field", [{ "field_1": /regex/, "field_2": /regex/ }], [return_unique])</strong></dt>
+        <dd>
+          <p>This function returns an array of all row values for a specific field - selected using the first parameter (all field names are treated as case-insensitive). There are a couple of optional arguments which allows the field values to be filtered as well as definining whether the returned array only contains unique values. At face value, this function looks quite complicated, but hopefully the following example will help explain:</p>
+
+          <pre><span class="comment">NAME, AGE, COUNTRY</span>
+CHRIS, 65, GERMANY
+PAUL, 32, FRANCE
+EMMA, 32, ENGLAND
+SIMON, 18, GERMANY
+DORRIS, 32, ESTONIA</pre>
+
+          <p>What follows are some examples using the above data - where an argument is passed as "null", it means use the default (i.e. don't filter and don't remove duplicate values).</p>
+
+          <pre><span class="comment"># This will return an array of the following values: [CHRIS, PAUL, EMMA, SIMON, DORRIS]</span>
+<span class="comment">#  Every "NAME" row value.</span>
+<span class="script">&lt;?= templatefx.fields("NAME") ?&gt;</span>
+          
+<span class="comment"># This will return an array of the following values: [GERMANY, FRANCE, ENGLAND, ESTONIA]</span>
+<span class="comment">#  Every unique "COUNTRY" row value.</span>
+<span class="script">&lt;?= templatefx.fields("COUNTRY", null, true) ?&gt;</span>         
+
+<span class="comment"># This will return an array of the following values: [CHRIS, SIMON]</span>
+<span class="comment">#  Every "NAME" who has a "COUNTRY" that matches regex /^GERMANY$/.</span>
+<span class="script">&lt;?= templatefx.fields("NAME", { "COUNTRY": /^GERMANY$/ }) ?&gt;</span>         
+
+<span class="comment"># This will return an array of the following values: [EMMA, DORRIS]</span>
+<span class="comment">#  Every "NAME" who has a "COUNTRY" that matches regex /^e/i and an "AGE" that matches regex /^32$/.</span>
+<span class="script">&lt;?= templatefx.fields("NAME", { "COUNTRY": /^e/i, "AGE": /^32$/ }) ?&gt;</span></pre>
+        </dd>        
       </dl>
 
       <h4 class="heading">7.2. Built-In JavaScript Functions</h4>
@@ -980,27 +1011,19 @@ DATA
 <pre><span class="comment"># Generate a random 12 character password using the provided characters</span>
 <span class="script">&lt;?= passwd(12, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZZ") ?&gt;</span></pre>
         </dd>
-        <dt><strong>rot13 ("string")</strong></dt>
+        <dt><strong>pad ("string", length, [align])</strong></dt>
         <dd>
-          <p>This function encodes (or decodes) a "string" using "rot13". Not to be confused with any sort of encryption as it is a very basic substitution cipher which can be easily reversed. It could be used to encode strings to stop the casual passer-by from gleaning passwords from looking at your screen, if you feel it necessary to hard code them into your templates.</span>
-        </dd>
-        <dt><strong>banner ("text", ["pre_char"], ["fill_char"], ["charset"], ["post_char"])</strong></dt>
-        <dd>
-          <p>This function generates an ASCII banner with the provided "text" - this mimics the Unix "banner" utility which is found in some distributions. It currently supports two character sets: "regular" and "small" with "regular" being the default which provides 7x7 upper case characters and 6x6 lower case characters. The "small" character set provides a subset (<code>A-Z</code>, <code>0-9</code> and <code>-+.</code>) of characters in a slightly smaller 5x5 form factor.</p>
+          <p>This function provides left, right or centre alignment of text using padding. If the length of the "string" is less than the provided length, then the "string" will be padded using space. By default, the "string" is padded with space on the right (left alignment), which can be changed using the optional third parameter with one of the following values:</p>
 
-          <p>The "pre_char" argument is optional and allows you to specify a start of line character. In the same sense the "post_char" argument is also optional and allows you to specify an end of line character - both options can be specified as an empty string or null to use the default (nothing). The "fill_char" argument is also optional and will default to "#", but any character can be specified (even Unicode as per the example below). The "charset" argument allows you to switch between the two character sets. The following example demonstrates a banner using the text "TemplateFx" using the "FULL BLOCK (2588 in Hex)" UTF-8 character:</p>
+          <p><strong>align = 0 || null</strong><br />
+          This, or the default if omitted, will output the "string" with padding at the end of the text (left alignment).</p>
 
-          <pre><span class="script">&lt;?= banner("TemplateFx", null, "\u2588", "small") ?&gt;</span></pre>
+          <p><strong>align = 1</strong><br />
+          This will output the "string" with padding at the beginning of the text (right alignment).</p>
 
-          <p>The above syntax will be translated into the following banner in your output:</p>
-
-          <pre>&#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;  &#9608;&#9608;&#9608;&#9608;   &#9608;       &#9608;&#9608;&#9608;   &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;
-  &#9608;    &#9608;      &#9608;&#9608; &#9608;&#9608;  &#9608;   &#9608;  &#9608;      &#9608;   &#9608;    &#9608;    &#9608;      &#9608;       &#9608; &#9608;
-  &#9608;    &#9608;&#9608;&#9608;    &#9608; &#9608; &#9608;  &#9608;&#9608;&#9608;&#9608;   &#9608;      &#9608;&#9608;&#9608;&#9608;&#9608;    &#9608;    &#9608;&#9608;&#9608;    &#9608;&#9608;&#9608;      &#9608;
-  &#9608;    &#9608;      &#9608;   &#9608;  &#9608;      &#9608;      &#9608;   &#9608;    &#9608;    &#9608;      &#9608;       &#9608; &#9608;
-  &#9608;    &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;  &#9608;      &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;    &#9608;    &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;      &#9608;   &#9608;</pre>
-        </dd>
-
+          <p><strong>align = 2</strong><br />
+          This will output the "string" with half the padding at the beginning and half at the end (centre alignment).</p>
+        </dd>        
         <dt><strong>timestamp (["format"])</strong></dt>
         <dd>
           <p>This function generates a timestamp based on the current date and time, either based on a provided format (using the same format as Java's <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class) or using a default pattern if omitted.</p>
@@ -1028,15 +1051,31 @@ DATA
         <dd>
           <p>This function is used for console logging to aid troubleshooting. It will write the passed message to the console. This allows you to debug your templates to output the current value of a variable, etc in different places.</p>
         </dd>
+        <dt><strong>banner ("text", ["pre_char"], ["fill_char"], ["charset"], ["post_char"])</strong></dt>
+        <dd>
+          <p>This function generates an ASCII banner with the provided "text" - this mimics the Unix "banner" utility which is found in some distributions. It currently supports two character sets: "regular" and "small" with "regular" being the default which provides 7x7 upper case characters and 6x6 lower case characters. The "small" character set provides a subset (<code>A-Z</code>, <code>0-9</code> and <code>-+.</code>) of characters in a slightly smaller 5x5 form factor.</p>
+
+          <p>The "pre_char" argument is optional and allows you to specify a start of line character. In the same sense the "post_char" argument is also optional and allows you to specify an end of line character - both options can be specified as an empty string or null to use the default (nothing). The "fill_char" argument is also optional and will default to "#", but any character can be specified (even Unicode as per the example below). The "charset" argument allows you to switch between the two character sets. The following example demonstrates a banner using the text "TemplateFx" using the "FULL BLOCK (2588 in Hex)" UTF-8 character:</p>
+
+          <pre><span class="script">&lt;?= banner("TemplateFx", null, "\u2588", "small") ?&gt;</span></pre>
+
+          <p>The above syntax will be translated into the following banner in your output:</p>
+
+          <pre>&#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;  &#9608;&#9608;&#9608;&#9608;   &#9608;       &#9608;&#9608;&#9608;   &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;
+  &#9608;    &#9608;      &#9608;&#9608; &#9608;&#9608;  &#9608;   &#9608;  &#9608;      &#9608;   &#9608;    &#9608;    &#9608;      &#9608;       &#9608; &#9608;
+  &#9608;    &#9608;&#9608;&#9608;    &#9608; &#9608; &#9608;  &#9608;&#9608;&#9608;&#9608;   &#9608;      &#9608;&#9608;&#9608;&#9608;&#9608;    &#9608;    &#9608;&#9608;&#9608;    &#9608;&#9608;&#9608;      &#9608;
+  &#9608;    &#9608;      &#9608;   &#9608;  &#9608;      &#9608;      &#9608;   &#9608;    &#9608;    &#9608;      &#9608;       &#9608; &#9608;
+  &#9608;    &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;  &#9608;      &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;    &#9608;    &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;      &#9608;   &#9608;</pre>
+        </dd>
+        <dt><strong>rot13 ("string")</strong></dt>
+        <dd>
+          <p>This function encodes (or decodes) a "string" using "rot13". Not to be confused with any sort of encryption as it is a very basic substitution cipher which can be easily reversed. It could be used to encode strings to stop the casual passer-by from gleaning passwords from looking at your screen, if you feel it necessary to hard code them into your templates.</span>
+        </dd>
       </dl>
 
       <h4 class="heading">7.3. External JavaScript Libraries</h4>
 
-      <p>In addition to the built-in JavaScript variables and functions, TemplateFx also includes version 3.10.1 of the "<a href="https://lodash.com/" target="_blank">lodash.js</a>" JavaScript library - not enabled by default. This library is similar to "Underscore.js" and is a utility library delivering extra JavaScript functions for common tasks (using the "_" object) - full details on syntax and usage can be found in their <a href="https://github.com/lodash/lodash/blob/3.10.1/doc/README.md" target="_blank">API Documentation</a> - the example below shows the version of the library that has been included is as stated above.</p>
-
-<pre><span class="script">&lt;?= _.VERSION ?&gt;</span></pre>
-      
-      <p>In addition to including this library in TemplateFx, I have also added support for globally including other JavaScript libraries. You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. If you have issues including some JavaScript libraries, I recommended you try with the latest version of the Java Runtime Environment - the JavaScript processing was greatly improved from Java 8 onwards with the Nashorn JavaScript Engine. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
+      <p>In addition to the built-in JavaScript variables and functions, TemplateFx also supports globally including external JavaScript libraries. You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. If you have issues including some JavaScript libraries, I recommended you try with the latest version of the Java Runtime Environment - the JavaScript processing was greatly improved from Java 8 onwards with the Nashorn JavaScript Engine. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
 
       <br />
     </div>
