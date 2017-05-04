@@ -38,7 +38,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.60 (Build 17101)<br />Released: 11th April 2017</h4>
+        <h4>Latest Version: 2.61 (Build 17124)<br />Released: 4th May 2017</h4>
       </div>
 
       <h4 class="heading">1. Introduction</h4>
@@ -168,11 +168,12 @@
         </dd>
       </dl>
       
+      <a name="datatemplates"></a>
       <h4 class="heading">3. DataTemplates</h4>
 
       <p>A DataTemplate is a proprietary file format which uses the file extension ".dt" and is used to store a template along with the source data. Instead of having to distribute the template and source data in separate files, you can save it as a DataTemplate, which combines them both together. Warning: The file format isn't text based and if you attempt to edit it outside of TemplateFx then you will screw up the checksum and it won't load.</p>
 
-      <p>However, you do have the option to export a DataTemplate (and import) in plain text - this will include all aspects of the DataTemplate using specific section blocks to differentiate different aspects. This allows you to edit it outside of TemplateFx and then import it later on. On import you don't need to include all sections (e.g. you can have a file with just some "snippet" blocks), which allows you to merge in additional sections into an existing DataTemplate - on import you have the option to either "Replace" (clear everything first) or "Merge" (will overwrite elements that already exist) the contents of the existing DataTemplate. Finally, if you paste in an exported DataTemplate to one of the panes, it will detect the syntax and ask you whether you wish to treat it as a DataTemplate or just text.</p>
+      <p>However, you do have the option to export a DataTemplate (and import) in plain text - this will include all aspects of the DataTemplate using specific section blocks to differentiate different aspects. This allows you to edit it outside of TemplateFx and then import it later on. On import you don't need to include all sections (e.g. you can have a file with just some "snippet" blocks), which allows you to merge in additional sections into an existing DataTemplate - on import you have the option to either "Replace" (clear everything first) or "Merge" (will overwrite elements that already exist) the contents of the existing DataTemplate.</p>
       
       <p>The DataTemplate is exported in the following text based format:</p>
 
@@ -236,6 +237,7 @@ interface Gi0/0/2
 
       <h4 class="heading">4.1. Branching and Looping Constructs</h4>
 
+      <a name="if"></a>
       <h4 class="heading">4.1.1. IF</h4>
 
       <p>The IF construct is one of the most important features of many languages, templates included. It allows for the conditional use of template text based on a true or false statement. If the statement evaluates to true, the text will be displayed, and if it evaluates to false, it won't.</p>
@@ -261,6 +263,7 @@ interface Gi0/0/2
 
       <p>In the above example, the block will only be displayed if the "INTERFACE" field equals "Gi0/0/0".</p>
 
+      <a name="for"></a>
       <h4 class="heading">4.1.2. FOR</h4>
 
       <p>The FOR construct is also an important feature of many languages, templates included - it is used to support intra-row looping. There are two different syntaxes that are supported for this construct; the first allows you to specify a variable "VAR" and a comma separated list of data values, e.g. <code>"VAL1", "VAL2", ..., "VALn"</code>, the second allows you to specify a variable "VAR" and then use the <code>X TO Y [STEP N]</code> syntax for the values - if "STEP" is omitted then a default value of 1 or -1 will be used depending on the context. It will then duplicate the contents of the FOR block for every entry by substituting <code>{{VAR}}</code> for the value. If there are no entries within the list of data values then the block isn't displayed (white space is maintained at the beginning and end of FOR blocks, but not empty lines). To maintain performance and preserve memory, a maximum iteration limit of 1024 has been imposed.</p>
@@ -330,6 +333,7 @@ R = 3:A
 R = 5:B
 R = 5:A</pre>
 
+      <a name="snippets"></a>
       <h4 class="heading">4.2. Snippets</h4>
 
       <p>To allow the re-using of templating components, TemplateFx also supports the notion of including the contents of snippets into a template. This allows a common piece of text to be written once but used multiple times in the same template - any modifications to the common snippet is seen in all occurrences within the template. Snippets are defined in the snippet panel and can then be referenced in the main template using the following syntax:</p>
@@ -364,12 +368,13 @@ R = 5:A</pre>
 
       <p>The above syntax instructs TemplateFx to include the contents of "\\uk\ukroot\templates\site-build-template.txt" into the template at this point. The current order of operation means that snippets are imported into the template before includes, which means snippets can include external files. A maximum filesize of 262,144 bytes is currently enforced per external file.</p>
 
+      <a name="input"></a>
       <h4 class="heading">4.4. User Input</h4>
 
       <p>There might be some situations where you don't want to store dynamic or sensitive data within the actual DataTemplate. In these situations, TemplateFx provides the ability to request data from the user as the output is being generated through the use of input blocks using the <code>&lt;[ ... ]&gt;</code> or <code>&lt;[ ... ][0|1|2]&gt;</code> syntax. By default it will present the user with a multi-line input box, which allows you to enter data which would normally be difficult to do so using the "Data" pane. The second format of syntax allows a numerical type to be specified as per the list below:</p>
 
       <p><strong>0</strong><br />
-      This is the default and indicates that a multi-line input box will be presented to the user.
+      This is the default and indicates that a multi-line input box will be presented to the user - the input will be accepted when the user clicks "OK" or presses "&lt;CTRL&gt; + &lt;ENTER&gt;". 
 
       <p><strong>1</strong><br />
       This indicates a single-line input box will be presented to the user - the input will be accepted when the user clicks "OK" or presses "&lt;ENTER&gt;".
@@ -392,6 +397,7 @@ R = 5:A</pre>
 
       <p>Regardless of how many data rows you have, the user will be prompted once per input before output generation commences (if the same input is requested multiple times then the value is cached). The value provided by the user will then replace the <code>&lt;[ ... ]&gt;</code> block.</p>
 
+      <a name="comments"></a>
       <h4 class="heading">4.5. Comments</h4>
 
       <p>There are two types of comments which can be used within a template (and snippets), both of which must be used at the beginning of a line as TemplateFx doesn't presently support end of line comments. The first is a template comment and uses the <code>#</code> syntax to comment out a line in a template - this results in the line being completely ignored and not appearing in your output (if you require a <code>#</code> at the start of a line then you can escape it using <code>##</code> instead). The second type of comment, which uses the <code>!</code> syntax is used to supplement your output with comments:</p>
@@ -405,6 +411,7 @@ R = 5:A</pre>
       <pre><span style="display: inline-block; width: 100%;" class="comment">#- Using a hyphen (-) after the comment symbol will highlight the entire row.</span>
 </pre>
 
+      <a name="filtering"></a>
       <h4 class="heading">5. Filtering and Sorting</h4>
 
       <p>TemplateFx provides the capability to filter and sort the data before an output is generated. To use this feature you need to create a snippet called <code>~FILTER</code> and fill it with your filtering and sorting criteria based on the following syntax (case insensitive comparison is performed):</p>
@@ -441,7 +448,8 @@ Z, A, W
 1, F, Y</pre>
 
       <p>It also supports the ability to filter which output groups are shown by using a special "~GROUP" field in the same way - however, you can't mix the "~GROUP" syntax with normal header fields in the same "OR" clause.</p>
-            
+
+      <a name="grouping"></a>
       <h4 class="heading">6. Grouping</h4>
 
       <p>There are two features which allow you to control how the outputs are generated: "Group By" and Advanced Dynamic Grouping. By default TemplateFx will generate a single output with each row's output one after another. To demonstrate the difference between these features, we are going to use the following data source as an example:</p>
@@ -510,6 +518,7 @@ SECOND
 SECOND
 SECOND</pre>
 
+      <a name="scripting"></a>
       <h4 class="heading">7. Scripting</h4>
 
       <p>For the more advanced users who want to do more than just simple substitution, TemplateFx has the ability to interpret dynamic templates which are written using JavaScript. This User Guide assumes you have a basic understanding of JavaScript, but if this isn't the case then the web (<a href="http://lmgtfy.com/?q=JavaScript" target="_blank">http://lmgtfy.com/?q=JavaScript</a>) has a large amount of information on it.</p>
@@ -622,6 +631,21 @@ router bgp 37119
   !
  !
 !</pre>
+          <p>Although JavaScript has no native support for HEREDOC style syntax, TemplateFx does provide limited support for it in script blocks. It uses similar syntax to other languages which do support it (e.g. PHP, Perl, etc). This is possible as TemplateFx parses the JavaScript within a script block before it is evaluated, so it is able to convert it to valid JavaScript beforehand. The following syntax is valid within a script block - the "EOF" marker can be any arbitrary text, but it must be the same at the start and the end.</p>
+          <pre><span class="script">&lt;?
+var x = &lt;&lt;&lt;EOF
+This is a
+multi-line piece
+of text.
+EOF;
+?&gt;</span></pre>
+          <p>The <code>${var}</code> syntax can also be used to reference existing JavaScript variables, for example:</p>
+          <pre><span class="script">&lt;?
+var sname = "Chris";
+var x = &lt;&lt;&lt;EOF
+My name is ${sname}
+EOF;
+?&gt;</span></pre>
         </dd>
         <dt><strong>&lt;?= ... ?&gt;</strong></dt>
         <dd>
@@ -675,6 +699,7 @@ interface Gi0/0/2
 
       <p><span class="label label-warning">WARNING</span>&nbsp;The JavaScript parser allows you to reference Java classes (e.g. <code>java.math.BigInteger</code>) from within JavaScript - this is called Live Connect. Although JavaScript doesn't permit access to the local file system, Java does and could allow a malicious user to send you a template that did naughty things - this is the same principal as someone sending you an Excel sheet with a malicious macro. To protect you from this, the Java SecurityManager is now enabled to stop any access to local resources by scripts. However, you should always be cautious if you ever receive a template or DataTemplate from someone you don't know or trust.</p>
 
+      <a name="variables"></a>
       <h4 class="heading">7.1. Built-In JavaScript Variables</h4>
 
       <p>As well as the standard JavaScript syntax there is also a series of built-in variables that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
@@ -799,14 +824,16 @@ DORRIS, 32, ESTONIA</pre>
 <span class="comment"># This will return an array of the following values: [EMMA, DORRIS]</span>
 <span class="comment">#  Every "NAME" who has a "COUNTRY" that matches regex /^e/i and an "AGE" that matches regex /^32$/.</span>
 <span class="script">&lt;?= templatefx.fields("NAME", { "COUNTRY": /^e/i, "AGE": /^32$/ }) ?&gt;</span></pre>
-        </dd>        
+        </dd>
       </dl>
 
+      <a name="functions"></a>
       <h4 class="heading">7.2. Built-In JavaScript Functions</h4>
 
       <p>In addition to the built-in variables, there is also a series of built-in functions that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
 
       <dl>
+        <a name="counter"></a>
         <dt><strong>counter (["key"], [increment], [start])</strong></dt>
         <dd>
           <p>This function provides a counter which will produce a series of numbers in the given sequence. If the "key" is omitted or passed as "null" then the counter is reset back to 0 (or "start") for every row. If a "key" is provided then the counter is persistent across rows. Every time you call the function with the same "key" then it will increment the counter and return the number. Different persistent counters can be created using different "key" values. There is an optional "increment" parameter which allows you to specify a different increment as opposed to the default of 1. There is also an optional "start" parameter which allows you to specify a different start number as opposed to the default of 1. The following example demonstrates both of these parameters to produce a positive and negative counter:</p>
@@ -820,10 +847,22 @@ DORRIS, 32, ESTONIA</pre>
 <span class="script">&lt;?= counter() ?&gt;</span>
 </pre>
         </dd>
+        <a name="cancel"></a>
         <dt><strong>cancel (["message"])</strong></dt>
         <dd>
           <p>This function provides a way to cancel processing a template if something isn't right. This could be if an invalid value has been specified in the data source or if a key field hasn't been filled in correctly. An optional "message" can be provided to give the user more information about why processing was cancelled. The first time the function is executed, the whole processing is stopped.</p>
         </dd>
+        <a name="base64encode"></a>
+        <dt><strong>base64encode ("string")</strong></dt>
+        <dd>
+          <p>This function encodes a string using Base64 encoding. It will return the Base64 encoded string on success and null on failure.</p>
+        </dd>
+        <a name="base64decode"></a>
+        <dt><strong>base64decode ("base64 encoded string")</strong></dt>
+        <dd>
+          <p>This function decodes a Base64 encoded string. It will return the decoded string on success and null on failure.</p>
+        </dd>
+        <a name="ip"></a>
         <dt>
           <strong>ip ("ip", number, [ipv6format])</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
@@ -851,6 +890,7 @@ DORRIS, 32, ESTONIA</pre>
 <span class="comment"># Add 32 to the IPv6 address "2001:db8::" and output in preferred form (i.e. 2001:db8:0:0:0:0:0:20)</span>
 <span class="script">&lt;?= ip("2001:db8::", 32) ?&gt;</span></pre>
         </dd>
+        <a name="insubnet"></a>
         <dt>
           <strong>insubnet ("subnet", "ip")</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
@@ -862,6 +902,7 @@ DORRIS, 32, ESTONIA</pre>
 <span class="if">&lt;/IF&gt;</span>
 </pre>
         </dd>
+        <a name="ipsplit"></a>
         <dt>
           <strong>ipsplit ("subnet", "cidr_mask" | min_subnets)</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
@@ -873,6 +914,7 @@ DORRIS, 32, ESTONIA</pre>
 <pre><span class="script">&lt;?= ipsplit("2001:db8::/32", 8).join("\n") ?&gt;</span></pre>
           <p>To be able to split a subnet into smaller subnets the "cidr_mask" should be longer than the mask on the "subnet" (and have 10 bits or less between them). However, if you specify a shorter mask as your "cidr_mask" then it will return the supernet instead (i.e. using "192.0.2.0/24" with a "cidr_mask" of "/16" will return "192.0.0.0/16"). In the same sense you can specify a negative number to provide a supernet (i.e. using "192.0.2.0/28" with the minimum number of subnets as -8 will return "192.0.2.0/25").</p>
         </dd>
+        <a name="range2cidr"></a>
         <dt>
           <strong>range2cidr ("range")</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
@@ -889,6 +931,61 @@ DORRIS, 32, ESTONIA</pre>
 192.0.2.176/31
 </pre>
         </dd>
+        <a name="aggregate"></a>
+        <dt>
+          <strong>aggregate (new Array("cidr", "cidr", ...), [gaps])</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function is used to find the shortest list of aggregate subnets that cover the list of IPv4/IPv6 subnets provided. It aggregates adjacent subnets ensuring the summary is explicit in only containing the provided subnets. By default it doesn't highlight where we have no contiguous blocks, but by setting the optional parameter "gaps" you can control it as follows:</p>
+
+          <p><strong>gaps = 0 || null</strong><br />
+          This, or the default if omitted, will output a simple list of summarised prefixes without implying whether they are contiguous or discontiguous.</p>
+
+          <p><strong>gaps = 1</strong><br />
+          This will output a list of summarised prefixes, but will include a "-" where there is a gap between the prefixes (i.e. if the list is discontiguous).</p>
+
+          <p><strong>gaps = 2</strong><br />
+          This will output a list of summarised prefixes, but will fill in the missing prefixes to make the list contiguous from start to finish - any prefixes which fill the gaps will be prefixed with "-".</p>
+
+          <p>The following example demonstrates this function by outputting the aggregates one per row:</p>
+
+<pre><span class="script">&lt;?
+  var subnets = [
+    "192.0.2.0/31",
+    "192.0.2.4 255.255.255.252",
+    "192.0.2.8/30",
+    "192.0.2.12/30",
+    "192.0.2.16 255.255.255.248",
+    "192.0.2.24/29",
+    "2001:db8::8:800:200c:417a/64"
+  ];
+?&gt;</span>
+
+<span class="script">&lt;?= aggregate(subnets, 1).join("\n") ?&gt;</span></pre>
+        <p>This results in the following output:</p>
+<pre>192.0.2.0/31
+-
+192.0.2.4/30
+192.0.2.8/29
+192.0.2.16/28
+-
+2001:db8:0:0:0:0:0:0/64
+</pre>
+
+          <p>If you were to set "gaps" to 2 then you would get the following with the gap filled in:</p>
+
+<pre>192.0.2.0/31
+- 192.0.2.2/31
+192.0.2.4/30
+192.0.2.8/29
+192.0.2.16/28
+-
+2001:db8:0:0:0:0:0:0/64
+</pre>
+
+        </dd>
+        <a name="network"></a>
         <dt>
           <strong>network ("cidr", [return_mask])</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
@@ -896,6 +993,7 @@ DORRIS, 32, ESTONIA</pre>
         <dd>
           <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the network address. The function will return "null" if an error occurs, an invalid parameter is detected. In the above example it will return the string "192.0.2.0" for IPv4 and "2001:db8:0:0:0:0:0:0" for IPv6. By default it doesn't return the CIDR mask, but there is an optional parameter "return_mask", which if set to "true" will return it using CIDR notation.</p>
         </dd>
+        <a name="ipfirst"></a>
         <dt>
           <strong>ipfirst ("cidr")</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
@@ -903,6 +1001,7 @@ DORRIS, 32, ESTONIA</pre>
         <dd>
           <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the first usable address of the subnet. The function will return "null" if an error occurs or an invalid parameter is detected.</p>
         </dd>
+        <a name="iphosts"></a>
         <dt>
           <strong>iphosts ("cidr", [nwbc])</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
@@ -910,6 +1009,7 @@ DORRIS, 32, ESTONIA</pre>
         <dd>
           <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns (as an array) all the usable addresses of the subnet. The function will return "null" if an error occurs or an invalid parameter is detected. By default it doesn't return the "network" and "broadcast" address of IPv4 subnets, but there is an optional parameter "nwbc", which if set to "true" will return them.</p>
         </dd>
+        <a name="iplast"></a>
         <dt>
           <strong>iplast ("cidr")</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
@@ -917,6 +1017,7 @@ DORRIS, 32, ESTONIA</pre>
         <dd>
           <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the last usable address of the subnet. The function will return "null" if an error occurs or an invalid parameter is detected.</p>
         </dd>
+        <a name="broadcast"></a>
         <dt>
           <strong>broadcast ("cidr")</strong>
           <span class="label label-danger">IPv4 Only</span>
@@ -924,6 +1025,7 @@ DORRIS, 32, ESTONIA</pre>
         <dd>
           <p>This function takes an IPv4 prefix (there is no concept of a broadcast in IPv6) in CIDR format (i.e. "192.0.2.13/24") and returns the broadcast address. The function will return "null" if an error occurs, an invalid parameter is detected or if the mask length doesn't support a broadcast address (i.e. /31 or /32).</p>
         </dd>
+        <a name="smask"></a>
         <dt>
           <strong>smask ("cidr", [inverse])</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
@@ -931,6 +1033,7 @@ DORRIS, 32, ESTONIA</pre>
         <dd>
           <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the subnet mask (e.g. "255.255.255.0" or "ffff:ffff:ffff:ffff::") or for IPv4 addresses only, the inverse/wildcard mask (e.g. "0.0.0.255") if the optional parameter "inverse" is true. The function will return "null" if an error occurs or if an invalid parameter is detected.</p>
         </dd>
+        <a name="ip2long"></a>
         <dt>
           <strong>ip2long ("ip")</strong>
           <span class="label label-danger">IPv4 Only</span>
@@ -938,6 +1041,7 @@ DORRIS, 32, ESTONIA</pre>
         <dd>
           <p>This function takes an IPv4 address and converts it into a long.</p>
         </dd>
+        <a name="long2ip"></a>
         <dt>
           <strong>long2ip (long)</strong>
           <span class="label label-danger">IPv4 Only</span>
@@ -945,6 +1049,7 @@ DORRIS, 32, ESTONIA</pre>
         <dd>
           <p>This function takes a long and converts it into an IPv4 address.</p>
         </dd>
+        <a name="nslookup"></a>
         <dt>
           <strong>nslookup ("query", [response_type])</strong>
           <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
@@ -972,6 +1077,7 @@ DORRIS, 32, ESTONIA</pre>
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
         </dd>
+        <a name="curl"></a>
         <dt><strong>curl ("url", ["basic_auth_string"], [ignore_ssl_cert], [timeout])</strong></dt>
         <dd>
           <p>This function can be used to download http/https based content using the HTTP GET method. The only mandatory argument is "url" which is the same as what you would enter into your web browser (e.g. "https://www.google.com"). It supports HTTP Basic Authentication and if required can be invoked by providing a Base64 encoded string in the format of "username:password" as the "basic_auth_string" argument. HTTP Cookies are also supported and will persist for subsequent requests to the same server. If a HTTPS URL has been provided then it will check to ensure a valid trusted SSL certificate is being presented - you can override this behaviour by passing a value of "true" to the "ignore_ssl_cert" argument which will permit self-signed certificates to be accepted and bypass other security checks (this isn't advisable or recommended, but is provided out of necessity). The "timeout" argument can be used to specify a connection timeout in milliseconds - the default timeout is 5000 ms (5 seconds). At the moment this function only supports direct connections - the use of a proxy server isn't supported.</p>
@@ -1005,12 +1111,14 @@ DORRIS, 32, ESTONIA</pre>
 
           <p>The above example demonstrates how you can check for success or failure when using this function. We use the <code>isNaN()</code> function to determine if we have a numerical or textual response - it assumes any numerical only response is some sort of error.</p>
         </dd>
+        <a name="passwd"></a>
         <dt><strong>passwd ([length], ["chars"])</strong></dt>
         <dd>
           <p>This function generates a cryptographically strong random password using the following characters: a-z, A-Z, 0-9, unless a custom character set using the "chars" parameter has been provided. The length is determined by the passed "length" parameter or a length of 16 is used if the parameter is omitted.</p>
 <pre><span class="comment"># Generate a random 12 character password using the provided characters</span>
 <span class="script">&lt;?= passwd(12, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZZ") ?&gt;</span></pre>
         </dd>
+        <a name="pad"></a>
         <dt><strong>pad ("string", length, [align])</strong></dt>
         <dd>
           <p>This function provides left, right or centre alignment of text using padding. If the length of the "string" is less than the provided length, then the "string" will be padded using space. By default, the "string" is padded with space on the right (left alignment), which can be changed using the optional third parameter with one of the following values:</p>
@@ -1023,11 +1131,13 @@ DORRIS, 32, ESTONIA</pre>
 
           <p><strong>align = 2</strong><br />
           This will output the "string" with half the padding at the beginning and half at the end (centre alignment).</p>
-        </dd>        
+        </dd>
+        <a name="timestamp"></a>
         <dt><strong>timestamp (["format"])</strong></dt>
         <dd>
           <p>This function generates a timestamp based on the current date and time, either based on a provided format (using the same format as Java's <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class) or using a default pattern if omitted.</p>
         </dd>
+        <a name="date"></a>
         <dt><strong>date ("date", "format", amount, ["dest_format"], ["field"])</strong></dt>
         <dd>
           <p>This function is used to manipulate dates by adding or subtracting a duration from a given date, or by converting one date format to another. The "date" field is used to pass a particular date string and the "format" field is used to specify the format of that given date (using the same format as Java's <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class). The "amount" field specifies the number of days (by default) to add or subtract from the given date - to subtract days, a negative number can be provided. On success it will return the manipulated date in the same format that was provided - you can specify a different output format using the "dest_format" optional parameter (using the same formatting rules). By default this function operates using days, but by specifying either "d" for days, "w" for weeks, "m" for months or "y" for years as the "field" parameter, the default behaviour can be changed.</p>
@@ -1043,14 +1153,17 @@ DORRIS, 32, ESTONIA</pre>
 <span class="comment"># Add 5 weeks to 18/OCT/2014 and output using the same format (i.e. 22/Nov/2014)</span>
 <span class="script">&lt;?= date("18/Oct/2014", "dd/MMM/yyyy", 5, null, "w") ?&gt;</span></pre>
         </dd>
+        <a name="add_output_mutation"></a>
         <dt><strong>add_output_mutation ("regex", "replacement")</strong></dt>
         <dd>
-          <p>This function allows you to make changes to the output post generation before it is displayed. This function can be called at any point in your template, but it won't perform the changes until after the output has finished being generated. The replacements will be performed in the order they are added. This function could be used to insert information into your template that isn't known at the point where you want it inserted. As an example, you might want to add a section to your output which lists all the IP addresses which have been used in your output, however you won't being able to produce this list until after the output has been generated. You could leave a placeholder (i.e. "[PLACEHOLDER]") in the template and then use this function to update it at the end with the list of IP addresses that have been found by searching through the output using <code>templatefx.output</code>.</p>
+          <p>This function allows you to make changes to the output post generation before it is displayed. This function can be called at any point in your template, but it won't perform the changes until after the output has finished being generated. The replacements will be performed in the order they are added. This function could be used to insert information into your template that isn't known at the point where you want it inserted. As an example, you might want to add a section to your output which lists all the IP addresses which have been used in your output, however you won't being able to produce this list until after the output has been generated. You could leave a placeholder (i.e. "[PLACEHOLDER]") in the template and then use this function to update it at the end with the list of IP addresses that have been found by searching through the output using <code>templatefx.output</code>. The "regex" is case-sensitive and must be provided as a string as opposed to the <code>/regex/</code> JavaScript construct.</p>
         </dd>
+        <a name="console.log"></a>
         <dt><strong>console.log ("message")</strong></dt>
         <dd>
           <p>This function is used for console logging to aid troubleshooting. It will write the passed message to the console. This allows you to debug your templates to output the current value of a variable, etc in different places.</p>
         </dd>
+        <a name="banner"></a>
         <dt><strong>banner ("text", ["pre_char"], ["fill_char"], ["charset"], ["post_char"])</strong></dt>
         <dd>
           <p>This function generates an ASCII banner with the provided "text" - this mimics the Unix "banner" utility which is found in some distributions. It currently supports two character sets: "regular" and "small" with "regular" being the default which provides 7x7 upper case characters and 6x6 lower case characters. The "small" character set provides a subset (<code>A-Z</code>, <code>0-9</code> and <code>-+.</code>) of characters in a slightly smaller 5x5 form factor.</p>
@@ -1067,6 +1180,7 @@ DORRIS, 32, ESTONIA</pre>
   &#9608;    &#9608;      &#9608;   &#9608;  &#9608;      &#9608;      &#9608;   &#9608;    &#9608;    &#9608;      &#9608;       &#9608; &#9608;
   &#9608;    &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;  &#9608;      &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;   &#9608;    &#9608;    &#9608;&#9608;&#9608;&#9608;&#9608;  &#9608;      &#9608;   &#9608;</pre>
         </dd>
+        <a name="rot13"></a>
         <dt><strong>rot13 ("string")</strong></dt>
         <dd>
           <p>This function encodes (or decodes) a "string" using "rot13". Not to be confused with any sort of encryption as it is a very basic substitution cipher which can be easily reversed. It could be used to encode strings to stop the casual passer-by from gleaning passwords from looking at your screen, if you feel it necessary to hard code them into your templates.</span>
@@ -1076,7 +1190,6 @@ DORRIS, 32, ESTONIA</pre>
       <h4 class="heading">7.3. External JavaScript Libraries</h4>
 
       <p>In addition to the built-in JavaScript variables and functions, TemplateFx also supports globally including external JavaScript libraries. You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. If you have issues including some JavaScript libraries, I recommended you try with the latest version of the Java Runtime Environment - the JavaScript processing was greatly improved from Java 8 onwards with the Nashorn JavaScript Engine. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
-
       <br />
     </div>
   </body>
