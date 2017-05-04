@@ -1,6 +1,21 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2017 Chris Mason <chris@templatefx.org>
 
+Version 2.61 - 4th May 2017
+	* Updated "IP Calc" tab so it ignores irregular whitespace characters on input.
+	* Added non-standard JavaScript HEREDOC support for script blocks and JavaScript libraries.
+	* Moved all the internal JavaScript functions into TemplateFx.js so they are accessible from external JS libs.
+	* Optimised the DNS lookup function when you have multiple NICs under Windows - rotates DNS servers on timeout.
+	* Added support for JavaScript function "base64encode()" due to a lack of "btoa()" support in Java's JavaScript ScriptEngine.
+	* Added support for JavaScript function "base64decode()" due to a lack of "atob()" support in Java's JavaScript ScriptEngine.
+	* Added support for a powerful "aggregate()" JavaScript function to summarise prefixes into the smallest possible list.
+	* Added support for the same aggregate function to the "IP Calc" tab.
+	* Added anchors/bookmarks to the User Guide for direct access into some sections.
+	* Fixed a bug if you tried to bookmark a DataTemplate which hadn't been saved.
+	* You can now proceed on a multi-line input box using CTRL+<ENTER> instead of clicking "OK".
+	* Updated "range2cidr()" function so the lower address can be on either side.
+	* Updated "range2cidr()" function so it deals with scenarios where both sides match - a range specifying a single host.
+
 Version 2.60 - 11th April 2017
 	* Added support for JavaScript function "templatefx.fields()" to return all row values for a specific field with optional filter.
 	* Added support for JavaScript function "pad()" to provide left, right or middle alignment of text.
