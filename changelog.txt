@@ -1,6 +1,17 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2017 Chris Mason <chris@templatefx.org>
 
+Version 2.62 - 18th August 2017
+	* Added the TemplateFx Server - a minimalist server implementation of the core templating engine as a REST API.
+	* Added support for Template-only and Data-less DataTemplates.
+	* Extended support for inter group ordering to go alongside intra group ordering.
+	* Disabled rotating of DNS servers on timeout - bad things happen under Cisco AnyConnect.
+	* Fixed a bug where elapsed time started before the user actually hit "OK" on "Generate Output" dialog.
+	* Added support for providing data as JSON within an text based DataTemplate.
+	* Updated documentation to provide examples of regex matching using IF blocks.
+	* Updated the "pad()" JavaScript function to allow a different padding character.
+	* Added null check to JavaScript IP functions (null in = null out).
+
 Version 2.61 - 4th May 2017
 	* Updated "IP Calc" tab so it ignores irregular whitespace characters on input.
 	* Added non-standard JavaScript HEREDOC support for script blocks and JavaScript libraries.
