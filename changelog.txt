@@ -1,6 +1,16 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2017 Chris Mason <chris@templatefx.org>
 
+Version 2.63 - 2nd October 2017
+	* TemplateFx Server now processes requests in parallel - fixed the thread safety issue.
+	* Added left margin highlighting in the GUI to show the start and end of the current FOR, IF or GROUP block.
+	* Added support for JavaScript function "skiprow()" to disregard the output from the current row.
+	* Updated JavaScript function "insubnet()" to also test whether one subnet is within another.
+	* Updated for Java 9 by replacing some deprecated methods with alternatives where they exist in JDK 1.7.
+	* Updated the MacOS application launcher so it now correctly finds Java 9.
+	* Updated TemplateFx so it now correctly works with "Open With" and is associated with ".dt" files on MacOS.
+	* Updated TemplateFx so the About and Quit handlers now work with Java 9 on MacOS.
+
 Version 2.62 - 18th August 2017
 	* Added the TemplateFx Server - a minimalist server implementation of the core templating engine as a REST API.
 	* Added support for Template-only and Data-less DataTemplates.
