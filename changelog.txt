@@ -1,6 +1,13 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2017 Chris Mason <chris@templatefx.org>
 
+Version 2.64 - 26th October 2017
+	* Fixed a bug with margin highlighting - it was getting out of sync during output generation.
+	* Updated "templatefx.first()" and "templatefx.last()" to include a filter option like "templatefx.fields()"
+	* Updated documentation to add an example of negating a filter in the "templatefx.fields()" function.
+	* Fixed a bug in IPCalc where you couldn't pass a query like "nslookup 192.0.2.0 255.255.255.0"
+	* Moved "Prev Network" higher up in the output to come before the current network.
+
 Version 2.63 - 2nd October 2017
 	* TemplateFx Server now processes requests in parallel - fixed the thread safety issue.
 	* Added left margin highlighting in the GUI to show the start and end of the current FOR, IF or GROUP block.
