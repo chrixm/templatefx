@@ -39,7 +39,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.63 (Build 17275)<br />Released: 2nd October 2017</h4>
+        <h4>Latest Version: 2.64 (Build 17299)<br />Released: 26th October 2017</h4>
       </div>
 
       <h4 class="heading">1. Introduction</h4>
@@ -776,7 +776,7 @@ interface Gi0/0/2
         <dd>
           <p>This variable is a multi-dimensional array of the actual data with the headers in row "0". This allows you to access the raw data from whatever row you are currently processing.</p>
         </dd>
-        <dt><strong>templatefx.first (["field_1[ || field_2]"])</strong></dt>
+        <dt><strong>templatefx.first (["field_1[ || field_2]"], [{ "field_1": /regex/, "field_2": /regex/ }])</strong></dt>
         <dd>
           <p>This variable is actually a JavaScript function and allows you to determine if this is the first time you have seen this particular field value. It will return true if this row of data is the first time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the first time you have seen this specific combination of values together. If you omit the "field" variable then it will return true for the first row of data. An example is included below which determines whether this is the first time we have seen this specific value within the "ROUTER" field:</p>
 
@@ -785,8 +785,9 @@ interface Gi0/0/2
 <span class="if">&lt;/IF&gt;</span>
 DATA
 </pre>
+          <p>The function also supports an optional secondary parameter which allows you to filter what rows you are checking against - if you don't want to specify a specific field then you can pass "null" as the first parameter. This follows the same syntax which can be found within the <code>templatefx.fields()</code> function definition.</p>
         </dd>
-        <dt><strong>templatefx.last (["field_1[ || field_2]"])</strong></dt>
+        <dt><strong>templatefx.last (["field_1[ || field_2]"], [{ "field_1": /regex/, "field_2": /regex/ }])</strong></dt>
         <dd>
           <p>This variable is actually a JavaScript function and allows you to determine if this is the last time you will see this particular field value - the oppposite of <code>templatefx.first()</code>. It will return true if this row of data is the last time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the last time you have seen this specific combination of values together. If you omit the "field" variable then it will return true for the last row of data. An example is included below which determines whether this is the last time we have seen this specific combination of values for the "ROUTER" and "INTERFACE" fields:</p>
 
@@ -795,6 +796,7 @@ DATA
 <span class="if">&lt;/IF&gt;</span>
 DATA
 </pre>
+          <p>The function also supports an optional secondary parameter which allows you to filter what rows you are checking against - if you don't want to specify a specific field then you can pass "null" as the first parameter. This follows the same syntax which can be found within the <code>templatefx.fields()</code> function definition.</p>
         </dd>
         <dt><strong>templatefx.field ("field")</strong></dt>
         <dd>
@@ -832,7 +834,12 @@ DORRIS, 32, ESTONIA</pre>
 
 <span class="comment"># This will return an array of the following values: [EMMA, DORRIS]</span>
 <span class="comment">#  Every "NAME" who has a "COUNTRY" that matches regex /^e/i and an "AGE" that matches regex /^32$/.</span>
-<span class="script">&lt;?= templatefx.fields("NAME", { "COUNTRY": /^e/i, "AGE": /^32$/ }) ?&gt;</span></pre>
+<span class="script">&lt;?= templatefx.fields("NAME", { "COUNTRY": /^e/i, "AGE": /^32$/ }) ?&gt;</span>
+
+<span class="comment"># This will return an array of the following values: [CHRIS, SIMON]</span>
+<span class="comment">#  Every "NAME" who has an "AGE" that doesn't contain a 2 using a negative lookahead regex.</span>
+<span class="comment">#  Note: If you omit the .* from the regex then it becomes "doesn't begin with" instead of "doesn't contain".</span>
+<span class="script">&lt;?= templatefx.fields("NAME", { "AGE": /^(?!.*2)/ }) ?&gt;</span></pre>
         </dd>
       </dl>
 
@@ -864,7 +871,7 @@ DORRIS, 32, ESTONIA</pre>
         <a name="skiprow"></a>
         <dt><strong>skiprow ()</strong></dt>
         <dd>
-          <p>This function provides a way to skip processing of the current row and disregard all output associated with it. Once this function is called, then TemplateFx will continue processing the next row in the data as if this row never existed - however, it will still exist within the data schema so functions like <code>templatefx.first()</code> and <code>templatefx.fields()</code> will still take it into consideration..</p>
+          <p>This function provides a way to skip processing of the current row and disregard all output associated with it. Once this function is called, then TemplateFx will continue processing the next row in the data as if this row never existed - please be aware that it will still exist within the data schema, so functions like <code>templatefx.first()</code> and <code>templatefx.fields()</code> will still take it into consideration.</p>
         </dd>
         <a name="base64encode"></a>
         <dt><strong>base64encode ("string")</strong></dt>
