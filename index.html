@@ -39,7 +39,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.64 (Build 17299)<br />Released: 26th October 2017</h4>
+        <h4>Latest Version: 2.65 (Build 17364)<br />Released: 30th December 2017</h4>
       </div>
 
       <h4 class="heading">1. Introduction</h4>
@@ -935,7 +935,7 @@ DORRIS, 32, ESTONIA</pre>
 <pre><span class="script">&lt;?= ipsplit("192.0.2.0/26", "/29").join("\n") ?&gt;</span></pre>
           <p>To demonstrate the same by specifying the minimum number of subnets, we can specify 8 as the second parameter, but using an IPv6 address this time - this will return "/35" subnets as there are 8 of them to a "/32" subnet:</p>
 <pre><span class="script">&lt;?= ipsplit("2001:db8::/32", 8).join("\n") ?&gt;</span></pre>
-          <p>To be able to split a subnet into smaller subnets the "cidr_mask" should be longer than the mask on the "subnet" (and have 10 bits or less between them). However, if you specify a shorter mask as your "cidr_mask" then it will return the supernet instead (i.e. using "192.0.2.0/24" with a "cidr_mask" of "/16" will return "192.0.0.0/16"). In the same sense you can specify a negative number to provide a supernet (i.e. using "192.0.2.0/28" with the minimum number of subnets as -8 will return "192.0.2.0/25").</p>
+          <p>To be able to split a subnet into smaller subnets the "cidr_mask" should be longer than the mask on the "subnet" (and have 16 bits or less between them). However, if you specify a shorter mask as your "cidr_mask" then it will return the supernet instead (i.e. using "192.0.2.0/24" with a "cidr_mask" of "/16" will return "192.0.0.0/16"). In the same sense you can specify a negative number to provide a supernet (i.e. using "192.0.2.0/28" with the minimum number of subnets as -8 will return "192.0.2.0/25").</p>
         </dd>
         <a name="range2cidr"></a>
         <dt>
@@ -1055,6 +1055,14 @@ DORRIS, 32, ESTONIA</pre>
         </dt>
         <dd>
           <p>This function takes an IPv4 or IPv6 prefix in CIDR format (i.e. "192.0.2.13/24" or "2001:db8::8:800:200c:417a/64") and returns the subnet mask (e.g. "255.255.255.0" or "ffff:ffff:ffff:ffff::") or for IPv4 addresses only, the inverse/wildcard mask (e.g. "0.0.0.255") if the optional parameter "inverse" is true. The function will return "null" if an error occurs or if an invalid parameter is detected.</p>
+        </dd>
+        <a name="cidrmask"></a>
+        <dt>
+          <strong>cidrmask ("mask")</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function takes an IPv4 or IPv6 subnet mask (i.e. "255.255.255.0" or "0.0.0.255" or "ffff:ffff:ffff:ffff::") and returns the cidr prefix length (e.g. "24" or "64"). The function will return "null" if an error occurs or if an invalid parameter is detected.</p>
         </dd>
         <a name="ip2long"></a>
         <dt>
@@ -1226,14 +1234,15 @@ DORRIS, 32, ESTONIA</pre>
       <dl>
         <dt><strong>HTTP Server Mode</strong></dt>
         <dd>
-          <p><code>java -jar TemplateFxS.jar -s [host[:port]] [-dumpreq]</code></p>
-          <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8088 on 127.0.0.1 only (localhost - doesn't accept remote connections). The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process. By specifying a host of "0.0.0.0" or using a specific interface IP address it will accept remote connections from other hosts that have access to it. By default it will listen for standard HTTP connections (no TLS).</p>
+          <p><code>java -jar TemplateFxS.jar -s [host[:port]] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
+          <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 (or 8443 if TLS is enabled) on 127.0.0.1 only (localhost - doesn't accept remote connections). The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether. The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process. By specifying a host of "0.0.0.0" or using a specific interface IP address it will accept remote connections from other hosts that have access to it. By default it will listen for standard HTTP connections (no TLS).</p>
+          <p>The preferred method is to run the TemplateFx Server bound to "localhost" only and then using something like Apache's "ProxyPass" directive to forward requests to the TemplateFx Server (e.g. "ProxyPass /api http://127.0.0.1:8080" - requests sent to "/api/generate" would thenthen  be mapped to "http://127.0.0.1:8080/generate").</p>
         </dd>
 
         <dt><strong>HTTPS Server Mode</strong></dt>
         <dd>
-          <p><code>java -jar TemplateFxS.jar -s [host[:port]] -tls &lt;templatefx.jks&gt; [-dumpreq]</code></p>
-          <p>As standard HTTP doesn't provide any security as the requests are sent in plaintext over the network (possibly acceptable when bound to localhost only), it also supports Transport Layer Security (TLS). By using the "-tls" parameter it allows you to specify a Java Key Store that contains your public/private key pair (where your public key is either self-signed or signed from a trusted Certificate Authority) - this enables TLS/HTTPS and disables HTTP so that all traffic between client and server is encrypted.</p>
+          <p><code>java -jar TemplateFxS.jar -s [host[:port]] -tls &lt;templatefx.jks&gt; [-t &lt;timeout&gt;] [-dumpreq]</code></p>
+          <p>As standard HTTP doesn't provide any security as the requests are sent in plaintext over the network (possibly acceptable when bound to localhost only), it also supports Transport Layer Security (TLS). By using the "-tls" parameter it allows you to specify a Java Key Store (or PKCS#12 archive) that contains your public/private key pair (where your public key is either self-signed or signed from a trusted Certificate Authority) - this enables TLS/HTTPS and disables HTTP so that all traffic between client and server is encrypted.</p>
 
           <p>As an example using Java's keytool, the following demonstrates how to generate a self-signed RSA (or Elliptic Curve) key using a modulus of 4096 bits (or 384 for EC) with a validity of 1825 days (5 years):</p>
 
@@ -1248,21 +1257,44 @@ DORRIS, 32, ESTONIA</pre>
           <p><code>keytool -import -alias templatefx -keystore templatefx.jks -file templatefx.cer</code></p>
 
           <p>As a Java Key Store contains your private key it needs to be protected by a password - the TemplateFx Server can either prompt you for that password on startup or you can provide it via setting the environment variable "TFX_JKS_PW".</p>
+
+          <p>If you already have a signed certificate for Apache for example, then you can use the following command to convert the private key and public certificate into a PKCS#12 file that can be used instead.</p>
+
+          <p><code>openssl pkcs12 -export -inkey privkey.pem -in fullchain.pem -name templatefx -out templatefx.jks</code></p>
         </dd>
 
         <dt><strong>Offline Mode</strong></dt>
         <dd>
-          <p><code>java -jar TemplateFxS.jar -dt &lt;dataTemplate&gt; -out &lt;outfile&gt;</code></p>
+          <p><code>java -jar TemplateFxS.jar -dt &lt;dataTemplate&gt; -out &lt;outfile&gt; [-t &lt;timeout&gt;]</code></p>
           <p>An alternative option is to use the TemplateFx Server component in Offline Mode by running it from the command line as and when you wish to generate an output. With this method, you provide it with an input DataTemplate and it will generate the output to the specified file. This could be called directly from a local script or from another program to generate outputs whenever you require, without having to support a TCP connection. The format of the DataTemplate is identical to the POST DATA associated with the REST API which is detailed below.</p>
         </dd>
       </dl>
 
       <h4 class="heading">8.1. Request Format</h4>
 
-      <p>To submit a request to the TemplateFx Server you need to use a standard HTTP POST request using the URL "/dataTemplate". The POST DATA should contain your DataTemplate in the text based format that is described in section 3 of this document - an example has been included below.</p>
+      <p>To submit a request to the TemplateFx Server you need to use a standard HTTP POST request using the URL "/generate". The POST DATA should contain your DataTemplate in the text based format that is described in section 3 of this document or preferably using the web friendly JavaScript Object Notation (JSON) format - an example of both has been included below.</p>
 
-      <pre>POST /dataTemplate HTTP/1.1
-Host: 127.0.0.1:8088
+      <h4 class="heading">8.1.1. JavaScript Object Notation (JSON) Format</h4>
+
+      <pre>POST /generate HTTP/1.1
+Host: 127.0.0.1:8080
+Content-Type: application/json; Charset=UTF-8
+Content-Length: 207
+
+<span style="color: darkgreen;">{
+  "data": "&lt;base64 string&gt;",
+  "template": "&lt;base64 string&gt;",
+  "group_by": "FIELD_1[ || FIELD_2][ || ...]",
+  "snippets": {
+    "NAME_1": "&lt;base64 string&gt;",
+    "NAME_2": "&lt;base64 string&gt;"
+  }
+}</span></pre>
+
+      <h4 class="heading">8.1.2. DataTemplate Format</h4>
+
+      <pre>POST /generate HTTP/1.1
+Host: 127.0.0.1:8080
 Content-Type: text/plain; Charset=UTF-8
 Content-Length: 483 
 
@@ -1283,21 +1315,11 @@ interface &lt;&lt;INTERFACE&gt;&gt;
 !
 <strong>&lt;/templatefx:template&gt;</strong></span></pre>
 
-      <p>To support a more web friendly format, the "data" can also be submitted using JavaScript Object Notation (JSON) - the equivalent to the above is shown below.</p>
-
-      <pre><span style="color: darkgreen;"><strong>&lt;templatefx:data&gt;</strong>
-[
-  { "ROUTER": "PE-1A", "INTERFACE": "Gi0/0/0", "IP_SUBNET": "192.0.2.0", "DEST": "R1 (Gi0/0)", "HELPERS": "192.0.2.129; 192.0.2.130; 192.0.2.131" },
-  { "ROUTER": "PE-1A", "INTERFACE": "Gi0/0/1", "IP_SUBNET": "192.0.2.4", "DEST": "R2 (Gi0/1)", "HELPERS": "" },
-  { "ROUTER": "PE-1A", "INTERFACE": "Gi0/0/2", "IP_SUBNET": "192.0.2.8", "DEST": "R3 (Gi0/2)", "HELPERS": "10.254.0.1" }
-]
-<strong>&lt;/templatefx:data&gt;</strong></pre>
-
       <h4 class="heading">8.2. Response Format</h4>
 
       <p>Assuming the request is valid HTTP and you don't get a HTTP error code back (i.e. something which isn't HTTP 200 OK), then there are two different response formats (all responses use JSON as per most REST APIs) - one for success and one for failure.</p>
 
-      <p>All responses will have a "version" field which is expected to be set to "1.0" as this defines the version of the API - any changes which radically change the response format will increase the version number. The "status" field is either "ok" or "error" depending on the response - when it is "ok" then it will return the generated outputs using array notation via the "outputs" object, which contains a separate hash containing a "group" and "value" key per output. In all instances the outputs themselves are encoded using Base64. The "console" field is also always included on success, but may be empty if nothing was written to it - again always Base64 encoded. When the status is "error" then it will return an error "code" and "message" to tell you what went wrong.</p>
+      <p>All responses will have a "version" field which is expected to be set to "1.0" as this defines the version of the API - any changes which radically change the response format will increase the version number. The "status" field is either "ok" or "error" depending on the response - when it is "ok" then it will return the generated outputs using array notation via the "outputs" object, which contains a separate hash containing a "group" and "value" key per output. In all instances the outputs themselves are encoded using Base64. The "console" field is also always included on success, but may be empty if nothing was written to it - again always Base64 encoded. The "elapsed" field is the processing duration in seconds represented to 3 decimal places. When the status is "error" then it will return an error "code" and "message" to tell you what went wrong.</p>
 
       <h4 class="heading">8.2.1. On Success</h4>
 
@@ -1305,7 +1327,7 @@ interface &lt;&lt;INTERFACE&gt;&gt;
 {
   "version": "1.0",
   "status": "ok",
-  "elapsed": "&lt;string&gt;",
+  "elapsed": &lt;float&gt;,
   "console": "&lt;base64 string&gt;",
   "outputs": [
     {
