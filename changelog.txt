@@ -1,6 +1,20 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2017 Chris Mason <chris@templatefx.org>
 
+Version 2.65 - 30th December 2017
+	* MAY BREAK THINGS WARNING: Updated TemplateFx Server URL from "/dataTemplate" to "/generate".
+	* Fixed an issue with the TemplateFx Server where it wasn't allowing Data-less DataTemplates.
+	* Increased the default TemplateFx Server processing limit to 2 minutes from 90 seconds.
+	* Added the ability to change the processing limit on the TemplateFx Server on the command line.
+	* Updated the format of the "elapsed" field in the TemplateFx Server response to float.
+	* Changed the default TemplateFx Server port (8080 for HTTP and 8443 for HTTPS).
+	* TemplateFx Server now supports a web friendly JSON request format.
+	* Reduced the thickness of the border for margin highlighting in the GUI.
+	* Updates to the IP Calc to provide a continuous output instead of always clearing the screen.
+	* Fixed an exception if you pressed "CTRL+C" during IP Calc operations.
+	* Implemented some JavaScript optimisations using CompiledScript to speed things up a tiny bit.
+	* Added "cidrmask()" JavaScript function to convert from subnet mask to cidr.
+
 Version 2.64 - 26th October 2017
 	* Fixed a bug with margin highlighting - it was getting out of sync during output generation.
 	* Updated "templatefx.first()" and "templatefx.last()" to include a filter option like "templatefx.fields()"
