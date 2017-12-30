@@ -1,5 +1,5 @@
 TemplateFx | Dynamic Templating Tool
-Copyright (c) 2011-2017 Chris Mason <chris@templatefx.org>
+Copyright (c) 2011-2018 Chris Mason <chris@templatefx.org>
 
 Version 2.65 - 30th December 2017
 	* MAY BREAK THINGS WARNING: Updated TemplateFx Server URL from "/dataTemplate" to "/generate".
