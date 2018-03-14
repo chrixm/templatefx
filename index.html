@@ -39,7 +39,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.65 (Build 17364)<br />Released: 30th December 2017</h4>
+        <h4>Latest Version: 2.66 (Build 18072)<br />Released: 13th March 2018</h4>
       </div>
 
       <p>I have had a couple of requests to provide a "donate" type link for people to show their appreciation - I don't charge anything for you to use TemplateFx and I never will, but if you use TemplateFx and find it useful and want to show your appreciation then you can using <a href="https://paypal.me/chrixm">https://paypal.me/chrixm</a>.</p>
@@ -91,7 +91,7 @@
 
       <h4 class="heading">2.3. Output Pane</h4>
 
-      <p>Every time you click on the "Generate Output" button a new output pane is added as a new tab. This pane allows you to see the merged output with the ability to save it or to zip multiple outputs together into a single archive. If you have selected a field in the "Group By" drop down, then you have the ability to cycle through the different output groups. In the event that TemplateFx detects you are creating a HTML based template then it will give you the option of showing the output in your default browser using the "In Browser" button.</p>
+      <p>Every time you click on the "Generate Output" button a new output pane is added as a new tab. This pane allows you to see the merged output with the ability to save it or to zip multiple outputs together into a single archive. If you have selected a field in the "Group By" drop down, then you have the ability to cycle through the different output groups. In the event that TemplateFx detects you are creating a HTML based template (i.e. if it detects <code>&lt!DOCTYPE html&gt</code> at the start of your template and then <code>&lt;html&gt;</code> and <code>&lt;/html&gt;</code> tags) then it will give you the option of showing the output in your default browser using the "In Browser" button.</p>
 
       <p>You also have various different selection options ("Select Line", "Select Block" and "Select Paragraph") by right clicking on the output pane which allows you to easily select blocks to copy. This goes one step further with a feature called "Copy Mode", which is available in the same menu that automatically highlights blocks as you move the mouse over them - this allows you to copy blocks without having to manually select them first.</p>
 
@@ -362,7 +362,7 @@ R = 5:A</pre>
 
       <p>The above <code>%{NAME}%</code> syntax tells TemplateFx to replace it with the contents of the snippet named "ACL-STANDARD". This directive is processed first before any substitutions have taken place which means any valid template syntax can be used within a snippet. The scope of snippets is within the DataTemplate and when the DataTemplate is saved or loaded then the snippets are included with it. There are two Snippets which have a special meaning (<code>~HEADER</code> and <code>~FOOTER</code>), which are automatically added to either the start or the end of your template - hopefully self-explanatory.</p>
 
-      <p>Snippets also support parsing of an optional parameter by specifying parenthesis after the snippet name (i.e. <code>%{NAME("&lt;string&gt;")}%</code>) when you reference it in your template, which can then be accessed in the snippet via the <code>{%}</code> markup. Any occurrences of <code>{%}</code> in the snippet will be replaced with "&lt;string&gt;" - this could be used to pass through a literal string which allows a different response to be produced depending on what is passed through. However, care should be taken when passing through special constructs (i.e. <code>&lt;?= ?&gt;</code>) as they will be evaluated as part of the snippet body and thus need to be valid in the context they are being evaluated.</p>
+      <p>Snippets also support parsing of an optional parameter by specifying parenthesis after the snippet name (i.e. <code>%{NAME("&lt;string&gt;")}%</code>) when you reference it in your template, which can then be accessed in the snippet via the <code>{%}</code> markup. Any occurrences of <code>{%}</code> in the snippet will be replaced with "&lt;string&gt;" - this could be used to pass through a literal string which allows a different response to be produced depending on what is passed through. However, care should be taken when passing through special constructs (i.e. <code>&lt;?= ?&gt;</code>) as they will be evaluated as part of the snippet body and thus need to be valid in the context they are being evaluated - to emphasise this point, special constructs won't be syntax highlighted in the main template pane.</p>
 
       <p>The final use of snippets is a bit of a hack, but allows DataTemplate specific options to be defined and saved within the DataTemplate. The following "special" snippets are currently supported:</p>
 
@@ -518,13 +518,13 @@ SECOND
 FIRST
 SECOND</pre>
 
-      <p>However, if you use the following instead and specify an order (any positive number starting from 0) for the specific <code>GROUP</code> section - then it will order the sections based on the numbers in ascending order (any <code>GROUP</code> section without a number will assume "0" - which means it will be output first):</p>
+      <p>However, if you use the following instead and specify an order (any positive number starting from 0, but it also supports <code>&lt;?= ?&gt;</code> blocks for dynamic generation of the number) for the specific <code>GROUP</code> section - then it will order the sections based on the numbers in ascending order (any <code>GROUP</code> section without a number or invalid syntax will assume "0" - which means it will be output first):</p>
 
       <pre><span class="group">&lt;GROUP = OUTPUT&gt;[<span class="field">0</span>]</span>
 FIRST
 <span class="group">&lt;/GROUP&gt;</span>
       
-<span class="group">&lt;GROUP = OUTPUT&gt;[<span class="field">1</span>]</span>
+<span class="group">&lt;GROUP = OUTPUT&gt;[<span class="script">&lt;?= 1 ?&gt;</span>]</span>
 SECOND
 <span class="group">&lt;/GROUP&gt;</span></pre>
 
@@ -754,7 +754,7 @@ interface Gi0/0/2
         </dd>
         <dt><strong>templatefx.jre_version</strong></dt>
         <dd>
-          <p>This variable returns the current Java (JRE) version as a string (e.g. "1.7.0_79").</p>
+          <p>This variable returns the current Java (JRE) version as a string (e.g. "1.8.0_162").</p>
         </dd>
         <dt><strong>templatefx.group_start</strong></dt>
         <dd>
@@ -780,7 +780,7 @@ interface Gi0/0/2
         <dd>
           <p>This variable is a multi-dimensional array of the actual data with the headers in row "0". This allows you to access the raw data from whatever row you are currently processing.</p>
         </dd>
-        <dt><strong>templatefx.first (["field_1[ || field_2]"], [{ "field_1": /regex/, "field_2": /regex/ }])</strong></dt>
+        <dt><strong>templatefx.first (["field_1[ || field_2]"], [{ "field_1": /regex/, "field_2": new RegExp("regex") }])</strong></dt>
         <dd>
           <p>This variable is actually a JavaScript function and allows you to determine if this is the first time you have seen this particular field value. It will return true if this row of data is the first time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the first time you have seen this specific combination of values together. If you omit the "field" variable then it will return true for the first row of data. An example is included below which determines whether this is the first time we have seen this specific value within the "ROUTER" field:</p>
 
@@ -791,7 +791,7 @@ DATA
 </pre>
           <p>The function also supports an optional secondary parameter which allows you to filter what rows you are checking against - if you don't want to specify a specific field then you can pass "null" as the first parameter. This follows the same syntax which can be found within the <code>templatefx.fields()</code> function definition.</p>
         </dd>
-        <dt><strong>templatefx.last (["field_1[ || field_2]"], [{ "field_1": /regex/, "field_2": /regex/ }])</strong></dt>
+        <dt><strong>templatefx.last (["field_1[ || field_2]"], [{ "field_1": /regex/, "field_2": new RegExp("regex") }])</strong></dt>
         <dd>
           <p>This variable is actually a JavaScript function and allows you to determine if this is the last time you will see this particular field value - the oppposite of <code>templatefx.first()</code>. It will return true if this row of data is the last time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the last time you have seen this specific combination of values together. If you omit the "field" variable then it will return true for the last row of data. An example is included below which determines whether this is the last time we have seen this specific combination of values for the "ROUTER" and "INTERFACE" fields:</p>
 
@@ -811,9 +811,9 @@ DATA
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
         </dd>
-        <dt><strong>templatefx.fields ("field", [{ "field_1": /regex/, "field_2": /regex/ }], [return_unique])</strong></dt>
+        <dt><strong>templatefx.fields ("field", [{ "field_1": /regex/, "field_2": new RegExp("regex") }], [return_unique])</strong></dt>
         <dd>
-          <p>This function returns an array of all row values for a specific field - selected using the first parameter (all field names are treated as case-insensitive). There are a couple of optional arguments which allows the field values to be filtered (the function will return an empty array no rows match the criteria) as well as definining whether the returned array only contains unique values. At face value, this function looks quite complicated, but hopefully the following example will help explain:</p>
+          <p>This function returns an array of all row values for a specific field - selected using the first parameter (all field names are treated as case-insensitive). There are a couple of optional arguments which allows the field values to be filtered (the function will return null if no rows match the criteria) as well as definining whether the returned array only contains unique values. At face value, this function looks quite complicated, but hopefully the following example will help explain:</p>
 
           <pre><span class="comment">NAME, AGE, COUNTRY</span>
 CHRIS, 65, GERMANY
@@ -939,6 +939,14 @@ DORRIS, 32, ESTONIA</pre>
 <pre><span class="script">&lt;?= ipsplit("2001:db8::/32", 8).join("\n") ?&gt;</span></pre>
           <p>To be able to split a subnet into smaller subnets the "cidr_mask" should be longer than the mask on the "subnet" (and have 16 bits or less between them). However, if you specify a shorter mask as your "cidr_mask" then it will return the supernet instead (i.e. using "192.0.2.0/24" with a "cidr_mask" of "/16" will return "192.0.0.0/16"). In the same sense you can specify a negative number to provide a supernet (i.e. using "192.0.2.0/28" with the minimum number of subnets as -8 will return "192.0.2.0/25").</p>
         </dd>
+        <a name="cidr2range"></a>
+        <dt>
+          <strong>cidr2range ("cidr")</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+        <p>This function is used to convert a CIDR subnet into an IP address range (e.g. "192.0.2.0/24" would produce "192.0.2.0-192.0.2.255") - it will return a string or "null" if you have tried to do something stupid. It will always return the full range including network and broadcast where applicable - if you only want the usable hosts within a CIDR subnet then please see the <code>ipfirst()</code> and <code>iplast()</code> functions. Although I mention a CIDR address, it does support any format of subnet as input (e.g. "192.0.2.0 255.255.255.0" or "192.0.2.0 0.0.0.255" are also valid).</p>
+        </dd>
         <a name="range2cidr"></a>
         <dt>
           <strong>range2cidr ("range")</strong>
@@ -1009,6 +1017,14 @@ DORRIS, 32, ESTONIA</pre>
 2001:db8:0:0:0:0:0:0/64
 </pre>
 
+        </dd>
+        <a name="supernet"></a>
+        <dt>
+          <strong>supernet ("cidr_1", "cidr_2")</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+          <p>This function takes a pair of CIDR prefixes and finds the smallest subnet that encompasses them both. In most cases this will produce a subnet that is much larger then just the two subnets and in this instance the subnet returned will be prefixed with "~" to indicate this. In scenarios where an exact subnet is found (e.g. <code>supernet("192.0.2.0/29", "192.0.2.8/29")</code>) then it will return the subnet without a prefix.</p>
         </dd>
         <a name="network"></a>
         <dt>
@@ -1168,12 +1184,12 @@ DORRIS, 32, ESTONIA</pre>
         <a name="timestamp"></a>
         <dt><strong>timestamp (["format"])</strong></dt>
         <dd>
-          <p>This function generates a timestamp based on the current date and time, either based on a provided format (using the same format as Java's <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class) or using a default pattern if omitted.</p>
+          <p>This function generates a timestamp based on the current date and time, either based on a provided format (using the same format as Java's <a href="http://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class) or using a default pattern if omitted.</p>
         </dd>
         <a name="date"></a>
         <dt><strong>date ("date", "format", amount, ["dest_format"], ["field"])</strong></dt>
         <dd>
-          <p>This function is used to manipulate dates by adding or subtracting a duration from a given date, or by converting one date format to another. The "date" field is used to pass a particular date string and the "format" field is used to specify the format of that given date (using the same format as Java's <a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class). The "amount" field specifies the number of days (by default) to add or subtract from the given date - to subtract days, a negative number can be provided. On success it will return the manipulated date in the same format that was provided - you can specify a different output format using the "dest_format" optional parameter (using the same formatting rules). By default this function operates using days, but by specifying either "d" for days, "w" for weeks, "m" for months or "y" for years as the "field" parameter, the default behaviour can be changed.</p>
+          <p>This function is used to manipulate dates by adding or subtracting a duration from a given date, or by converting one date format to another. The "date" field is used to pass a particular date string and the "format" field is used to specify the format of that given date (using the same format as Java's <a href="http://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html" target="_blank">SimpleDateFormat</a> class). The "amount" field specifies the number of days (by default) to add or subtract from the given date - to subtract days, a negative number can be provided. On success it will return the manipulated date in the same format that was provided - you can specify a different output format using the "dest_format" optional parameter (using the same formatting rules). By default this function operates using days, but by specifying either "d" for days, "w" for weeks, "m" for months or "y" for years as the "field" parameter, the default behaviour can be changed.</p>
 <pre><span class="comment"># Add 5 days to 27/04/2016 and output using dd/MMMM/yyyy (i.e. 02 May 2016)</span>
 <span class="script">&lt;?= date("27/04/2016", "dd/MM/yyyy", 5, "dd MMMM yyyy") ?&gt;</span>
 
@@ -1224,7 +1240,7 @@ DORRIS, 32, ESTONIA</pre>
 
       <p><span class="label label-danger">GUI Only</span>&nbsp;Not supported within TemplateFx Server DataTemplates</p>
 
-      <p>In addition to the built-in JavaScript variables and functions, TemplateFx also supports globally including external JavaScript libraries. You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. If you have issues including some JavaScript libraries, I recommended you try with the latest version of the Java Runtime Environment - the JavaScript processing was greatly improved from Java 8 onwards with the Nashorn JavaScript Engine. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
+      <p>In addition to the built-in JavaScript variables and functions, TemplateFx also supports globally including external JavaScript libraries. You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
 
       <a name="server"></a>
       <h4 class="heading">8. TemplateFx as a Service (REST API)</h4>
@@ -1236,14 +1252,14 @@ DORRIS, 32, ESTONIA</pre>
       <dl>
         <dt><strong>HTTP Server Mode</strong></dt>
         <dd>
-          <p><code>java -jar TemplateFxS.jar -s [host[:port]] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
-          <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 (or 8443 if TLS is enabled) on 127.0.0.1 only (localhost - doesn't accept remote connections). The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether. The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process. By specifying a host of "0.0.0.0" or using a specific interface IP address it will accept remote connections from other hosts that have access to it. By default it will listen for standard HTTP connections (no TLS).</p>
+          <p><code>java -jar TemplateFxS.jar -s [host[:port]] [-lib &lt;library.js&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
+          <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 (or 8443 if TLS is enabled) on 127.0.0.1 only (localhost - doesn't accept remote connections). The "-lib" parameter is used to specify external JavaScript modules (it can be used multiple times) - they are loaded server side so are accessible to all API clients. The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether. The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process. By specifying a host of "0.0.0.0" or using a specific interface IP address it will accept remote connections from other hosts that have access to it. By default it will listen for standard HTTP connections (no TLS).</p>
           <p>The preferred method is to run the TemplateFx Server bound to "localhost" only and then using something like Apache's "ProxyPass" directive to forward requests to the TemplateFx Server (e.g. "ProxyPass /api http://127.0.0.1:8080" - requests sent to "/api/generate" would thenthen  be mapped to "http://127.0.0.1:8080/generate").</p>
         </dd>
 
         <dt><strong>HTTPS Server Mode</strong></dt>
         <dd>
-          <p><code>java -jar TemplateFxS.jar -s [host[:port]] -tls &lt;templatefx.jks&gt; [-t &lt;timeout&gt;] [-dumpreq]</code></p>
+          <p><code>java -jar TemplateFxS.jar -s [host[:port]] -tls &lt;templatefx.jks&gt; [-lib &lt;library.js&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
           <p>As standard HTTP doesn't provide any security as the requests are sent in plaintext over the network (possibly acceptable when bound to localhost only), it also supports Transport Layer Security (TLS). By using the "-tls" parameter it allows you to specify a Java Key Store (or PKCS#12 archive) that contains your public/private key pair (where your public key is either self-signed or signed from a trusted Certificate Authority) - this enables TLS/HTTPS and disables HTTP so that all traffic between client and server is encrypted.</p>
 
           <p>As an example using Java's keytool, the following demonstrates how to generate a self-signed RSA (or Elliptic Curve) key using a modulus of 4096 bits (or 384 for EC) with a validity of 1825 days (5 years):</p>
@@ -1267,7 +1283,7 @@ DORRIS, 32, ESTONIA</pre>
 
         <dt><strong>Offline Mode</strong></dt>
         <dd>
-          <p><code>java -jar TemplateFxS.jar -dt &lt;dataTemplate&gt; -out &lt;outfile&gt; [-t &lt;timeout&gt;]</code></p>
+          <p><code>java -jar TemplateFxS.jar -dt &lt;dataTemplate&gt; -out &lt;outfile&gt; [-lib &lt;library.js&gt;] [-t &lt;timeout&gt;]</code></p>
           <p>An alternative option is to use the TemplateFx Server component in Offline Mode by running it from the command line as and when you wish to generate an output. With this method, you provide it with an input DataTemplate and it will generate the output to the specified file. This could be called directly from a local script or from another program to generate outputs whenever you require, without having to support a TCP connection. The format of the DataTemplate is identical to the POST DATA associated with the REST API which is detailed below.</p>
         </dd>
       </dl>
