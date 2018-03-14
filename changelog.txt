@@ -1,6 +1,31 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2018 Chris Mason <chris@templatefx.org>
 
+Version 2.66 - 13th March 2018
+	* Updated the minimum JRE version to 8 to allow the removal of legacy code and to keep up with deprecation.
+	* Removed support for decryption of pre v2.54 legacy encryption - to open in v2.66 or later you need to re-save with v2.54 or later.
+	* Removed custom "PBKDF2WithHmacSHA512" routines as we now have native support in Java 8.
+	* Removed custom Base64 routines as we now have native support in Java 8.
+	* Removed 58 anonymous inner classes by using Lambdas in Java 8.
+	* Fixed a bug where the percentage bar wasn't reaching 100% when using "skiprow()" in templates.
+	* Added support for script blocks within GROUP tags to dynamically generate the position number.
+	* Added a warning when using both "GROUP BY" blocks and "Group By" in the DataTemplate.
+	* Fixed a bug where it was still syntax highlighting IF, GROUP and FOR blocks in script blocks.
+	* Added "Copy Last Output" support to IPCalc for subnet DNS lookups and subnet calculations.
+	* Update to IPCalc in moving "Prev Network" back to where it was originally in the output.
+	* Added support for including external JavaScript libraries using "-lib" in TemplateFx Server.
+	* Fixed an inconsistency in the way HTML files were being opened when using "In Browser".
+	* Fixed an issue where blank lines within "~FILTER" were being raised as invalid syntax.
+	* Added support in the IPCalc for advanced subnetting calculations.
+	* Updated "templatefx.fields()" function to return null if no rows match.
+	* Updates to IPCalc to deal with some soon to be deprecated code in Java 10.
+	* Margin highlighting is now disabled if "Wrap Long Lines" is enabled as it doesn't work.
+	* Added caching to JavaScript IP functions to speed up subsequent requests if "Cache JavaScript Libraries" is enabled.
+	* Added a check for invalid characters when importing DataTemplates with Snippets.
+	* Added a summary to the IPCalc when performing an nslookup on a subnet.
+	* Added a JavaScript "cidr2range()" function.
+	* Added a JavaScript "supernet()" function.
+
 Version 2.65 - 30th December 2017
 	* MAY BREAK THINGS WARNING: Updated TemplateFx Server URL from "/dataTemplate" to "/generate".
 	* Fixed an issue with the TemplateFx Server where it wasn't allowing Data-less DataTemplates.
