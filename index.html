@@ -25,6 +25,7 @@
       span.input_type { background: #ee82ee }
       span.script { background: #ffc800 }
       span.comment { background: #99ccff }
+      span.marker { background: #33b8ff }       
       span.group { background: #11ccaa }
       span.at { background: #ff7f50 }
       .inline-left { text-align: left }
@@ -39,7 +40,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.66 (Build 18072)<br />Released: 13th March 2018</h4>
+        <h4>Latest Version: 2.67 (Build 18206)<br />Released: 25th July 2018</h4>
       </div>
 
       <p>I have had a couple of requests to provide a "donate" type link for people to show their appreciation - I don't charge anything for you to use TemplateFx and I never will, but if you use TemplateFx and find it useful and want to show your appreciation then you can using <a href="https://paypal.me/chrixm">https://paypal.me/chrixm</a>.</p>
@@ -430,6 +431,19 @@ R = 5:A</pre>
       <pre><span style="display: inline-block; width: 100%;" class="comment">#- Using a hyphen (-) after the comment symbol will highlight the entire row.</span>
 </pre>
 
+      <a name="markers"></a>
+      <h4 class="heading">4.6. Markers</h4>
+
+      <p><span class="label label-danger">GUI Only</span>&nbsp;Not supported within TemplateFx Server DataTemplates</p>
+
+      <p>There is a further type of comment called a "Marker", which allows you to mark a point within the Template that you can easily jump. It uses the <code>#$ &lt;TEXT&gt;</code> syntax and when placed within the Template will add an entry to the menu that appears when you right click on the Template pane. By clicking on the item within that menu, it will automatically jump to that place within the Template. The markers are case insensitive and if you add duplicate markers then it will only use the first occurrence. At the moment, TemplateFx supports a maximum of 8 markers per DataTemplate, mainly to stop the menu becoming too large.</p>
+
+      <pre><span class="marker">#$ START</span>
+
+<span class="comment"># ... </span>
+
+<span class="marker">#$ END</span></pre>
+        
       <a name="filtering"></a>
       <h4 class="heading">5. Filtering and Sorting</h4>
 
