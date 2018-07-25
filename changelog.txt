@@ -1,6 +1,17 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2018 Chris Mason <chris@templatefx.org>
 
+Version 2.67 - 25th July 2018
+	* Added support for markers using #$ syntax within the Template pane on right click - see section 4.6 in the User Guide.
+	* Added support to the IPCalc to perform multi dns lookups based on regex style static characters classes and groups.
+	* Added support to the IPCalc aggregate function to also calculate the supernet with subnet fill in.
+	* Fixed a bug which caused TemplateFx to hang on generation if a script syntax error was detected within a Snippet.
+	* Updated the JavaScript "aggregate" function to use a space between IPv4 and IPv6 subnets instead of "-".
+	* Updated the IPCalc to filter out any non-ASCII 7-bit characters from the input box.
+	* Renamed "Copy List of IPs" to "Copy Last List of IPs" in IPCalc.
+	* Renamed "Copy Reverse List of IPs" to "Copy Last Reverse List of IPs" in IPCalc.
+	* Increased the default height of the window from 640 to 700 pixels to accommodate the updated IPCalc usage screen.
+
 Version 2.66 - 13th March 2018
 	* Updated the minimum JRE version to 8 to allow the removal of legacy code and to keep up with deprecation.
 	* Removed support for decryption of pre v2.54 legacy encryption - to open in v2.66 or later you need to re-save with v2.54 or later.
