@@ -5,7 +5,7 @@ Version 2.67 - 25th July 2018
 	* Added support for markers using #$ syntax within the Template pane on right click - see section 4.6 in the User Guide.
 	* Added support to the IPCalc to perform multi dns lookups based on regex style static characters classes and groups.
 	* Added support to the IPCalc aggregate function to also calculate the supernet with subnet fill in.
-	* Fixed a bug which caused TemplateFx to hang on generation if a script syntax error was detected within a Snippet.
+	* BUG: Fixed a bug which caused TemplateFx to hang on generation if a script syntax error was detected within a Snippet.
 	* Updated the JavaScript "aggregate" function to use a space between IPv4 and IPv6 subnets instead of "-".
 	* Updated the IPCalc to filter out any non-ASCII 7-bit characters from the input box.
 	* Renamed "Copy List of IPs" to "Copy Last List of IPs" in IPCalc.
@@ -18,15 +18,15 @@ Version 2.66 - 13th March 2018
 	* Removed custom "PBKDF2WithHmacSHA512" routines as we now have native support in Java 8.
 	* Removed custom Base64 routines as we now have native support in Java 8.
 	* Removed 58 anonymous inner classes by using Lambdas in Java 8.
-	* Fixed a bug where the percentage bar wasn't reaching 100% when using "skiprow()" in templates.
+	* BUG: Fixed a bug where the percentage bar wasn't reaching 100% when using "skiprow()" in templates.
 	* Added support for script blocks within GROUP tags to dynamically generate the position number.
 	* Added a warning when using both "GROUP BY" blocks and "Group By" in the DataTemplate.
-	* Fixed a bug where it was still syntax highlighting IF, GROUP and FOR blocks in script blocks.
+	* BUG: Fixed a bug where it was still syntax highlighting IF, GROUP and FOR blocks in script blocks.
 	* Added "Copy Last Output" support to IPCalc for subnet DNS lookups and subnet calculations.
 	* Update to IPCalc in moving "Prev Network" back to where it was originally in the output.
 	* Added support for including external JavaScript libraries using "-lib" in TemplateFx Server.
-	* Fixed an inconsistency in the way HTML files were being opened when using "In Browser".
-	* Fixed an issue where blank lines within "~FILTER" were being raised as invalid syntax.
+	* BUG: Fixed an inconsistency in the way HTML files were being opened when using "In Browser".
+	* BUG: Fixed an issue where blank lines within "~FILTER" were being raised as invalid syntax.
 	* Added support in the IPCalc for advanced subnetting calculations.
 	* Updated "templatefx.fields()" function to return null if no rows match.
 	* Updates to IPCalc to deal with some soon to be deprecated code in Java 10.
@@ -39,7 +39,7 @@ Version 2.66 - 13th March 2018
 
 Version 2.65 - 30th December 2017
 	* MAY BREAK THINGS WARNING: Updated TemplateFx Server URL from "/dataTemplate" to "/generate".
-	* Fixed an issue with the TemplateFx Server where it wasn't allowing Data-less DataTemplates.
+	* BUG: Fixed an issue with the TemplateFx Server where it wasn't allowing Data-less DataTemplates.
 	* Increased the default TemplateFx Server processing limit to 2 minutes from 90 seconds.
 	* Added the ability to change the processing limit on the TemplateFx Server on the command line.
 	* Updated the format of the "elapsed" field in the TemplateFx Server response to float.
@@ -47,33 +47,36 @@ Version 2.65 - 30th December 2017
 	* TemplateFx Server now supports a web friendly JSON request format.
 	* Reduced the thickness of the border for margin highlighting in the GUI.
 	* Updates to the IP Calc to provide a continuous output instead of always clearing the screen.
-	* Fixed an exception if you pressed "CTRL+C" during IP Calc operations.
+	* BUG: Fixed an exception if you pressed "CTRL+C" during IP Calc operations.
 	* Implemented some JavaScript optimisations using CompiledScript to speed things up a tiny bit.
 	* Added "cidrmask()" JavaScript function to convert from subnet mask to cidr.
 
 Version 2.64 - 26th October 2017
-	* Fixed a bug with margin highlighting - it was getting out of sync during output generation.
+	* BUG: Fixed a bug with margin highlighting - it was getting out of sync during output generation.
 	* Updated "templatefx.first()" and "templatefx.last()" to include a filter option like "templatefx.fields()"
 	* Updated documentation to add an example of negating a filter in the "templatefx.fields()" function.
-	* Fixed a bug in IPCalc where you couldn't pass a query like "nslookup 192.0.2.0 255.255.255.0"
+	* BUG: Fixed a bug in IPCalc where you couldn't pass a query like "nslookup 192.0.2.0 255.255.255.0"
 	* Moved "Prev Network" higher up in the output to come before the current network.
 
 Version 2.63 - 2nd October 2017
-	* TemplateFx Server now processes requests in parallel - fixed the thread safety issue.
+	* BUG: TemplateFx Server now processes requests in parallel - fixed the thread safety issue.
 	* Added left margin highlighting in the GUI to show the start and end of the current FOR, IF or GROUP block.
 	* Added support for JavaScript function "skiprow()" to disregard the output from the current row.
 	* Updated JavaScript function "insubnet()" to also test whether one subnet is within another.
 	* Updated for Java 9 by replacing some deprecated methods with alternatives where they exist in JDK 1.7.
-	* Updated the MacOS application launcher so it now correctly finds Java 9.
-	* Updated TemplateFx so it now correctly works with "Open With" and is associated with ".dt" files on MacOS.
-	* Updated TemplateFx so the About and Quit handlers now work with Java 9 on MacOS.
+	* BUG: Updated the MacOS application launcher so it now correctly finds Java 9.
+	* BUG: Updated TemplateFx so it now correctly works with "Open With" and is associated with ".dt" files on MacOS.
+	* BUG: Updated TemplateFx so the About and Quit handlers now work with Java 9 on MacOS.
+
+Version 2.62.1 - 19th August 2017
+	* BUG: Issue with thread safety for TemplateFx Server - requests are now temporarily processed in serial.
 
 Version 2.62 - 18th August 2017
 	* Added the TemplateFx Server - a minimalist server implementation of the core templating engine as a REST API.
 	* Added support for Template-only and Data-less DataTemplates.
 	* Extended support for inter group ordering to go alongside intra group ordering.
-	* Disabled rotating of DNS servers on timeout - bad things happen under Cisco AnyConnect.
-	* Fixed a bug where elapsed time started before the user actually hit "OK" on "Generate Output" dialog.
+	* BUG: Disabled rotating of DNS servers on timeout - bad things happen under Cisco AnyConnect.
+	* BUG: Fixed a bug where elapsed time started before the user actually hit "OK" on "Generate Output" dialog.
 	* Added support for providing data as JSON within an text based DataTemplate.
 	* Updated documentation to provide examples of regex matching using IF blocks.
 	* Updated the "pad()" JavaScript function to allow a different padding character.
@@ -89,7 +92,7 @@ Version 2.61 - 4th May 2017
 	* Added support for a powerful "aggregate()" JavaScript function to summarise prefixes into the smallest possible list.
 	* Added support for the same aggregate function to the "IP Calc" tab.
 	* Added anchors/bookmarks to the User Guide for direct access into some sections.
-	* Fixed a bug if you tried to bookmark a DataTemplate which hadn't been saved.
+	* BUG: Fixed a bug if you tried to bookmark a DataTemplate which hadn't been saved.
 	* You can now proceed on a multi-line input box using CTRL+<ENTER> instead of clicking "OK".
 	* Updated "range2cidr()" function so the lower address can be on either side.
 	* Updated "range2cidr()" function so it deals with scenarios where both sides match - a range specifying a single host.
@@ -99,10 +102,10 @@ Version 2.60 - 11th April 2017
 	* Added support for JavaScript function "pad()" to provide left, right or middle alignment of text.
 	* The JavaScript IP manipulation functions now use the same codepath for both IPv4 and IPv6 - just use different bit lengths.
 	* The IPv6 JavaScript functions now accept a full subnet mask as well as CIDR representation.
-	* Fixed an issue which caused a security violation if the current directory didn't match the working directory.
+	* BUG: Fixed an issue which caused a security violation if the current directory didn't match the working directory.
 	* Deprecated "templatefx.group_start" in favour of "templatefx.first()".
 	* Deprecated "templatefx.group_end" in favour of "templatefx.last()".
-	* Removed the bundled "lodash.js" JavaScript library from the distribution - can still be manually included by downloading.
+	* Removed the bundled "lodash.js" JavaScript library from the distribution - it can still be manually included by downloading.
 
 Version 2.59 - 19th February 2017
 	* Enabled the Java SecurityManager to protect users against malicious JavaScript blocks.
