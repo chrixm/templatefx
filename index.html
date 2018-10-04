@@ -40,7 +40,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.67 (Build 18206)<br />Released: 25th July 2018</h4>
+        <h4>Latest Version: 2.68 (Build 18277)<br />Released: 4th October 2018</h4>
       </div>
 
       <p>I have had a couple of requests to provide a "donate" type link for people to show their appreciation - I don't charge anything for you to use TemplateFx and I never will, but if you use TemplateFx and find it useful and want to show your appreciation then you can using <a href="https://paypal.me/chrixm">https://paypal.me/chrixm</a>.</p>
@@ -443,7 +443,7 @@ R = 5:A</pre>
 <span class="comment"># ... </span>
 
 <span class="marker">#$ END</span></pre>
-        
+
       <a name="filtering"></a>
       <h4 class="heading">5. Filtering and Sorting</h4>
 
@@ -770,14 +770,6 @@ interface Gi0/0/2
         <dd>
           <p>This variable returns the current Java (JRE) version as a string (e.g. "1.8.0_162").</p>
         </dd>
-        <dt><strong>templatefx.group_start</strong></dt>
-        <dd>
-          <p><span class="label label-warning">DEPRECATED</span>&nbsp;Use <code>templatefx.first()</code></p>
-        </dd>
-        <dt><strong>templatefx.group_end</strong></dt>
-        <dd>
-          <p><span class="label label-warning">DEPRECATED</span>&nbsp;Use <code>templatefx.last()</code></p>
-        </dd>
         <dt><strong>templatefx.row</strong></dt>
         <dd>
           <p>This variable returns the current row within the data set.</p>
@@ -890,6 +882,19 @@ DORRIS, 32, ESTONIA</pre>
         <dt><strong>skiprow ()</strong></dt>
         <dd>
           <p>This function provides a way to skip processing of the current row and disregard all output associated with it. Once this function is called, then TemplateFx will continue processing the next row in the data as if this row never existed - please be aware that it will still exist within the data schema, so functions like <code>templatefx.first()</code> and <code>templatefx.fields()</code> will still take it into consideration.</p>
+        </dd>
+        <a name="expand"></a>
+        <dt><strong>expand ("string")</strong></dt>
+        <dd>
+        <p>This function is used to expand a string that contains static character classes (i.e. "[0-9]") or static groups (i.e. "(a|b)") into an array of all the different permutations. You are permitted to use as many classes or groups within the same string - if it doesn't detect any classes or groups within the string then the "string" will be returned as the only array element. Character classes support "A-Z", "a-z" and "0-9" characters, whereas static groups allow any string of characters.</p>
+<pre><span class="comment"># This will return an array containing [ "mcxxx-pe-1a", "mcxxx-pe-1b" ]</span>
+<span class="script">&lt;?= expand("mcxxx-pe-1[ab]") ?&gt;</span>
+
+<span class="comment"># This will return an array containing [ "mcxxx-pe-1a", "mcyyy-pe-1a" ]</span>
+<span class="script">&lt;?= expand("mc(xxx|yyy)-pe-1a") ?&gt;</span>
+
+<span class="comment"># This will return an array containing [ "mcxxx-pe-1a", "mcxxx-pe-1b", "mcyyy1-pe-1a", "mcyyy1-pe-1b", "mcyyy2-pe-1a", "mcyyy2-pe-1b" ]</span>
+<span class="script">&lt;?= expand("mc(xxx|yyy[12])-pe-1[ab]") ?&gt;</span></pre>
         </dd>
         <a name="base64encode"></a>
         <dt><strong>base64encode ("string")</strong></dt>
@@ -1016,7 +1021,7 @@ DORRIS, 32, ESTONIA</pre>
 192.0.2.4/30
 192.0.2.8/29
 192.0.2.16/28
--
+
 2001:db8:0:0:0:0:0:0/64
 </pre>
 
@@ -1027,7 +1032,7 @@ DORRIS, 32, ESTONIA</pre>
 192.0.2.4/30
 192.0.2.8/29
 192.0.2.16/28
--
+
 2001:db8:0:0:0:0:0:0/64
 </pre>
 
@@ -1252,47 +1257,29 @@ DORRIS, 32, ESTONIA</pre>
 
       <h4 class="heading">7.3. External JavaScript Libraries</h4>
 
-      <p><span class="label label-danger">GUI Only</span>&nbsp;Not supported within TemplateFx Server DataTemplates</p>
-
-      <p>In addition to the built-in JavaScript variables and functions, TemplateFx also supports globally including external JavaScript libraries. You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
+      <p>In addition to the built-in JavaScript variables and functions, TemplateFx also supports globally including external JavaScript libraries. You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries (or using "-lib" when using the TemplateFx Server) - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
 
       <a name="server"></a>
       <h4 class="heading">8. TemplateFx as a Service (REST API)</h4>
 
-      <p>As it isn't always possible to deploy the Java Runtime Environment within a Desktop environment, maybe due to corporate policy or user preference, TemplateFx can also be deployed as a service instance using the TemplateFx Server component. In this scenario it provides a HTTP(S) based REST API to allow templating to occur from a number of different clients without having the burden of installing the TemplateFx GUI. Any client (i.e. Web Browser, Perl, PHP, Curl, Microsoft Excel, etc) which is able to establish a HTTP connection can use the REST API to generate outputs based on templates - it could be a service activation service that uses it to generate configuration on the fly from an order form, etc.</p>
+      <p>As it isn't always possible to deploy the Java Runtime Environment within a Desktop environment, maybe due to corporate policy or user preference, TemplateFx can also be deployed as a service instance using the TemplateFx Server component. In this scenario it provides a HTTP based REST API to allow templating to occur from a number of different clients without having the burden of installing the TemplateFx GUI. Any client (i.e. Web Browser, Perl, PHP, Curl, Microsoft Excel, etc) which is able to establish a HTTP connection can use the REST API to generate outputs based on templates - it could be a service activation service that uses it to generate configuration on the fly from an order form, etc.</p>
 
       <p>The TemplateFx Server is a cut down version of TemplateFx which is contained within a separate JAR file and only contains the core templating engine. It is run via the command line and supports the following command line options:</p>
 
       <dl>
         <dt><strong>HTTP Server Mode</strong></dt>
         <dd>
-          <p><code>java -jar TemplateFxS.jar -s [host[:port]] [-lib &lt;library.js&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
-          <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 (or 8443 if TLS is enabled) on 127.0.0.1 only (localhost - doesn't accept remote connections). The "-lib" parameter is used to specify external JavaScript modules (it can be used multiple times) - they are loaded server side so are accessible to all API clients. The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether. The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process. By specifying a host of "0.0.0.0" or using a specific interface IP address it will accept remote connections from other hosts that have access to it. By default it will listen for standard HTTP connections (no TLS).</p>
-          <p>The preferred method is to run the TemplateFx Server bound to "localhost" only and then using something like Apache's "ProxyPass" directive to forward requests to the TemplateFx Server (e.g. "ProxyPass /api http://127.0.0.1:8080" - requests sent to "/api/generate" would thenthen  be mapped to "http://127.0.0.1:8080/generate").</p>
+          <p><span class="label label-warning">PARTIAL DEPRECATION</span>&nbsp;As "HTTPS Server Mode" has been deprecated, we are also deprecating the ability to allow remote connections as unsecured connections over the network are a security risk - use "ProxyPass" instead to allow secured remote connections.</p>
+          <p><code>java -jar TemplateFxS.jar -s [port] [-lib &lt;library.js&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
+          <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 on 127.0.0.1 only (localhost - doesn't accept remote connections) - if you prefer, you can specify a different port as a parameter. The "-lib" parameter is used to specify external JavaScript modules (it can be used multiple times) - they are loaded server side so are accessible to all API clients. The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether. The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process.</p>
+          <p>As the TemplateFx Server can be bound to "localhost" only then you will need to use Apache's "ProxyPass" directive (or similar under NGINX) to forward requests to the TemplateFx Server - the following syntax will send requests sent to "/api/generate" via "http://127.0.0.1:8080/generate"). This allows Apache to manage the certificates and TLS configuration to ensure the traffic is secured over the network.</p>
+          <pre>ProxyRequests Off
+ProxyPass /api http://127.0.0.1:8080
+ProxyPassReverse /api http://127.0.0.1:8080</pre>
         </dd>
-
         <dt><strong>HTTPS Server Mode</strong></dt>
         <dd>
-          <p><code>java -jar TemplateFxS.jar -s [host[:port]] -tls &lt;templatefx.jks&gt; [-lib &lt;library.js&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
-          <p>As standard HTTP doesn't provide any security as the requests are sent in plaintext over the network (possibly acceptable when bound to localhost only), it also supports Transport Layer Security (TLS). By using the "-tls" parameter it allows you to specify a Java Key Store (or PKCS#12 archive) that contains your public/private key pair (where your public key is either self-signed or signed from a trusted Certificate Authority) - this enables TLS/HTTPS and disables HTTP so that all traffic between client and server is encrypted.</p>
-
-          <p>As an example using Java's keytool, the following demonstrates how to generate a self-signed RSA (or Elliptic Curve) key using a modulus of 4096 bits (or 384 for EC) with a validity of 1825 days (5 years):</p>
-
-          <p><code>keytool -genkeypair -keyalg RSA <i>(or EC)</i> -alias templatefx -keystore templatefx.jks -validity 1825 -keysize 4096 <i>(or 384)</i> -dname "CN=&lt;CommonName&gt;, C=&lt;CountryName&gt;, ST=&lt;StateOrProvinceName&gt;, L=&lt;Locality&gt;, O=&lt;Organization&gt;, emailAddress=&lt;emailAddress&gt;" -ext san=dns:&lt;Host or IP&gt; -v</code></p>
-
-          <p>By using self-signed certificates, the client will need to be told to trust this certificate as it hasn't been signed by a trusted Certificate Authority. The alternative and preferred way is to generate a Certificate Signing Request (CSR) and getting it signed by a CA that the client trusts. If you wish to go down the route of obtaining a signed certificate then you can generate a CSR from your key pair using the following:</p>
-
-          <p><code>keytool -certreq -alias templatefx -keyalg RSA <i>(or EC)</i> -file templatefx.csr -keystore templatefx.jks -ext san=dns:&lt;Host or IP&gt; -v</code></p>
-
-          <p>The contents of "templatefx.csr" can then be submitted to a public Certificate Authority to be signed, which can then be imported back (you will also need to import any Intermediary Certificates as well) into your Java Key Store:</p>
-
-          <p><code>keytool -import -alias templatefx -keystore templatefx.jks -file templatefx.cer</code></p>
-
-          <p>As a Java Key Store contains your private key it needs to be protected by a password - the TemplateFx Server can either prompt you for that password on startup or you can provide it via setting the environment variable "TFX_JKS_PW".</p>
-
-          <p>If you already have a signed certificate for Apache for example, then you can use the following command to convert the private key and public certificate into a PKCS#12 file that can be used instead.</p>
-
-          <p><code>openssl pkcs12 -export -inkey privkey.pem -in fullchain.pem -name templatefx -out templatefx.jks</code></p>
+          <p><span class="label label-warning">DEPRECATED</span>&nbsp;Certificates and TLS are much better handled by Apache - use "ProxyPass" instead (explained above).</p>
         </dd>
 
         <dt><strong>Offline Mode</strong></dt>
