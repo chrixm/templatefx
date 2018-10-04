@@ -1,6 +1,22 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2018 Chris Mason <chris@templatefx.org>
 
+Version 2.68 - 4th October 2018
+	* WARNING: Deprecated "HTTPS Server Mode" in TemplateFx Server - use "ProxyPass" instead (see User Guide).
+	* WARNING: Deprecated the ability for the TemplateFx Server to listen for remote connections - use "ProxyPass" instead.
+	* BUG: Fixed a bug in the "ip()" function where IPv6 addresses were rolling over instead of returning null.
+	* BUG: Fixed another bug in the "ip()" function where IPv4 addresses were all "0.0.0.0" if "number" was omitted.
+	* BUG: Fixed a bug which caused high CPU utilisation if your template constantly wrote to the Console.
+	* Added JavaScript function "expand()" which is used to expand strings using static regex character classes and groups.
+	* Updated markers so it places the marker at the top left of the viewport when moving to them.
+	* IPCalc now highlights the network in red if the calculated network is different.
+	* Added support to the IPCalc to output the previous network using different masks.
+	* Enhanced the "Copy Last Output" menu option to include all type of outputs.
+	* Updated the IPCalc to also use the "expand()" function for expanding nslookup queries.
+	* TemplateFx now adds an internal "_yield()" call into all for, do while and while loops to prevent infinite loop deadlock.
+	* TemplateFx now remembers different last directories for DataTemplates vs Outputs.
+	* Updated the hyperlinks for templatefx.org to use "https" instead of "http".
+
 Version 2.67 - 25th July 2018
 	* Added support for markers using #$ syntax within the Template pane on right click - see section 4.6 in the User Guide.
 	* Added support to the IPCalc to perform multi dns lookups based on regex style static characters classes and groups.
