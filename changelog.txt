@@ -1,6 +1,10 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2018 Chris Mason <chris@templatefx.org>
 
+Version 2.68.1 - 5th October 2018
+	* BUG: Fixed an issue introduced in v2.68 where the IPCalc doesn't auto-scroll if you select something.
+	* In TemplateFx Server, the logging of "SRC" has been removed in favour of "XFF".
+
 Version 2.68 - 4th October 2018
 	* WARNING: Deprecated "HTTPS Server Mode" in TemplateFx Server - use "ProxyPass" instead (see User Guide).
 	* WARNING: Deprecated the ability for the TemplateFx Server to listen for remote connections - use "ProxyPass" instead.
