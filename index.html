@@ -40,7 +40,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.68.1 (Build 18278)<br />Released: 5th October 2018</h4>
+        <h4>Latest Version: 2.69 / 3.0.0 (Build 18304)<br />Released: 31st October 2018</h4>
       </div>
 
       <p>I have had a couple of requests to provide a "donate" type link for people to show their appreciation - I don't charge anything for you to use TemplateFx and I never will, but if you use TemplateFx and find it useful and want to show your appreciation then you can using <a href="https://paypal.me/chrixm">https://paypal.me/chrixm</a>.</p>
@@ -784,9 +784,9 @@ interface Gi0/0/2
         <dd>
           <p>This variable is a multi-dimensional array of the actual data with the headers in row "0". This allows you to access the raw data from whatever row you are currently processing.</p>
         </dd>
-        <dt><strong>templatefx.first (["field_1[ || field_2]"], [{ "field_1": /regex/, "field_2": new RegExp("regex") }])</strong></dt>
+        <dt><strong>templatefx.first (["field_1[ || field_2]"], [{ "field_1": /regex/, "field_2": new RegExp("regex") }], [ignore_case])</strong></dt>
         <dd>
-          <p>This variable is actually a JavaScript function and allows you to determine if this is the first time you have seen this particular field value. It will return true if this row of data is the first time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the first time you have seen this specific combination of values together. If you omit the "field" variable then it will return true for the first row of data. An example is included below which determines whether this is the first time we have seen this specific value within the "ROUTER" field:</p>
+          <p>This variable is actually a JavaScript function and allows you to determine if this is the first time you have seen this particular field value (case insensitive comparison of value if "ignore_case" is true - default is false). It will return true if this row of data is the first time this or these field values occur (the "field" variable is always case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the first time you have seen this specific combination of values together. If you omit the "field" variable then it will return true for the first row of data. An example is included below which determines whether this is the first time we have seen this specific value within the "ROUTER" field:</p>
 
           <pre><span class="if">&lt;IF (<span class="script">templatefx.first("ROUTER")</span>)&gt;</span>
 <span class="comment">! @ </span><span class="field">&lt;&lt;ROUTER&gt;&gt;</span>
@@ -795,9 +795,9 @@ DATA
 </pre>
           <p>The function also supports an optional secondary parameter which allows you to filter what rows you are checking against - if you don't want to specify a specific field then you can pass "null" as the first parameter. This follows the same syntax which can be found within the <code>templatefx.fields()</code> function definition.</p>
         </dd>
-        <dt><strong>templatefx.last (["field_1[ || field_2]"], [{ "field_1": /regex/, "field_2": new RegExp("regex") }])</strong></dt>
+        <dt><strong>templatefx.last (["field_1[ || field_2]"], [{ "field_1": /regex/, "field_2": new RegExp("regex") }], [ignore_case])</strong></dt>
         <dd>
-          <p>This variable is actually a JavaScript function and allows you to determine if this is the last time you will see this particular field value - the oppposite of <code>templatefx.first()</code>. It will return true if this row of data is the last time this or these field values occur (the "field" variable is case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the last time you have seen this specific combination of values together. If you omit the "field" variable then it will return true for the last row of data. An example is included below which determines whether this is the last time we have seen this specific combination of values for the "ROUTER" and "INTERFACE" fields:</p>
+          <p>This variable is actually a JavaScript function and allows you to determine if this is the last time you will see this particular field value (case insensitive comparison of value if "ignore_case" is true - default is false) - the opposite of <code>templatefx.first()</code>. It will return true if this row of data is the last time this or these field values occur (the "field" variable is always case insensitive). It also supports specifying multiple fields delimited by "||" if you wish to check if this is the last time you have seen this specific combination of values together. If you omit the "field" variable then it will return true for the last row of data. An example is included below which determines whether this is the last time we have seen this specific combination of values for the "ROUTER" and "INTERFACE" fields:</p>
 
           <pre><span class="if">&lt;IF (<span class="script">templatefx.last("ROUTER||INTERFACE")</span>)&gt;</span>
 <span class="comment">! ...</span>
@@ -815,9 +815,9 @@ DATA
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
         </dd>
-        <dt><strong>templatefx.fields ("field", [{ "field_1": /regex/, "field_2": new RegExp("regex") }], [return_unique])</strong></dt>
+        <dt><strong>templatefx.fields ("field", [{ "field_1": /regex/, "field_2": new RegExp("regex") }], [return_unique], [ignore_case])</strong></dt>
         <dd>
-          <p>This function returns an array of all row values for a specific field - selected using the first parameter (all field names are treated as case-insensitive). There are a couple of optional arguments which allows the field values to be filtered (the function will return null if no rows match the criteria) as well as definining whether the returned array only contains unique values. At face value, this function looks quite complicated, but hopefully the following example will help explain:</p>
+          <p>This function returns an array of all row values for a specific field - selected using the first parameter (all field names are always treated as case insensitive). There are a few optional arguments which allows the field values to be filtered (the function will return null if no rows match the criteria) as well as defining whether the returned array only contains unique values ("ignore_case" can be specified with "return_unique" to return a unique list of values regardless of case (default is false) - the first occurrence of a value will be used if there are different cases for the same string). At face value, this function looks quite complicated, but hopefully the following example will help explain:</p>
 
           <pre><span class="comment">NAME, AGE, COUNTRY</span>
 CHRIS, 65, GERMANY
@@ -1268,12 +1268,11 @@ DORRIS, 32, ESTONIA</pre>
         <dt><strong>HTTP Server Mode</strong></dt>
         <dd>
           <p><span class="label label-warning">PARTIAL DEPRECATION</span>&nbsp;As "HTTPS Server Mode" has been deprecated, we are also deprecating the ability to allow remote connections as unsecured connections over the network are a security risk - use "ProxyPass" instead to allow secured remote connections.</p>
-          <p><code>java -jar TemplateFxS.jar -s [port] [-lib &lt;library.js&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
+          <p><code>java -jar TemplateFxS.jar -s [port] [-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
           <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 on 127.0.0.1 only (localhost - doesn't accept remote connections) - if you prefer, you can specify a different port as a parameter. The "-lib" parameter is used to specify external JavaScript modules (it can be used multiple times) - they are loaded server side so are accessible to all API clients. The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether. The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process.</p>
           <p>As the TemplateFx Server can be bound to "localhost" only then you will need to use Apache's "ProxyPass" directive (or similar under NGINX) to forward requests to the TemplateFx Server - the following syntax will send requests sent to "/api/generate" via "http://127.0.0.1:8080/generate"). This allows Apache to manage the certificates and TLS configuration to ensure the traffic is secured over the network.</p>
           <pre>ProxyRequests Off
-ProxyPass /api http://127.0.0.1:8080
-ProxyPassReverse /api http://127.0.0.1:8080</pre>
+ProxyPass /api http://127.0.0.1:8080</pre>
         </dd>
         <dt><strong>HTTPS Server Mode</strong></dt>
         <dd>
@@ -1282,20 +1281,32 @@ ProxyPassReverse /api http://127.0.0.1:8080</pre>
 
         <dt><strong>Offline Mode</strong></dt>
         <dd>
-          <p><code>java -jar TemplateFxS.jar -dt &lt;dataTemplate&gt; -out &lt;outfile&gt; [-lib &lt;library.js&gt;] [-t &lt;timeout&gt;]</code></p>
+          <p><code>java -jar TemplateFxS.jar -dt &lt;dataTemplate&gt; -out &lt;outfile&gt; [-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-t &lt;timeout&gt;]</code></p>
           <p>An alternative option is to use the TemplateFx Server component in Offline Mode by running it from the command line as and when you wish to generate an output. With this method, you provide it with an input DataTemplate and it will generate the output to the specified file. This could be called directly from a local script or from another program to generate outputs whenever you require, without having to support a TCP connection. The format of the DataTemplate is identical to the POST DATA associated with the REST API which is detailed below.</p>
         </dd>
       </dl>
 
+      <p>In addition to the above command line arguments, the TemplateFx Server also supports the following environment variables - in a scenario where both environment variables and command line arguments are present then command line arguments will replace the environment variables:</p>
+
+      <dt><strong>TFX_LIB</strong></dt>
+        <dd>
+          <p>This is used to specify external JavaScript libraries and is the same as the "-lib" command line argument. Multiple libraries can be specific by separating them with a semi-colon (i.e. LIB1;LIB2;LIBn).</p>
+        </dd>
+
+      <dt><strong>TFX_LOGFILE</strong></dt>
+        <dd>
+        <p>This is used to specify a logfile to use for logging and is the same as the "-log" command line argument.</p>
+        </dd>
+
       <h4 class="heading">8.1. Request Format</h4>
 
-      <p>To submit a request to the TemplateFx Server you need to use a standard HTTP POST request using the URL "/generate". The POST DATA should contain your DataTemplate in the text based format that is described in section 3 of this document or preferably using the web friendly JavaScript Object Notation (JSON) format - an example of both has been included below.</p>
+      <p>To submit a request to the TemplateFx Server you need to use a standard HTTP POST request using the URL "/generate". The POST DATA should contain your DataTemplate in the text based format that is described in section 3 of this document or preferably using the web friendly JavaScript Object Notation (JSON) format - an example of both has been included below. The "Content-Type" header must be either "application/json" or "application/datatemplate" depending on the request format.</p>
 
       <h4 class="heading">8.1.1. JavaScript Object Notation (JSON) Format</h4>
 
       <pre>POST /generate HTTP/1.1
 Host: 127.0.0.1:8080
-Content-Type: application/json; Charset=UTF-8
+Content-Type: application/json; charset=utf-8
 Content-Length: 207
 
 <span style="color: darkgreen;">{
@@ -1310,9 +1321,11 @@ Content-Length: 207
 
       <h4 class="heading">8.1.2. DataTemplate Format</h4>
 
+      <p><span class="label label-warning">DEPRECATED</span>&nbsp;It is preferred and recommended to pass requests using the "application/json" content type.</p>
+
       <pre>POST /generate HTTP/1.1
 Host: 127.0.0.1:8080
-Content-Type: text/plain; Charset=UTF-8
+Content-Type: application/datatemplate; charset=utf-8
 Content-Length: 483 
 
 <span style="color: darkgreen;"><strong>&lt;templatefx:data&gt;</strong>
