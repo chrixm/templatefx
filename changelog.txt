@@ -1,6 +1,16 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2018 Chris Mason <chris@templatefx.org>
 
+Version 2.69 / 3.0.0 - 31st October 2018
+	* WARNING: Deprecated passing requests to the TemplateFx Server using the text based DataTemplate format - please use JSON.
+	* WARNING: TemplateFx Server now insists on a Content-Type header to be either "application/json" or the deprecated "application/datatemplate".
+	* BUG: The "curl()" JavaScript function wasn't permitted to trust all certificates due to a permissions issue.
+	* BUG: Fixed an issue where TemplateFx thought you were using "Group By" and "GROUP" syntax at the same time.
+	* Rewritten the logging routines for the TemplateFx Server and introduced the "-log" command line option.
+	* The TemplateFx Server now also includes the Process ID (PID) in log messages.
+	* Added support for environment variables TFX_LIB and TFX_LOGFILE to the TemplateFx Server.
+	* Added a new optional parameter "ignore_case" to "templatefx.first()", "templatefx.last()" and "templatefx.fields()".
+
 Version 2.68.1 - 5th October 2018
 	* BUG: Fixed an issue introduced in v2.68 where the IPCalc doesn't auto-scroll if you select something.
 	* In TemplateFx Server, the logging of "SRC" has been removed in favour of "XFF".
