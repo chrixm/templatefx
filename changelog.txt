@@ -1,5 +1,17 @@
 TemplateFx | Dynamic Templating Tool
-Copyright (c) 2011-2018 Chris Mason <chris@templatefx.org>
+Copyright (c) 2011-2019 Chris Mason <chris@templatefx.org>
+
+Version 3.0.1 - 30th December 2018
+	* WARNING: Added consistent "print()" and "println()" JavaScript functions for template output within script blocks.
+	    - Any existing use of "print()" will need to be updated to "println()" to maintain the same behaviour going forward.
+	* BUG: It is no longer possible to mix uppercase and lowercase characters in ranges (e.g. [A-z]) in the "expand()" function.
+	* BUG: Fixed a typo on the "About TemplateFx" dialog where it used to say "About DataTemplate".
+	* Added an "uptime" field to the TemplateFx Server response to indicate how long the server has been up in seconds.
+	* Made it possible to clear the Group By field by passing an empty string to "templatefx:group_by".
+	* Updated the internal storeOutput() routine to use Strings to maintain output order.
+	* The cursor is now visible within the Output pane of the TemplateFx GUI.
+	* Added support for defining constant field values on the header row if they are consistent for all rows (see User Guide).
+	* Added support for suffixing header fields with "**" to enable automatic field value expansion (see User Guide).
 
 Version 2.69 / 3.0.0 - 31st October 2018
 	* WARNING: Deprecated passing requests to the TemplateFx Server using the text based DataTemplate format - please use JSON.
