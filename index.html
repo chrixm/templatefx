@@ -40,7 +40,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 2.69 / 3.0.0 (Build 18304)<br />Released: 31st October 2018</h4>
+        <h4>Latest Version: 3.0.1 (Build 18364)<br />Released: 30th December 2018</h4>
       </div>
 
       <p>I have had a couple of requests to provide a "donate" type link for people to show their appreciation - I don't charge anything for you to use TemplateFx and I never will, but if you use TemplateFx and find it useful and want to show your appreciation then you can using <a href="https://paypal.me/chrixm">https://paypal.me/chrixm</a>.</p>
@@ -187,7 +187,7 @@
 DATA
 <strong>&lt;/templatefx:data&gt;</strong>
 
-<strong>&lt;templatefx:group_by = </strong>FIELD_1[ || FIELD_2][ || ...]<strong> /&gt;</strong>
+<strong>&lt;templatefx:group_by = </strong>[FIELD_1[ || FIELD_2][ || ...]]<strong> /&gt;</strong>
       
 <strong>&lt;templatefx:snippet = </strong>NAME_1<strong>&gt;</strong>
 SNIPPET 1
@@ -238,6 +238,13 @@ interface Gi0/0/2
  ip address 192.0.2.9 255.255.255.252
  no shutdown
 !</pre>
+
+      <p>The data pane also supports defining constant field values on the header row - you may add as many header columns using this syntax wherever you like. The rest of the data values would remain unchanged, like the header column wasn't even there. Using the above example, as "ROUTER" is always "PE-1a" then we could have written it as follows to define it as a constant:</p>
+
+      <pre><span class="comment">ROUTER=PE-1A, INTERFACE, IP, DEST</span>
+Gi0/0/0, 192.0.2.1, R1 (Gi0/0)
+Gi0/0/1, 192.0.2.5, R2 (Gi0/1)
+Gi0/0/2, 192.0.2.9, R3 (Gi0/2)</pre>
 
       <h4 class="heading">4.1. Branching and Looping Constructs</h4>
 
@@ -857,6 +864,16 @@ DORRIS, 32, ESTONIA</pre>
       <p>In addition to the built-in variables, there is also a series of built-in functions that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
 
       <dl>
+        <a name="print"></a>
+        <dt><strong>print ("output")</strong></dt>
+        <dd>
+        <p>This function is used to output text into the template and can be used in script blocks. This function won't terminate the output with a new line character.</p>
+        </dd>
+        <a name="println"></a>
+        <dt><strong>println ("output")</strong></dt>
+        <dd>
+        <p>This function is used to output text into the template and can be used in script blocks. This function although similar to <code>print</code> will terminate output with a new line character.</p>
+        </dd>
         <a name="counter"></a>
         <dt><strong>counter (["key"], [increment], [start])</strong></dt>
         <dd>
@@ -893,6 +910,15 @@ DORRIS, 32, ESTONIA</pre>
 
 <span class="comment"># This will return an array containing [ "mcxxx-pe-1a", "mcxxx-pe-1b", "mcyyy1-pe-1a", "mcyyy1-pe-1b", "mcyyy2-pe-1a", "mcyyy2-pe-1b" ]</span>
 <span class="script">&lt;?= expand("mc(xxx|yyy[12])-pe-1[ab]") ?&gt;</span></pre>
+
+<p>Within the Data Pane you may also suffix your header field within the header row with <code>**</code>, which will enable automatic field value expansion if you were to use static character classes or static groups in your values, for example:</p>
+
+        <pre><span class="comment">ROUTER**, INTERFACE**, DESCRIPTION</span>
+ABC-RTR-1[AB], Gi0/0/0/[0-9], ## Reserved for Expansion ##
+XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
+
+        <p>As you have suffixed <code>**</code> to "ROUTER" and "INTERFACE" then it will automatically expand this and generate the extra rows in your data. You will then access those values using <code>&lt;&lt;ROUTER&gt;&gt;</code> and <code>&lt;&lt;INTERFACE&gt;&gt;</code> as normal within your template.</p>
+
         </dd>
         <a name="base64encode"></a>
         <dt><strong>base64encode ("string")</strong></dt>
