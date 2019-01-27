@@ -40,7 +40,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 3.0.1 (Build 18364)<br />Released: 30th December 2018</h4>
+        <h4>Latest Version: 3.0.2 (Build 19027)<br />Released: 27th January 2019</h4>
       </div>
 
       <p>I have had a couple of requests to provide a "donate" type link for people to show their appreciation - I don't charge anything for you to use TemplateFx and I never will, but if you use TemplateFx and find it useful and want to show your appreciation then you can using <a href="https://paypal.me/chrixm">https://paypal.me/chrixm</a>.</p>
@@ -1204,11 +1204,14 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
           <p>The above example demonstrates how you can check for success or failure when using this function. We use the <code>isNaN()</code> function to determine if we have a numerical or textual response - it assumes any numerical only response is some sort of error.</p>
         </dd>
         <a name="passwd"></a>
-        <dt><strong>passwd ([length], ["chars"])</strong></dt>
+        <dt><strong>passwd ([length], [ ["chars", ...] ])</strong></dt>
         <dd>
-          <p>This function generates a cryptographically strong random password using the following characters: a-z, A-Z, 0-9, unless a custom character set using the "chars" parameter has been provided. The length is determined by the passed "length" parameter or a length of 16 is used if the parameter is omitted.</p>
-<pre><span class="comment"># Generate a random 12 character password using the provided characters</span>
-<span class="script">&lt;?= passwd(12, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZZ") ?&gt;</span></pre>
+        <p>This function generates a cryptographically secure and strong random password using the following characters: "A-Z", "a-z", "0-9" and "!$@%?" - unless a custom character set has been provided. The length is determined by the passed "length" parameter or a length of 22 is used if the parameter is omitted. The "chars" parameter can either be a string of characters or can be an array of character sets (e.g. "['ABC...', 'abc...', '012...']") - if this is the case then the function will ensure the password contains at least one character from each character set.</p>
+<pre><span class="comment"># Generate a random 12 character password from the provided characters</span>
+<span class="script">&lt;?= passwd(12, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZZ") ?&gt;</span>
+
+<span class="comment"># Generate a random 16 character password ensuring it contains at least one character from each set</span>
+<span class="script">&lt;?= passwd(16, ["ABCDEFG", "abcdefg", "0123456789", "!@"]) ?&gt;</span></pre>
         </dd>
         <a name="pad"></a>
         <dt><strong>pad ("string", length, [align], [pchar])</strong></dt>
