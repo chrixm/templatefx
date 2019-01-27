@@ -1,6 +1,14 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2019 Chris Mason <chris@templatefx.org>
 
+Version 3.0.2 - 27th January 2019
+	* BUG: Fixed a race condition when adding the "Console", "IP Calc" and "DataTemplate" panes to the GUI.
+	* BUG: Fixed a bug in the GUI where the "counter()" function wasn't resetting before the next "Generate Output".
+	* Added support in the IP Calc to only show DNS entries which match a regex when looking up a subnet.
+	* Improved the JavaScript "passwd()" function so it uses the same method as https://netnix.org/pg.html
+	* Added support to select a custom font for the various panes under "Preferences".
+	* Added support to be able to reset all preferences under "Preferences".
+
 Version 3.0.1 - 30th December 2018
 	* WARNING: Added consistent "print()" and "println()" JavaScript functions for template output within script blocks.
 	    - Any existing use of "print()" will need to be updated to "println()" to maintain the same behaviour going forward.
