@@ -1,6 +1,18 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2019 Chris Mason <chris@templatefx.org>
 
+Version 3.1.0 - 14th February 2019 
+	* This release attempts to reintroduce threading in a thread-safe way to the TemplateFx Server - the GUI is still single threaded.
+	* Removed access to the "globals[]" variable from the TemplateFx Server as it isn't thread-safe.
+	* Introduced thread-safe JavaScript functions "templatefx.globals.set()" and "templatefx.globals.get()" to replace "globals[]"
+	* The JavaScript variable "globals[]" has been deprecated in the GUI in favour of new thread-safe functions.
+	* Introduced support for JavaScript function "sync()" to provide a synchronised thread-safe block to be
+	    used in conjunction with "templatefx.globals" to allow "get()" and "set()" to be performed in one atomic operation.
+	* Added support for a "cisco7decode()" JavaScript function to reverse those insecure Cisco type 7 passwords.
+	* Reintroduced support to allow the TemplateFx Server to listen on any IP to allow exposing ports via Docker containers.
+	* Updated TemplateFx Server to allow all CORS responses for pre-flight checks via OPTIONS header.
+	* Fixed an issue where an extra space was being added at the end of a HEREDOC section.
+
 Version 3.0.2 - 27th January 2019
 	* BUG: Fixed a race condition when adding the "Console", "IP Calc" and "DataTemplate" panes to the GUI.
 	* BUG: Fixed a bug in the GUI where the "counter()" function wasn't resetting before the next "Generate Output".
