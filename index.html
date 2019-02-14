@@ -40,7 +40,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest Version: 3.0.2 (Build 19027)<br />Released: 27th January 2019</h4>
+        <h4>Latest Version: 3.1.0 (Build 19045)<br />Released: 14th February 2019</h4>
       </div>
 
       <p>I have had a couple of requests to provide a "donate" type link for people to show their appreciation - I don't charge anything for you to use TemplateFx and I never will, but if you use TemplateFx and find it useful and want to show your appreciation then you can using <a href="https://paypal.me/chrixm">https://paypal.me/chrixm</a>.</p>
@@ -749,19 +749,9 @@ interface Gi0/0/2
       <p>As well as the standard JavaScript syntax there is also a series of built-in variables that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
 
       <dl>
-        <dt><strong>globals[]</strong></dt>
+        <dt><strong>globals[]</strong>&nbsp;<span class="label label-danger">GUI Only</span></dt>
         <dd>
-          <p>This variable provides a mechanism to store persistent data across rows - it is an associative array with global scope, which you use by adding elements. The following example demonstrates how we can store the value of the field "XYZ" from the current row as <code>globals["xyz"]</code> so we can reference it when processing the next row.</p>
-<pre><span class="script">&lt;?</span>
-<span class="script">  if (typeof globals["xyz"] !== "undefined") {</span>
-<span class="script">    if ("<span class="field">&lt;&lt;XYZ&gt;&gt;</span>" !== globals["xyz"]) {</span>
-<span class="script">      console.log("values are different");</span>
-<span class="script">    }</span>
-<span class="script">  }</span>
-<span class="script">  globals["xyz"] = "<span class="field">&lt;&lt;XYZ&gt;&gt;</span>";</span>
-<span class="script">?&gt;</span>
-</pre>
-          <p>First we make sure it is defined and then we compare the stored value to the value of the current row. If the values are different then we log a message to the console.</p>
+          <p><span class="label label-warning">DEPRECATED</span>&nbsp;See <code>templatefx.globals.set()</code> and <code>templatefx.globals.get()</code></p>
         </dd>
         <dt><strong>templatefx.version</strong></dt>
         <dd>
@@ -856,6 +846,14 @@ DORRIS, 32, ESTONIA</pre>
 <span class="comment">#  Note: If you omit the .* from the regex then it becomes "doesn't begin with" instead of "doesn't contain".</span>
 <span class="script">&lt;?= templatefx.fields("NAME", { "AGE": /^(?!.*2)/ }) ?&gt;</span></pre>
         </dd>
+        <dt><strong>templatefx.globals.set ("key", "string")</strong></dt>
+        <dd>
+        <p>This function is used to set a global variable which is persistent across rows - however, as rows can be processed in parallel due to threading, you need to take this into consideration and use the <code>sync()</code> function if using <code>get()</code> and <code>set()</code> together. Please see the <code>sync()</code> function below for an example of an atomic operation.</p>
+        </dd>
+        <dt><strong>templatefx.globals.get ("key")</strong></dt>
+        <dd>
+        <p>This is used to obtain the value of a global variable. This is thread-safe if used in isolation, but you must be sure that the global variable has been set in a thread-safe way before calling this function.</p>
+        </dd>
       </dl>
 
       <a name="functions"></a>
@@ -864,6 +862,29 @@ DORRIS, 32, ESTONIA</pre>
       <p>In addition to the built-in variables, there is also a series of built-in functions that are included with TemplateFx. These will be expanded with future versions of TemplateFx, but for the time being here is the current list:</p>
 
       <dl>
+        <a name="sync"></a>
+        <dt><strong>sync (function() {})</strong></dt>
+        <dd>
+        <p>This function is similar to Java's <code>synchronized</code> keyword that ensures only one thread can ever process this block of code at the same time. This is used to create an atomic operation where all statements within the block are guaranteed to be executed without any other thread interrupting. Without this, another thread could call the <code>set()</code> operation between our thread calling <code>get()</code> and <code>set()</code> - thus our thread would overwrite the value the other thread set.</p>
+        <pre><span class="script">&lt;?</span>
+<span class="script">  (sync(function() {</span>
+<span class="script">    if (templatefx.globals.get("mykey") == null) {</span>
+<span class="script">      templatefx.globals.set("mykey", "myvalue");</span>
+<span class="script">    }</span>
+<span class="script">  }))();</span>
+<span class="script">?&gt;</span></pre>
+        <p>The above function is referred to as a JavaScript IIFE (Immediately Invoked Function Expression), where the function is executed immediately - it is a shorthand for the following alternative syntax, where we actually define a function and call it separately:</p>
+        <pre><span class="script">&lt;?</span>
+<span class="script">  var myfunction = sync(function() {</span>
+<span class="script">    if (templatefx.globals.get("mykey") == null) {</span>
+<span class="script">      templatefx.globals.set("mykey", "myvalue");</span>
+<span class="script">    }</span>
+<span class="script">  });</span>
+<span class="script">  myfunction();</span>
+<span class="script">?&gt;</span></pre>
+        <p>The use of the <code>sync()</code> function is critical when using the <code>get()</code> and <code>set()</code> functions together like the above example to avoid a race condition. It isn't needed if we are just calling <code>get()</code> to obtain a previously set value.</p>
+        <p><span class="label label-info">NOTE</span>&nbsp;Although it is good to get used to this, it is only required when using the TemplateFx Server at present as the GUI is still single threaded.</p>
+        </dd>
         <a name="print"></a>
         <dt><strong>print ("output")</strong></dt>
         <dd>
@@ -877,7 +898,7 @@ DORRIS, 32, ESTONIA</pre>
         <a name="counter"></a>
         <dt><strong>counter (["key"], [increment], [start])</strong></dt>
         <dd>
-          <p>This function provides a counter which will produce a series of numbers in the given sequence. If the "key" is omitted or passed as "null" then the counter is reset back to 0 (or "start") for every row. If a "key" is provided then the counter is persistent across rows. Every time you call the function with the same "key" then it will increment the counter and return the number. Different persistent counters can be created using different "key" values. There is an optional "increment" parameter which allows you to specify a different increment as opposed to the default of 1. There is also an optional "start" parameter which allows you to specify a different start number as opposed to the default of 1. The following example demonstrates both of these parameters to produce a positive and negative counter:</p>
+          <p>This function provides a thread-safe counter which will produce a series of numbers in the given sequence. If the "key" is omitted or passed as "null" then the counter is reset back to 0 (or "start") for every row. If a "key" is provided then the counter is persistent across rows, but the order isn't guaranteed due to threading where rows are processed in parallel and in a random order - the only exception is if you specify the "SORT" keyword within the "~FILTER" snippet which effectively disabled threading to maintain the sorted order. Every time you call the function with the same "key" then it will increment the counter and return the number. Different persistent counters can be created using different "key" values. There is an optional "increment" parameter which allows you to specify a different increment as opposed to the default of 1. There is also an optional "start" parameter which allows you to specify a different start number as opposed to the default of 1. The following example demonstrates both of these parameters to produce a positive and negative counter:</p>
 <pre><span class="comment"># This will produce a positive sequence of 0, 5, 10, 15, 20, etc - it will persist across rows using key "id"</span>
 <span class="script">&lt;?= counter("id", 5, 0) ?&gt;</span>
 
@@ -1213,6 +1234,11 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
 <span class="comment"># Generate a random 16 character password ensuring it contains at least one character from each set</span>
 <span class="script">&lt;?= passwd(16, ["ABCDEFG", "abcdefg", "0123456789", "!@"]) ?&gt;</span></pre>
         </dd>
+        <a name="cisco7decode"></a>
+        <dt><strong>cisco7decode ("password")</strong></dt>
+        <dd>
+          <p>As the name suggests, this function will reverse those Cisco passwords which have been encoded by Cisco's type 7 encoding scheme - these are commonly found in Cisco device configurations.</p>
+        </dd>
         <a name="pad"></a>
         <dt><strong>pad ("string", length, [align], [pchar])</strong></dt>
         <dd>
@@ -1296,21 +1322,15 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
       <dl>
         <dt><strong>HTTP Server Mode</strong></dt>
         <dd>
-          <p><span class="label label-warning">PARTIAL DEPRECATION</span>&nbsp;As "HTTPS Server Mode" has been deprecated, we are also deprecating the ability to allow remote connections as unsecured connections over the network are a security risk - use "ProxyPass" instead to allow secured remote connections.</p>
-          <p><code>java -jar TemplateFxS.jar -s [port] [-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
-          <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 on 127.0.0.1 only (localhost - doesn't accept remote connections) - if you prefer, you can specify a different port as a parameter. The "-lib" parameter is used to specify external JavaScript modules (it can be used multiple times) - they are loaded server side so are accessible to all API clients. The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether. The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process.</p>
-          <p>As the TemplateFx Server can be bound to "localhost" only then you will need to use Apache's "ProxyPass" directive (or similar under NGINX) to forward requests to the TemplateFx Server - the following syntax will send requests sent to "/api/generate" via "http://127.0.0.1:8080/generate"). This allows Apache to manage the certificates and TLS configuration to ensure the traffic is secured over the network.</p>
+          <p><code>java -jar TFxServer.jar -s [host[:port]] [-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
+          <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 on 127.0.0.1 only (localhost - doesn't accept remote connections) - if you prefer, you can specify a different host or port as a parameter (i.e. "0.0.0.0:8080" to listen on all IPs - use with caution). The "-lib" parameter is used to specify external JavaScript modules (it can be used multiple times) - they are loaded server side so are accessible to all API clients. The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether. The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process.</p>
+          <p>As the TemplateFx Server only supports HTTP, it should only be bound to "localhost", but you can use Apache's "ProxyPass" directive (or similar under NGINX) to forward requests to the TemplateFx Server - the following syntax will send requests sent to "/api/generate" via "http://127.0.0.1:8080/generate"). This allows Apache to manage the certificates and TLS configuration to ensure the traffic is secured over the network.</p>
           <pre>ProxyRequests Off
 ProxyPass /api http://127.0.0.1:8080</pre>
         </dd>
-        <dt><strong>HTTPS Server Mode</strong></dt>
-        <dd>
-          <p><span class="label label-warning">DEPRECATED</span>&nbsp;Certificates and TLS are much better handled by Apache - use "ProxyPass" instead (explained above).</p>
-        </dd>
-
         <dt><strong>Offline Mode</strong></dt>
         <dd>
-          <p><code>java -jar TemplateFxS.jar -dt &lt;dataTemplate&gt; -out &lt;outfile&gt; [-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-t &lt;timeout&gt;]</code></p>
+          <p><code>java -jar TFxServer.jar -dt &lt;dataTemplate&gt; -out &lt;outfile&gt; [-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-t &lt;timeout&gt;]</code></p>
           <p>An alternative option is to use the TemplateFx Server component in Offline Mode by running it from the command line as and when you wish to generate an output. With this method, you provide it with an input DataTemplate and it will generate the output to the specified file. This could be called directly from a local script or from another program to generate outputs whenever you require, without having to support a TCP connection. The format of the DataTemplate is identical to the POST DATA associated with the REST API which is detailed below.</p>
         </dd>
       </dl>
@@ -1378,7 +1398,7 @@ interface &lt;&lt;INTERFACE&gt;&gt;
 
       <p>Assuming the request is valid HTTP and you don't get a HTTP error code back (i.e. something which isn't HTTP 200 OK), then there are two different response formats (all responses use JSON as per most REST APIs) - one for success and one for failure.</p>
 
-      <p>All responses will have a "version" field which is expected to be set to "1.0" as this defines the version of the API - any changes which radically change the response format will increase the version number. The "status" field is either "ok" or "error" depending on the response - when it is "ok" then it will return the generated outputs using array notation via the "outputs" object, which contains a separate hash containing a "group" and "value" key per output. In all instances the outputs themselves are encoded using Base64. The "console" field is also always included on success, but may be empty if nothing was written to it - again always Base64 encoded. The "elapsed" field is the processing duration in seconds represented to 3 decimal places. When the status is "error" then it will return an error "code" and "message" to tell you what went wrong.</p>
+      <p>All responses will have a "version" field which is expected to be set to "1.0" as this defines the version of the API - any changes which radically change the response format will increase the version number. The "status" field is either "ok" or "error" depending on the response - when it is "ok" then it will return the generated outputs using array notation via the "outputs" object, which contains a separate hash containing a "group" and "value" key per output. In all instances the outputs themselves are encoded using Base64. The "console" field is also always included on success, but may be empty if nothing was written to it - again always Base64 encoded. The "elapsed" field is the processing duration in seconds represented to 3 decimal places and the "uptime" field will report the uptime of the TemplateFx Server in seconds. When the status is "error" then it will return an error "code" and "message" to tell you what went wrong.</p>
 
       <h4 class="heading">8.2.1. On Success</h4>
 
@@ -1387,8 +1407,13 @@ interface &lt;&lt;INTERFACE&gt;&gt;
   "version": "1.0",
   "status": "ok",
   "elapsed": &lt;float&gt;,
+  "uptime": &lt;integer&gt;,
   "console": "&lt;base64 string&gt;",
   "outputs": [
+    {
+      "group": "&lt;string&gt;",
+      "value": "&lt;base64 string&gt;"
+    },
     {
       "group": "&lt;string&gt;",
       "value": "&lt;base64 string&gt;"
@@ -1404,12 +1429,45 @@ interface &lt;&lt;INTERFACE&gt;&gt;
 {
   "version": "1.0",
   "status": "error",
+  "uptime": &lt;integer&gt;,
   "error": {
     "code": &lt;integer&gt;,
     "message": "&lt;string&gt;"
   }
 }
 </pre>
+
+      <h4 class="heading">8.3. Docker and TemplateFx Server</h4>
+
+      <p>There is also a <a target="_blank" href="https://github.com/chrixm/templatefx/raw/master/Dockerfile">Dockerfile</a> available for the TemplateFx Server which contains everything you need to start a local TemplateFx Server running within a Docker container. To demonstrate how quickly you can get a TemplateFx Server up and running, the following commands can be executed on a new Linux install (this example was done using Ubuntu on AWS EC2, but others can equally be used).</p>
+
+      <pre><span class="comment"># Install Docker</span>
+wget -qO- https://get.docker.com | sh
+
+<span class="comment"># Build Image</span>
+docker image build -t templatefx:latest https://github.com/chrixm/templatefx/raw/master/Dockerfile
+
+<span class="comment"># Run Container (Listens on 127.0.0.1:8080)</span>
+docker container run -d --name templatefx --restart unless-stopped -p 127.0.0.1:8080:8080 templatefx:latest
+
+<span class="comment"># Install Apache2 and Let's Encrypt</span>
+apt install apache2 python-certbot-apache
+a2enmod ssl proxy_http
+
+<span class="comment"># Generate a Let's Encrypt Certificate</span>
+certbot --apache -d <span class="field">&lt;&lt;PUBLIC FQDN&gt;&gt;</span>
+
+<span class="comment"># Add ProxyPass to Apache2 to Proxy Requests to TemplateFx Server</span>
+sed -i <font style="color: darkred;">'/&lt;VirtualHost/a \
+  ProxyRequests Off \
+  &lt;Location /&gt; \
+    ProxyPass http://127.0.0.1:8080/ \
+  &lt;/Location&gt;'</font> /etc/apache2/sites-available/000-default-le-ssl.conf
+
+<span class="comment"># Restart Apache2</span>
+systemctl restart apache2</pre>
+
+      <p>The above example assumes that Apache isn't being used for anything else as the <code>ProxyPass</code> directive will proxy everything to the TemplateFx Server - it might be more appropriate to create an alias (e.g. "/api") instead. However, it is done this way as Apache is much better at handling TLS from both a security and ease of certificate management perspective than the TemplateFx Server - don't re-invent the wheel if something already exists!</p>
 
       <br />
     </div>
