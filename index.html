@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TemplateFx | Dynamic Templating Tool</title>
-    <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAABmJLR0QAAAByAMbcMWDEAAACkklEQVR42u3b0Q2AIAxAQWs6sUO6Fq6ABkThbgAT2uSlP8Z2nBuwpt0IQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAA4F3Z8dvFeKcQRuACAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAgNvSCGigTPimcAEAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAyXHb8dxrsMu3YBAAIACAAgAIAAAAIACAAgAMBgufDbi/VXCbP8zR5cAIAAAAIACAAgAIAAAAIACAAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgACYAQgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACADwTC789rB+XACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAADflkZAA36tdgEAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAANS5DZwdINbt8ygAAAABJRU5ErkJggg==">
+    <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAQQSURBVHic7dyhbmJ5HIbh32x6AZjKJlW1rVzZ3kQvsjcwsthx1I2ZhKR2BWLFyDVju9sdoAf6Po8+h3z8Ia8gwAwAAAAAAAAAAAAAAAAAAHCivux19/X9ambuDjOFM7KZ7Xq39Aj2d7Hn/Xdz+/g8q6uDjOEM7F5nXp4eZma99BT2t28AZlZXM5c3B5gCfLQ/lh4ALEcAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIOxi6QF8Ytf3q5m5W3rGB9vMdr1besR7CQDHdDe3j8+zulp6x8fYvc68PD3MzHrpKe8lABzX6mrm8mbpFbzBZwAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQdrH3I+xeDzCDs/F/X+/S++MMn+u+AdjMy9PDQZZwTjbvvq73/njv2QAAAAAAAAAAABzGl6UHnKzr+9XM3C0940RtZrve/edVzvAj7Ga7/u1vH+7/W4DP625uH59ndbX0jtOye51fX+9dv+NqZ3hs379+m+36z9+9XQD+zepq5vJm6RXnzRke14/nn/vc7ufAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAEHax9ICTtntdesHpcSafigC8bTMvTw9LjzhRm6UHcBgC8Jbtejcz66VnwDH5DADCBADCBADCBADCBADCBADCBADCBADCBADCBADCBADCBADCBADCBADCBADCBADC/CEIx7Sb71+/zY/nn0sP+bT+/mu79AQAAAAAAAAAAAAAAAAAAOAo/gG0Q06Sc9TFagAAAABJRU5ErkJggg==">
     <style type="text/css">
       html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:bold}dfn{font-style:italic}h1{font-size:2em;margin:0.67em 0}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sup{top:-0.5em}sub{bottom:-0.25em}img{border:0}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}pre{overflow:auto}code,kbd,pre,samp{font-family:monospace, monospace;font-size:1em}button,input,optgroup,select,textarea{color:inherit;font:inherit;margin:0}button{overflow:visible}button,select{text-transform:none}button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}input{line-height:normal}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}fieldset{border:1px solid #c0c0c0;margin:0 2px;padding:0.35em 0.625em 0.75em}legend{border:0;padding:0}textarea{overflow:auto}optgroup{font-weight:bold}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}*:before,*:after{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}html{font-size:62.5%;-webkit-tap-highlight-color:rgba(0,0,0,0)}body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#333;background-color:#fff}input,button,select,textarea{font-family:inherit;font-size:inherit;line-height:inherit}a{color:#428bca;text-decoration:none}a:hover,a:focus{color:#2a6496;text-decoration:underline}a:focus{outline:thin dotted;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}figure{margin:0}img{vertical-align:middle}.img-responsive{display:block;max-width:100%;height:auto}.img-rounded{border-radius:6px}.img-thumbnail{padding:4px;line-height:1.42857143;background-color:#fff;border:1px solid #ddd;border-radius:4px;-webkit-transition:all .2s ease-in-out;transition:all .2s ease-in-out;display:inline-block;max-width:100%;height:auto}.img-circle{border-radius:50%}hr{margin-top:20px;margin-bottom:20px;border:0;border-top:1px solid #eee}.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);border:0}
       code,kbd,pre,samp{font-family:Menlo,Monaco,Consolas,"Courier New",monospace}code{padding:2px 4px;font-size:90%;color:#c7254e;background-color:#f9f2f4;white-space:wrap;border-radius:4px}kbd{padding:2px 4px;font-size:90%;color:#fff;background-color:#333;border-radius:3px;box-shadow:inset 0 -1px 0 rgba(0,0,0,0.25)}pre{display:block;padding:9.5px;margin:0 0 10px;font-size:13px;line-height:1.42857143;word-break:break-all;word-wrap:break-word;color:#333;background-color:#f5f5f5;border:1px solid #ccc;border-radius:4px}pre code{padding:0;font-size:inherit;color:inherit;white-space:pre-wrap;background-color:transparent;border-radius:0}.pre-scrollable{max-height:340px;overflow-y:scroll}
@@ -36,7 +36,12 @@
   <body>
     <div class="content block-center">
       <div class="title inline-center">
-        <img width="48" height="48" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAABmJLR0QAAAByAMbcMWDEAAACkklEQVR42u3b0Q2AIAxAQWs6sUO6Fq6ABkThbgAT2uSlP8Z2nBuwpt0IQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAAQAAAAQAEABAA4F3Z8dvFeKcQRuACAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAAABAAQAEABAAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAAAEABAAQAEAAgNvSCGigTPimcAEAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAAACAAyXHb8dxrsMu3YBAAIACAAgAIAAAAIACAAgAMBgufDbi/VXCbP8zR5cAIAAAAIACAAgAIAAAAIACAAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgACYAQgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACAAgAIAAAAIACADwTC789rB+XACAAAACAAgAIACAAAACAAgAIACAAAACAAgAIACAAADflkZAA36tdgEAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAAAgAIACAAgAAANS5DZwdINbt8ygAAAABJRU5ErkJggg==" alt="Icon" />
+        <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <rect x="32" y="32" width="250" height="250" fill="#0074d9" stroke="#001f3f" />
+          <rect x="304" y="162" width="120" height="120" fill="#0074d9" stroke="#001f3f" />
+          <rect x="142" y="304" width="140" height="140" fill="#0074d9" stroke="#001f3f" />
+          <rect x="304" y="304" width="177" height="177" fill="#0074d9" stroke="#001f3f" />
+        </svg>
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
@@ -1460,15 +1465,81 @@ certbot --apache -d <span class="field">&lt;&lt;PUBLIC FQDN&gt;&gt;</span>
 <span class="comment"># Add ProxyPass to Apache2 to Proxy Requests to TemplateFx Server</span>
 sed -i <font style="color: darkred;">'/&lt;VirtualHost/a \
   ProxyRequests Off \
-  &lt;Location /&gt; \
+  &lt;Location /api/&gt; \
     ProxyPass http://127.0.0.1:8080/ \
   &lt;/Location&gt;'</font> /etc/apache2/sites-available/000-default-le-ssl.conf
 
 <span class="comment"># Restart Apache2</span>
 systemctl restart apache2</pre>
 
-      <p>The above example assumes that Apache isn't being used for anything else as the <code>ProxyPass</code> directive will proxy everything to the TemplateFx Server - it might be more appropriate to create an alias (e.g. "/api") instead. However, it is done this way as Apache is much better at handling TLS from both a security and ease of certificate management perspective than the TemplateFx Server - don't re-invent the wheel if something already exists!</p>
+      <p>The above example will proxy anything to "/api" to the TemplateFx Server. It is done this way as Apache is much better at handling TLS from both a security and ease of certificate management perspective than the TemplateFx Server - don't re-invent the wheel if something already exists!</p>
 
+      <h4 class="heading">8.4. JavaScript Client Example</h4>
+
+      <p>As an example, I have included a simple HTML page with some JavaScript that makes a call to the TemplateFx Server - it assumes it is running on the same host and we have setup the "/api" location as per the above example. We basically define some data, define a template and then pass it via an <code>XMLHttpRequest</code> object to the TemplateFx Server. The response is then decoded and printed into the web page. As JavaScript doesn't support HEREDOC syntax we are using some JavaScript hackery to simulate multi-line strings where we don't have to escape chevrons in the template.</p>
+
+      <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=Edge"&gt;
+    &lt;script&gt;
+      var templatefx_url = '/api/generate';
+      var datatemplate = {};
+
+      datatemplate.data = window.btoa((function() { <span style="color: green; display: inline;">/*
+A, B, C
+1, 2, 3
+4, 5, 6
+      */</span> }).toString().replace(/(?:^.+[\r\n]+|.+$)/g, ''));
+
+      datatemplate.template = window.btoa((function() { <span style="color: green; display: inline;">/*
+A is &lt;&lt;A&gt;&gt;
+B is &lt;&lt;B&gt;&gt;
+C is &lt;&lt;C&gt;&gt;
+      */</span> }).toString().replace(/(?:^.+[\r\n]+|.+$)/g, ''));
+
+      var xHR = new XMLHttpRequest();
+      xHR.open("POST", templatefx_url, true);
+      xHR.onload = function() {
+        if (this.status === 200) {
+          try {
+            var obj = JSON.parse(xHR.responseText);
+            if (obj.status === 'ok') {
+              if (obj.console.length &gt; 0) {
+                console.log(window.atob(obj.console));
+              }
+              document.write('&lt;pre&gt;');
+              for (var i = 0, len = obj.outputs.length; i &lt; len; i++) {
+                document.write('Output ' + obj.outputs[i].group + '&lt;br /&gt;');
+                document.write(window.atob(obj.outputs[i].value) + '&lt;br /&gt;&lt;br /&gt;');
+              }
+              document.write('&lt;/pre&gt;');
+            }
+            else {
+              document.write('TEMPLATEFX ERROR ' + obj.error.code + ': ' + obj.error.message);
+            }
+          }
+          catch (e) {
+            document.write('ERROR: ' + e);
+          }
+        }
+        else {
+          document.write('HTTP ERROR ' + this.status + ': ' + this.statusText);
+        }
+      };
+
+      xHR.onerror = function() {
+        document.write('ERROR: XMLHttpRequest.onError()');
+      };
+
+      xHR.setRequestHeader("Content-Type", "application/json");
+      xHR.send(JSON.stringify(datatemplate));
+    &lt;/script&gt;
+  &lt;/head&gt;
+&lt;/html&gt;
+      </pre>
       <br />
     </div>
   </body>
