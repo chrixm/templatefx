@@ -1476,7 +1476,7 @@ systemctl restart apache2</pre>
 
       <h4 class="heading">8.4. JavaScript Client Example</h4>
 
-      <p>As an example, I have included a simple HTML page with some JavaScript that makes a call to the TemplateFx Server - it assumes it is running on the same host and we have setup the "/api" location as per the above example. We basically define some data, define a template and then pass it via an <code>XMLHttpRequest</code> object to the TemplateFx Server. The response is then decoded and printed into the web page. As JavaScript doesn't support HEREDOC syntax we are using some JavaScript hackery to simulate multi-line strings where we don't have to escape chevrons in the template.</p>
+      <p>As an example, I have included a simple HTML page with some JavaScript that makes a call to the TemplateFx Server - it assumes it is running on the same host and we have setup the "/api" location as per the above example. We basically define some data, define a template and then pass it via an <code>XMLHttpRequest</code> object to the TemplateFx Server. The response is then decoded and printed into the web page. As JavaScript doesn't support HEREDOC syntax we are using some JavaScript magic to simulate multi-line strings where we don't have to escape chevrons in the template.</p>
 
       <pre>
 &lt;!DOCTYPE html&gt;
@@ -1488,17 +1488,27 @@ systemctl restart apache2</pre>
       var templatefx_url = '/api/generate';
       var datatemplate = {};
 
-      datatemplate.data = window.btoa((function() { <span style="color: green; display: inline;">/*
+      function multiline(f) {
+        return f.toString().replace(/(?:^.+[\r\n]+|.+$)/g, '');
+      }
+
+      datatemplate.data = window.btoa(multiline(function() { <span style="color: green; display: inline;">/*
 A, B, C
 1, 2, 3
 4, 5, 6
-      */</span> }).toString().replace(/(?:^.+[\r\n]+|.+$)/g, ''));
+      */</span> }));
 
-      datatemplate.template = window.btoa((function() { <span style="color: green; display: inline;">/*
+      datatemplate.template = window.btoa(multiline(function() { <span style="color: green; display: inline;">/*
 A is &lt;&lt;A&gt;&gt;
 B is &lt;&lt;B&gt;&gt;
 C is &lt;&lt;C&gt;&gt;
-      */</span> }).toString().replace(/(?:^.+[\r\n]+|.+$)/g, ''));
+      */</span> }));
+
+      datatemplate.snippets = {
+        '~FILTER': window.btoa(multiline(function() { <span style="color: green; display: inline;">/*
+A == 1
+        */</span> }))
+      };
 
       var xHR = new XMLHttpRequest();
       xHR.open("POST", templatefx_url, true);
