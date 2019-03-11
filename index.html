@@ -1478,77 +1478,77 @@ systemctl restart apache2</pre>
 
       <p>As an example, I have included a simple HTML page with some JavaScript that makes a call to the TemplateFx Server - it assumes it is running on the same host and we have setup the "/api" location as per the above example. We basically define some data, define a template and then pass it via an <code>XMLHttpRequest</code> object to the TemplateFx Server. The response is then decoded and printed into the web page. As JavaScript doesn't support HEREDOC syntax we are using some JavaScript magic to simulate multi-line strings where we don't have to escape chevrons in the template.</p>
 
-<pre><span style="color: #4c8317">&lt;!DOCTYPE html&gt;</span>
-<span style="color: #1e90ff; font-weight: bold">&lt;html</span> <span style="color: #1e90ff">lang=</span><span style="color: #aa5500">&quot;en&quot;</span><span style="color: #1e90ff; font-weight: bold">&gt;</span>
-  <span style="color: #1e90ff; font-weight: bold">&lt;head&gt;</span>
-    <span style="color: #1e90ff; font-weight: bold">&lt;meta</span> <span style="color: #1e90ff">charset=</span><span style="color: #aa5500">&quot;utf-8&quot;</span><span style="color: #1e90ff; font-weight: bold">&gt;</span>
-    <span style="color: #1e90ff; font-weight: bold">&lt;meta</span> <span style="color: #1e90ff">http-equiv=</span><span style="color: #aa5500">&quot;X-UA-Compatible&quot;</span> <span style="color: #1e90ff">content=</span><span style="color: #aa5500">&quot;IE=Edge&quot;</span><span style="color: #1e90ff; font-weight: bold">&gt;</span>
-    <span style="color: #1e90ff; font-weight: bold">&lt;script&gt;</span>
-      <span style="color: #0000aa">var</span> templatefx_url = <span style="color: #aa5500">&#39;/api/generate&#39;</span>;
-      <span style="color: #0000aa">var</span> datatemplate = {};
+<pre><span style="color: #0000ff">&lt;!DOCTYPE html&gt;</span>
+&lt;html lang=<span style="color: #a31515">&quot;en&quot;</span>&gt;
+  &lt;head&gt;
+    &lt;meta charset=<span style="color: #a31515">&quot;utf-8&quot;</span>&gt;
+    &lt;meta http-equiv=<span style="color: #a31515">&quot;X-UA-Compatible&quot;</span> content=<span style="color: #a31515">&quot;IE=Edge&quot;</span>&gt;
+    &lt;script&gt;
+      <span style="color: #0000ff">var</span> templatefx_url = <span style="color: #a31515">&#39;/api/generate&#39;</span>;
+      <span style="color: #0000ff">var</span> datatemplate = {};
 
-      <span style="color: #0000aa">function</span> multiline(f) {
-        <span style="color: #0000aa">return</span> f.toString().replace(<span style="color: #009999">/(?:^.+[\r\n]+|.+$)/g</span>, <span style="color: #aa5500">&#39;&#39;</span>);
+      <span style="color: #0000ff">function</span> multiline(f) {
+        <span style="color: #0000ff">return</span> f.toString().replace(<span style="color: #a31515">/(?:^.+[\r\n]+|.+$)/g</span>, <span style="color: #a31515">&#39;&#39;</span>);
       }
 
-      datatemplate.data = <span style="color: #00aaaa">window</span>.btoa(multiline(<span style="color: #0000aa">function</span>() { <span style="color: #aaaaaa; font-style: italic">/*</span>
-<span style="color: #aaaaaa; font-style: italic">A, B, C</span>
-<span style="color: #aaaaaa; font-style: italic">1, 2, 3</span>
-<span style="color: #aaaaaa; font-style: italic">4, 5, 6</span>
-<span style="color: #aaaaaa; font-style: italic">      */</span> }));
+      datatemplate.data = window.btoa(multiline(<span style="color: #0000ff">function</span>() { <span style="color: #008000">/*</span>
+<span style="color: #008000">A, B, C</span>
+<span style="color: #008000">1, 2, 3</span>
+<span style="color: #008000">4, 5, 6</span>
+<span style="color: #008000">      */</span> }));
 
-      datatemplate.template = <span style="color: #00aaaa">window</span>.btoa(multiline(<span style="color: #0000aa">function</span>() { <span style="color: #aaaaaa; font-style: italic">/*</span>
-<span style="color: #aaaaaa; font-style: italic">A is &lt;&lt;A&gt;&gt;</span>
-<span style="color: #aaaaaa; font-style: italic">B is &lt;&lt;B&gt;&gt;</span>
-<span style="color: #aaaaaa; font-style: italic">C is &lt;&lt;C&gt;&gt;</span>
-<span style="color: #aaaaaa; font-style: italic">      */</span> }));
+      datatemplate.template = window.btoa(multiline(<span style="color: #0000ff">function</span>() { <span style="color: #008000">/*</span>
+<span style="color: #008000">A is &lt;&lt;A&gt;&gt;</span>
+<span style="color: #008000">B is &lt;&lt;B&gt;&gt;</span>
+<span style="color: #008000">C is &lt;&lt;C&gt;&gt;</span>
+<span style="color: #008000">      */</span> }));
 
       datatemplate.snippets = {
-        <span style="color: #aa5500">&#39;~FILTER&#39;</span>: <span style="color: #00aaaa">window</span>.btoa(multiline(<span style="color: #0000aa">function</span>() { <span style="color: #aaaaaa; font-style: italic">/*</span>
-<span style="color: #aaaaaa; font-style: italic">A == 1</span>
-<span style="color: #aaaaaa; font-style: italic">        */</span> }))
+        <span style="color: #a31515">&#39;~FILTER&#39;</span>: window.btoa(multiline(<span style="color: #0000ff">function</span>() { <span style="color: #008000">/*</span>
+<span style="color: #008000">A == 1</span>
+<span style="color: #008000">        */</span> }))
       };
 
-      <span style="color: #0000aa">var</span> xHR = <span style="color: #0000aa">new</span> XMLHttpRequest();
-      xHR.open(<span style="color: #aa5500">&quot;POST&quot;</span>, templatefx_url, <span style="color: #0000aa">true</span>);
-      xHR.onload = <span style="color: #0000aa">function</span>() {
-        <span style="color: #0000aa">if</span> (<span style="color: #0000aa">this</span>.status === <span style="color: #009999">200</span>) {
-          <span style="color: #0000aa">try</span> {
-            <span style="color: #0000aa">var</span> obj = JSON.parse(xHR.responseText);
-            <span style="color: #0000aa">if</span> (obj.status === <span style="color: #aa5500">&#39;ok&#39;</span>) {
-              <span style="color: #0000aa">if</span> (obj.console.length &gt; <span style="color: #009999">0</span>) {
-                console.log(<span style="color: #00aaaa">window</span>.atob(obj.console));
+      <span style="color: #0000ff">var</span> xHR = <span style="color: #0000ff">new</span> XMLHttpRequest();
+      xHR.open(<span style="color: #a31515">&quot;POST&quot;</span>, templatefx_url, <span style="color: #0000ff">true</span>);
+      xHR.onload = <span style="color: #0000ff">function</span>() {
+        <span style="color: #0000ff">if</span> (<span style="color: #0000ff">this</span>.status === 200) {
+          <span style="color: #0000ff">try</span> {
+            <span style="color: #0000ff">var</span> obj = JSON.parse(xHR.responseText);
+            <span style="color: #0000ff">if</span> (obj.status === <span style="color: #a31515">&#39;ok&#39;</span>) {
+              <span style="color: #0000ff">if</span> (obj.console.length &gt; 0) {
+                console.log(window.atob(obj.console));
               }
-              <span style="color: #00aaaa">document</span>.write(<span style="color: #aa5500">&#39;&lt;pre&gt;&#39;</span>);
-              <span style="color: #0000aa">for</span> (<span style="color: #0000aa">var</span> i = <span style="color: #009999">0</span>, len = obj.outputs.length; i &lt; len; i++) {
-                <span style="color: #00aaaa">document</span>.write(<span style="color: #aa5500">&#39;Output &#39;</span> + obj.outputs[i].group + <span style="color: #aa5500">&#39;&lt;br /&gt;&#39;</span>);
-                <span style="color: #00aaaa">document</span>.write(<span style="color: #00aaaa">window</span>.atob(obj.outputs[i].value) + <span style="color: #aa5500">&#39;&lt;br /&gt;&lt;br /&gt;&#39;</span>);
+              document.write(<span style="color: #a31515">&#39;&lt;pre&gt;&#39;</span>);
+              <span style="color: #0000ff">for</span> (<span style="color: #0000ff">var</span> i = 0, len = obj.outputs.length; i &lt; len; i++) {
+                document.write(<span style="color: #a31515">&#39;Output &#39;</span> + obj.outputs[i].group + <span style="color: #a31515">&#39;&lt;br /&gt;&#39;</span>);
+                document.write(window.atob(obj.outputs[i].value) + <span style="color: #a31515">&#39;&lt;br /&gt;&lt;br /&gt;&#39;</span>);
               }
-              <span style="color: #00aaaa">document</span>.write(<span style="color: #aa5500">&#39;&lt;/pre&gt;&#39;</span>);
+              document.write(<span style="color: #a31515">&#39;&lt;/pre&gt;&#39;</span>);
             }
-            <span style="color: #0000aa">else</span> {
-              <span style="color: #00aaaa">document</span>.write(<span style="color: #aa5500">&#39;TEMPLATEFX ERROR &#39;</span> + obj.error.code + <span style="color: #aa5500">&#39;: &#39;</span> + obj.error.message);
+            <span style="color: #0000ff">else</span> {
+              document.write(<span style="color: #a31515">&#39;TEMPLATEFX ERROR &#39;</span> + obj.error.code + <span style="color: #a31515">&#39;: &#39;</span> + obj.error.message);
             }
           }
-          <span style="color: #0000aa">catch</span> (e) {
-            <span style="color: #00aaaa">document</span>.write(<span style="color: #aa5500">&#39;ERROR: &#39;</span> + e);
+          <span style="color: #0000ff">catch</span> (e) {
+            document.write(<span style="color: #a31515">&#39;ERROR: &#39;</span> + e);
           }
         }
-        <span style="color: #0000aa">else</span> {
-          <span style="color: #00aaaa">document</span>.write(<span style="color: #aa5500">&#39;HTTP ERROR &#39;</span> + <span style="color: #0000aa">this</span>.status + <span style="color: #aa5500">&#39;: &#39;</span> + <span style="color: #0000aa">this</span>.statusText);
+        <span style="color: #0000ff">else</span> {
+          document.write(<span style="color: #a31515">&#39;HTTP ERROR &#39;</span> + <span style="color: #0000ff">this</span>.status + <span style="color: #a31515">&#39;: &#39;</span> + <span style="color: #0000ff">this</span>.statusText);
         }
       };
 
-      xHR.onerror = <span style="color: #0000aa">function</span>() {
-        <span style="color: #00aaaa">document</span>.write(<span style="color: #aa5500">&#39;ERROR: XMLHttpRequest.onError()&#39;</span>);
+      xHR.onerror = <span style="color: #0000ff">function</span>() {
+        document.write(<span style="color: #a31515">&#39;ERROR: XMLHttpRequest.onError()&#39;</span>);
       };
 
-      xHR.setRequestHeader(<span style="color: #aa5500">&#39;Content-Type&#39;</span>, <span style="color: #aa5500">&#39;application/json&#39;</span>);
+      xHR.setRequestHeader(<span style="color: #a31515">&quot;Content-Type&quot;</span>, <span style="color: #a31515">&quot;application/json&quot;</span>);
       xHR.send(JSON.stringify(datatemplate));
-    <span style="color: #1e90ff; font-weight: bold">&lt;/script&gt;</span>
-  <span style="color: #1e90ff; font-weight: bold">&lt;/head&gt;</span>
-<span style="color: #1e90ff; font-weight: bold">&lt;/html&gt;</span>
-</pre>
+    &lt;/script&gt;
+  &lt;/head&gt;
+&lt;/html&gt;
+</pre>     
       <br />
     </div>
   </body>
