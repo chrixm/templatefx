@@ -1453,7 +1453,7 @@ wget -qO- https://get.docker.com | sh
 docker image build -t templatefx:latest https://github.com/chrixm/templatefx/raw/master/Dockerfile
 
 <span class="comment"># Run Container (Listens on 127.0.0.1:8080)</span>
-docker container run -d --name templatefx --restart unless-stopped -p 127.0.0.1:8080:8080 templatefx:latest
+docker container run -d --name templatefx --restart unless-stopped -e TZ=Europe/London -p 127.0.0.1:8080:8080 templatefx:latest
 
 <span class="comment"># Install Apache2 and Let's Encrypt</span>
 apt install apache2 python-certbot-apache
