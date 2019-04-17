@@ -5,8 +5,8 @@
 # start it running on port TCP/8080 on localhost waiting for connections (preferably via Apache using ProxyPass).
 #
 # Docker Build and Run:
-#  docker image build -t templatefx:latest .
-#  docker container run -d --name templatefx --restart unless-stopped -p 127.0.0.1:8080:8080 templatefx:latest
+#  docker image build -t templatefx:latest https://github.com/chrixm/templatefx/raw/master/Dockerfile
+#  docker container run -d --name templatefx --restart unless-stopped -e TZ=Europe/London -p 127.0.0.1:8080:8080 templatefx:latest
 
 FROM adoptopenjdk/openjdk11:latest AS build
 
