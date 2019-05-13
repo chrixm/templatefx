@@ -1,6 +1,6 @@
 # TemplateFx Server - Dockerfile
 # Copyright (c) 2011-2019 Chris Mason <chris@templatefx.org>
-# 
+#
 # This Dockerfile will containerise the TemplateFx Server with a minimised version of OpenJDK 11 and 
 # start it running on port TCP/8080 on localhost waiting for connections (preferably via Apache using ProxyPass).
 #
