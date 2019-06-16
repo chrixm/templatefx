@@ -20,8 +20,7 @@ RUN jlink \
 
 WORKDIR /tmp
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends wget
+RUN apt-get update && apt-get install -y wget
 
 RUN curl -s https://api.github.com/repos/chrixm/templatefx/releases/latest | \
  grep "browser_download_url.*TemplateFx_Server_v.*.tar.gz" | cut -d\" -f4 | wget -qi - && \
