@@ -1,6 +1,16 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2019 Chris Mason <chris@templatefx.org>
 
+Version 3.2.0 - 16th June 2019
+	* Added support in the GUI to import JSON based DataTemplates
+	* The "~NOPROMPT" Snippet is now included by default on new DataTemplates in the GUI.
+	* Updated paste routines to try and stop the GUI from hanging on Windows.
+	* IP Calc now performs a reverse PTR lookup when performing a forward A/AAAA lookup.
+	* Updated IP Calc nslookup so you can now search for "undefined" entries.
+	* Updated IP Calc nslookup so you can now negate a regex for searching for entries.
+	* Under the hood improvements to modulise the IP Calc classes to support a future REST API.
+	* Rewrote the JavaScript "sync()" function using a ReentrantLock().
+
 Version 3.1.0 - 14th February 2019 
 	* This release attempts to reintroduce threading in a thread-safe way to the TemplateFx Server - the GUI is still single threaded.
 	* Removed access to the "globals[]" variable from the TemplateFx Server as it isn't thread-safe.
