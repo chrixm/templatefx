@@ -7,6 +7,10 @@
 # Docker Build and Run:
 #  docker image build -t templatefx:latest https://github.com/chrixm/templatefx/raw/master/Dockerfile
 #  docker container run -d --name templatefx --restart unless-stopped -e TZ=Europe/London -p 127.0.0.1:8080:8080 templatefx:latest
+#
+# Docker Run with External Library /var/lib/templatefx/library.js:
+#  docker container run -d --name templatefx --restart unless-stopped -e TZ=Europe/London -e TFX_LIB=/opt/templatefx/lib/library.js -v /var/lib/templatefx:/opt/templatefx/lib -p 127.0.0.1:8080:8080 templatefx:latest
+#
 
 FROM adoptopenjdk/openjdk11:latest AS build
 
