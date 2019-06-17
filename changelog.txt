@@ -6,9 +6,11 @@ Version 3.2.0 - 16th June 2019
 	* The "~NOPROMPT" Snippet is now included by default on new DataTemplates in the GUI.
 	* Updated paste routines to try and stop the GUI from hanging on Windows.
 	* IP Calc now performs a reverse PTR lookup when performing a forward A/AAAA lookup.
+	* Added "Content-Type" to "Access-Control-Allow-Headers" for pre-flight CORS on TemplateFx Server.
 	* Updated IP Calc nslookup so you can now search for "undefined" entries.
 	* Updated IP Calc nslookup so you can now negate a regex for searching for entries.
 	* Under the hood improvements to modulise the IP Calc classes to support a future REST API.
+	* Fixed an issue with the TemplateFx Server where it wasn't pre-checking external libraries.
 	* Rewrote the JavaScript "sync()" function using a ReentrantLock().
 
 Version 3.1.0 - 14th February 2019 
