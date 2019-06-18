@@ -15,7 +15,7 @@
 FROM adoptopenjdk/openjdk11:latest AS build
 
 RUN jlink \
---add-modules java.base,java.management,java.naming,java.scripting,jdk.httpserver,jdk.scripting.nashorn,jdk.naming.dns \
+--add-modules java.base,java.management,java.naming,java.scripting,jdk.httpserver,jdk.scripting.nashorn,jdk.naming.dns,jdk.crypto.ec \
 --strip-debug \
 --compress=2 \
 --no-header-files \
@@ -38,4 +38,4 @@ COPY --from=build /tmp/TFxServer.jar /opt/templatefx/
 
 EXPOSE 8080
 
-CMD [ "/opt/java/bin/java", "-Dnashorn.args=--no-deprecation-warning", "-jar", "/opt/templatefx/TFxServer.jar", "-s", "0.0.0.0:8080" ]
+CMD [ "/opt/java/bin/java", "-Dnashorn.args=--no-deprecation-warning", "-jar", "/opt/templatefx/TFxServer.jar", "-s", "0.0.0.0" ]
