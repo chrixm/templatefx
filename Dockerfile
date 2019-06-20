@@ -1,16 +1,5 @@
-# TemplateFx Server - Dockerfile
+# Dockerfile for TemplateFx Server
 # Copyright (c) 2011-2019 Chris Mason <chris@templatefx.org>
-#
-# This Dockerfile will containerise the TemplateFx Server with a minimised version of OpenJDK 11 and 
-# start it running on port TCP/8080 on localhost waiting for connections (preferably via Apache using ProxyPass).
-#
-# Docker Build and Run:
-#  docker image build -t templatefx:latest https://github.com/chrixm/templatefx/raw/master/Dockerfile
-#  docker container run -d --name templatefx --cap-drop=all --restart unless-stopped -e TZ=Europe/London -p 127.0.0.1:8080:8080 templatefx:latest
-#
-# Docker Run with External Library /var/lib/templatefx/library.js:
-#  docker container run -d --name templatefx --cap-drop=all --restart unless-stopped -e TZ=Europe/London -e TFX_LIB=/opt/templatefx/lib/library.js -v /var/lib/templatefx:/opt/templatefx/lib -p 127.0.0.1:8080:8080 templatefx:latest
-#
 
 FROM adoptopenjdk/openjdk11:latest AS build
 
@@ -27,7 +16,6 @@ RUN curl -s https://api.github.com/repos/chrixm/templatefx/releases/latest \
 | cut -d'"' -f4 \
 | xargs -I {} curl -sL {} \
 | tar -zx -C /tmp
-
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
