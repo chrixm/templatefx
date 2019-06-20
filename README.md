@@ -1,4 +1,3 @@
-# templatefx
-TemplateFx - Dynamic Templating Tool
+# TemplateFx - Dynamic Templating Tool
 
 https://templatefx.org
