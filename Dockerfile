@@ -18,11 +18,12 @@ RUN curl -s https://api.github.com/repos/chrixm/templatefx/releases/latest \
 | tar -zx -C /tmp
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
-
 MAINTAINER Chris Mason <chris@templatefx.org>
 
-COPY --from=build /tmp/java /opt/java
-COPY --from=build /tmp/TFxServer.jar /opt/templatefx/
+COPY --chown=nobody:nobody --from=build /tmp/java /opt/java
+COPY --chown=nobody:nobody --from=build /tmp/TFxServer.jar /opt/templatefx/
+
+USER nobody
 
 EXPOSE 8080
 
