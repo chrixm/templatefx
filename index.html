@@ -45,12 +45,59 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>Latest TemplateFx Server v3.3.0 (Build 19176)<br />Released: 25th June 2019</h4>
-        <h4>Latest TemplateFx GUI v3.2.0 (Build 19167)<br />Released: 16th June 2019</h4>
+        <h4>TemplateFx Server v3.3.0 (Build 19176)<br />Released: 25th June 2019</h4>
+        <h4>TemplateFx GUI v3.2.0 (Build 19167)<br />Released: 16th June 2019</h4>
       </div>
 
       <p>I have had a couple of requests to provide a "donate" type link for people to show their appreciation - I don't charge anything for you to use TemplateFx and I never will, but if you use TemplateFx and find it useful and want to show your appreciation then you can using <a href="https://paypal.me/chrixm">https://paypal.me/chrixm</a>.</p>
-       
+
+      <h4 class="heading">Contents</h4>
+      <ul>
+        <li><a href="#introduction">Introduction</a></li>
+        <li>
+          <a href="#ui">User Interface</a>
+          <ul>
+            <li><a href="#data-pane">Data Pane</a></li>
+            <li><a href="#template-pane">Template Pane</a></li>
+            <li><a href="#output-pane">Output Pane</a></li>
+            <li><a href="#shortcuts">Shortcut Keys</a></li>
+            <li><a href="#command-line">Command Line Options</a></li>
+          </ul>
+          <li><a href="#datatemplates">DataTemplates</a></li>
+          <li>
+            <a href="#templates">Templates</a>
+            <ul>
+              <li><a href="#constructs">Branching and Looping Constructs</a></li>
+              <li><a href="#snippets">Snippets</a></li>
+              <li><a href="#externals">Including External Files</a></li>
+              <li><a href="#input">User Input</a></li>
+              <li><a href="#comments">Comments</a></li>
+              <li><a href="#markers">Markers</a></li>
+            </ul>
+          </li>
+          <li><a href="#filtering">Filtering and Sorting</a></li>
+          <li><a href="#grouping">Grouping</a></li>
+          <li>
+            <a href="#scripting">Scripting</a>
+            <ul>
+              <li><a href="#variables">Built-In JavaScript Variables</a></li>
+              <li><a href="#functions">Built-In JavaScript Functions</a></li>
+              <li><a href="#libraries">External JavaScript Libraries</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#server">TemplateFx as a Service (REST API)</a>
+            <ul>
+              <li><a href="#request">Request Format</a></li>
+              <li><a href="#response">Response Format</a></li>
+              <li><a href="#docker">Docker and TemplateFx Server</a></li>
+              <li><a href="#client">JavaScript Client Example</a></li>
+            </ul>
+          </li>
+        </li>
+      </ul>
+              
+      <a name="introduction"></a>
       <h4 class="heading">1. Introduction</h4>
 
       <p>TemplateFx is a Dynamic Templating Tool which allows you to generate outputs based on a template and some source data. Its main use is in generating configurations for CLI based devices like routers, switches, firewalls, etc. It aims to be portable and platform independent through the use of Java and as such requires a Java Runtime Environment (JRE) of at least version 8 to be installed.</p>
@@ -61,6 +108,7 @@
 
       <p>Download links for TemplateFx can be found on GitHub at the following location: <a href="https://github.com/chrixm/templatefx/releases" target="_blank">https://github.com/chrixm/templatefx/releases</a><br />All the changes in this release and previous releases can be found within the detailed <a href="changelog.txt" target="_blank">CHANGELOG</a>.</p>
       
+      <a name="ui"></a>
       <h4 class="heading">2. User Interface</h4>
 
       <p>The TemplateFx user interface consists of the "Console", "IP Calc" and "DataTemplate" tabs and multiple "Output" tabs. The "Console" tab is where STDOUT/STDERR goes and where all console logging is sent. The "IP Calc" tab provides easy access to an IPv4/IPv6 Subnet Calculator with support for DNS resolution of subnets, the "DataTemplate" tab is the main tab where you compose your template and the "Output" tabs are where you see your merged data after clicking on the "Generate Output" button on the toolbar.</p>
@@ -75,6 +123,7 @@
 
       <p>The "Group By" list allows you to select one or more of your data fields (using CTRL/&#8984; while clicking to select or deselect entries) to allow grouping of your output data. As an example, if you have configuration that needs to be applied to different interfaces on a series of routers, then you could use this to group by your router identifier and interface identifier, to allow you to group interfaces for the same router in the same output. There is also support for splitting an output into multiple outputs using advanced <code>GROUP</code> syntax that is explained in the "Grouping and Merging" section.</p>
 
+      <a name="data-pane"></a>
       <h4 class="heading">2.1. Data Pane</h4>
 
       <p>The data pane is where you enter your raw data that TemplateFx will use within your template. Text that is inserted into the data pane has a couple of restrictions that must be followed:</p>
@@ -88,18 +137,21 @@
 
       <p><span class="label label-info">NOTE</span>&nbsp;You will get a warning message if the data pane contains a <code>"</code>, <code>'</code> or <code>\</code> character. This is because TemplateFx doesn't keep track in which context the template fields are being inserted - it could be within the main body of the template or within a dynamic script block within an already quoted string. In some contexts, those characters may need to be escaped (e.g. <code>&lt;? print("&lt;&lt;FIELD&gt;&gt;") ?&gt;</code> when there is already a double quote in the value of <code>&lt;&lt;FIELD&gt;&gt;</code>), and in some they might not. If you aren't using those template fields in a scenario (generally a script block) which might cause a problem then you can ignore this warning.</p>
       
+      <a name="template-pane"></a>
       <h4 class="heading">2.2. Template Pane</h4>
 
       <p>The template pane is where you enter the text of your template that will be used as the basis for your output. TemplateFx fields are defined through the use of double chevrons (e.g. <code>&lt;&lt;FIELD&gt;&gt;</code>) and once you define them within the template pane, they are added to the "Template Fields" list (fields are highlighted in red if they don't exist in the data pane). When you click on the "Generate Output" button, the fields will be substituted for the values in the source data. In the "Generate Output" dialog you have the option of specifying a label for the output tab.</p>
       
       <p>In the event that a template field hasn't been defined within the source data then you will get a warning message as well as it being highlighted in the output to allow you to easily identify it.</p>
 
+      <a name="output-pane"></a>
       <h4 class="heading">2.3. Output Pane</h4>
 
       <p>Every time you click on the "Generate Output" button a new output pane is added as a new tab. This pane allows you to see the merged output with the ability to save it or to zip multiple outputs together into a single archive. If you have selected a field in the "Group By" drop down, then you have the ability to cycle through the different output groups. In the event that TemplateFx detects you are creating a HTML based template (i.e. if it detects <code>&lt!DOCTYPE html&gt</code> at the start of your template and then <code>&lt;html&gt;</code> and <code>&lt;/html&gt;</code> tags) then it will give you the option of showing the output in your default browser using the "In Browser" button.</p>
 
       <p>You also have various different selection options ("Select Line", "Select Block" and "Select Paragraph") by right clicking on the output pane which allows you to easily select blocks to copy. This goes one step further with a feature called "Copy Mode", which is available in the same menu that automatically highlights blocks as you move the mouse over them - this allows you to copy blocks without having to manually select them first.</p>
 
+      <a name="shortcuts"></a>
       <h4 class="heading">2.4. Shortcut Keys</h4>
 
       <p>TemplateFx defines the following shortcut/accelerator keys that can be used to perform tasks using the keyboard:</p>
@@ -171,6 +223,7 @@
         </tbody>
       </table>
 
+      <a name="command-line"></a>
       <h4 class="heading">2.5. Command Line Options (GUI)</h4>
 
       <dl>
@@ -252,6 +305,7 @@ Gi0/0/0, 192.0.2.1, R1 (Gi0/0)
 Gi0/0/1, 192.0.2.5, R2 (Gi0/1)
 Gi0/0/2, 192.0.2.9, R3 (Gi0/2)</pre>
 
+      <a name="constructs"></a>
       <h4 class="heading">4.1. Branching and Looping Constructs</h4>
 
       <a name="if"></a>
@@ -386,6 +440,7 @@ R = 5:A</pre>
         <li><code>~FOOTER</code> - The contents of this snippet are automatically added to the end of your template on output generation.</li>
       </ul>
 
+      <a name="externals"></a>
       <h4 class="heading">4.3. Including External Files</h4> 
 
       <p><span class="label label-danger">GUI Only</span>&nbsp;Not supported within TemplateFx Server DataTemplates</p>
@@ -1314,6 +1369,7 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
         </dd>
       </dl>
 
+      <a name="libraries"></a>
       <h4 class="heading">7.3. External JavaScript Libraries</h4>
 
       <p>In addition to the built-in JavaScript variables and functions, TemplateFx also supports globally including external JavaScript libraries. You can select the "JavaScript Libraries" menu item on the "File" menu to add or remove libraries (or using "-lib" when using the TemplateFx Server) - these are persistent across application restarts, enabled globally and will be available for every DataTemplate. By default TemplateFx will cache the loading of JavaScript Libraries on the first run (you can disable this by deselecting the "Cache JavaScript Libraries" option) - this is because Java seems to be getting slower and slower at parsing JavaScript with every release and this speeds things up a bit.</p>
@@ -1321,27 +1377,23 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
       <a name="server"></a>
       <h4 class="heading">8. TemplateFx as a Service (REST API)</h4>
 
-      <p>As it isn't always possible to deploy the Java Runtime Environment within a Desktop environment, maybe due to corporate policy or user preference, TemplateFx can also be deployed as a service instance using the TemplateFx Server component. In this scenario it provides a HTTP based REST API to allow templating to occur from a number of different clients without having the burden of installing the TemplateFx GUI. Any client (i.e. Web Browser, Perl, PHP, Curl, Microsoft Excel, etc) which is able to establish a HTTP connection can use the REST API to generate outputs based on templates - it could be a service activation service that uses it to generate configuration on the fly from an order form, etc.</p>
+      <p>As it isn't always possible to deploy the Java Runtime Environment within a Desktop environment, maybe due to corporate policy or user preference, TemplateFx can also be deployed as a service instance using the TemplateFx Server component. In this scenario it provides a HTTP(S) based REST API to allow templating to occur from a number of different clients without having the burden of installing the TemplateFx GUI. Any client (i.e. Web Browser, Perl, PHP, Curl, Microsoft Excel, etc) which is able to establish a HTTP(S) connection can use the REST API to generate outputs based on templates - it could be a service activation service that uses it to generate configuration on the fly from an order form, etc.</p>
 
-      <p>The TemplateFx Server is a cut down version of TemplateFx which is contained within a separate JAR file and only contains the core templating engine. It is run via the command line and supports the following command line options:</p>
+      <p>The TemplateFx Server is a cut down version of TemplateFx which is contained within a separate JAR file and only contains the core templating engine. It is run via the command line and supports the following usage:</p>
 
-      <dl>
-        <dt><strong>HTTP Server Mode</strong></dt>
-        <dd>
-          <p><code>java -jar TFxServer.jar -s [host[:port]] [-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
-          <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 on 127.0.0.1 only (localhost - doesn't accept remote connections) - if you prefer, you can specify a different host or port as a parameter (i.e. "0.0.0.0:8080" to listen on all IPs - use with caution). The "-lib" parameter is used to specify external JavaScript modules (it can be used multiple times) - they are loaded server side so are accessible to all API clients. The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether. The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process.</p>
-          <p>As the TemplateFx Server only supports HTTP, it should only be bound to "localhost", but you can use Apache's "ProxyPass" directive (or similar under NGINX) to forward requests to the TemplateFx Server - the following syntax will send requests sent to "/api/generate" via "http://127.0.0.1:8080/generate"). This allows Apache to manage the certificates and TLS configuration to ensure the traffic is secured over the network.</p>
-          <pre>ProxyRequests Off
+      <p><code>java -jar TFxServer.jar -s [host][:][port] @[-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-cert &lt;pem file&gt;] [-t &lt;timeout&gt;] [-dumpreq]</code></p>
+      <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 (or 8443 if using TLS) on 127.0.0.1 only (localhost - doesn't accept remote connections) - if you prefer, you can specify a different host or port as a parameter (i.e. "0.0.0.0:8080" to listen on all IPs - if connecting over a network then you should really enable TLS).</p>
+      <p>The "-lib" parameter is used to specify external JavaScript modules (it can be used multiple times) - they are loaded server side so are accessible to all API clients.</p>
+      <p>The "-cert" parameter is used to enable TLS - you specify a bundled PEM file that contains the X.509 Certificate, the RSA or EC Private Key (in PKCS#8 format) and all intermediate X.509 Certificates.</p><p>The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether.</p>
+      <p>The "-dumpreq" parameter is used to output more verbose information on what it has been asked to process.</p>
+
+      <p>Although the TemplateFx Server supports HTTPS via TLS, it should be noted that when you enable TLS (via the "-cert" option), it only enables TLSv1.2 and TLSv1.3 (on Java 9 and higher) as anything else is considered insecure. It also only allows RSA/EC keys and TLS Ciphers which will ensure an "A" rating is achieved on a Qualys scan regardless of whether you are using Java 8 or Java 11.</p>
+
+      <p>There are situations where you must use TLSv1.1 or lower (don't do it) for backwards compatibility or where you wish to forward connections from Apache or NGINX. In these situations, you can bind the TemplateFx Server to "localhost" without TLS and then use Apache's "ProxyPass" directive (or similar under NGINX) to forward requests to the TemplateFx Server - the following syntax will send requests sent to "/api/generate" via "http://127.0.0.1:8080/generate"). This allows Apache to manage the certificates and TLS configuration instead.</p>
+      <pre>ProxyRequests Off
 ProxyPass /api http://127.0.0.1:8080</pre>
-        </dd>
-        <dt><strong>Offline Mode</strong></dt>
-        <dd>
-          <p><code>java -jar TFxServer.jar -dt &lt;dataTemplate&gt; -out &lt;outfile&gt; [-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-t &lt;timeout&gt;]</code></p>
-          <p>An alternative option is to use the TemplateFx Server component in Offline Mode by running it from the command line as and when you wish to generate an output. With this method, you provide it with an input DataTemplate and it will generate the output to the specified file. This could be called directly from a local script or from another program to generate outputs whenever you require, without having to support a TCP connection. The format of the DataTemplate is identical to the POST DATA associated with the REST API which is detailed below.</p>
-        </dd>
-      </dl>
 
-      <p>In addition to the above command line arguments, the TemplateFx Server also supports the following environment variables - in a scenario where both environment variables and command line arguments are present then command line arguments will replace the environment variables:</p>
+      <p>In addition to the above command line arguments, the TemplateFx Server also supports the following environment variables - in a scenario where both environment variables and command line arguments are present then command line arguments will take priority over the environment variables:</p>
 
       <dt><strong>TFX_LIB</strong></dt>
         <dd>
@@ -1353,9 +1405,22 @@ ProxyPass /api http://127.0.0.1:8080</pre>
         <p>This is used to specify a logfile to use for logging and is the same as the "-log" command line argument.</p>
         </dd>
 
+      <dt><strong>TFX_CERT</strong></dt>
+        <dd>
+        <p>This is used to specify a bundled PEM file which contains the RSA/EC Private Key as well as all the X.509 Certificates required in the chain - it is the same as the "-cert" command line argument.</p>
+        </dd>
+
+      <dt><strong>TFX_TIMEOUT</strong></dt>
+        <dd>
+        <p>This is used to specify the TemplateFx Server timeout in seconds so it can be passed as an environment variable instead of using "-t".</p>
+        </dd>
+
+      <a name="request"></a>
       <h4 class="heading">8.1. Request Format</h4>
 
       <p>To submit a request to the TemplateFx Server you need to use a standard HTTP POST request using the URL "/generate". The POST DATA should contain your DataTemplate in the text based format that is described in section 3 of this document or preferably using the web friendly JavaScript Object Notation (JSON) format - an example of both has been included below. The "Content-Type" header must be either "application/json" or "application/datatemplate" depending on the request format.</p>
+
+      <p>To perform a liveliness check you can also use a standard HTTP GET request using the URL "/ping", which will respond with "200 OK" if the Template Server is up. By using this url, it has the advantage that it doesn't get printed in the log output, else it will flood the logs depending on your health check interval.</p>
 
       <h4 class="heading">8.1.1. JavaScript Object Notation (JSON) Format</h4>
 
@@ -1400,6 +1465,7 @@ interface &lt;&lt;INTERFACE&gt;&gt;
 !
 <strong>&lt;/templatefx:template&gt;</strong></span></pre>
 
+      <a name="response"></a>
       <h4 class="heading">8.2. Response Format</h4>
 
       <p>Assuming the request is valid HTTP and you don't get a HTTP error code back (i.e. something which isn't HTTP 200 OK), then there are two different response formats (all responses use JSON as per most REST APIs) - one for success and one for failure.</p>
@@ -1443,18 +1509,20 @@ interface &lt;&lt;INTERFACE&gt;&gt;
 }
 </pre>
 
+      <a name="docker"></a>
       <h4 class="heading">8.3. Docker and TemplateFx Server</h4>
 
-      <p>There is also a <a target="_blank" href="https://github.com/chrixm/templatefx/raw/master/Dockerfile">Dockerfile</a> available for the TemplateFx Server which contains everything you need to start a local TemplateFx Server running within a Docker container. To demonstrate how quickly you can get a TemplateFx Server up and running, the following commands can be executed on a new Linux install (this example was done using Ubuntu on AWS EC2, but others can equally be used).</p>
+      <p>The TemplateFx Server is the perfect example of a stateless microservice - something which lends itself very well to Docker containers. The latest Docker image of the TemplateFx Server is available on Docker Hub at "chrixm/templatefx:latest" - if you want to build the image from scratch then you can use the <a target="_blank" href="https://github.com/chrixm/templatefx/raw/master/Dockerfile">Dockerfile</a> stored in GitHub.</p>
+      
+      <p>The latest stable release (as opposed to the last image to be pushed) will always use the "latest" tag - if you wish to pull a specific version of the image, then you can use the version number (matches the GitHub release tag) as the tag (i.e. "chrixm/templatefx:v3.3.0" for version 3.3.0).</p>
+
+      <p>To demonstrate how quickly you can get the TemplateFx Server up and running, the following commands can be executed on a new Linux install (this example was done using Ubuntu on AWS EC2, but others can equally be used).</p>
 
       <pre><span class="comment"># Install Docker</span>
 wget -qO- https://get.docker.com | sh
 
-<span class="comment"># Build Image</span>
-docker image build -t templatefx:latest https://github.com/chrixm/templatefx/raw/master/Dockerfile
-
 <span class="comment"># Run Container (Listens on 127.0.0.1:8080)</span>
-docker container run -d --name templatefx --restart unless-stopped -e TZ=Europe/London -p 127.0.0.1:8080:8080 templatefx:latest
+docker container run -d --name templatefx --restart unless-stopped -p 127.0.0.1:8080:8080 chrixm/templatefx:latest
 
 <span class="comment"># Install Apache2 and Let's Encrypt</span>
 apt install apache2 python-certbot-apache
@@ -1473,8 +1541,17 @@ sed -i <font style="color: darkred;">'/&lt;VirtualHost/a \
 <span class="comment"># Restart Apache2</span>
 systemctl restart apache2</pre>
 
-      <p>The above example will proxy anything to "/api" to the TemplateFx Server. It is done this way as Apache is much better at handling TLS from both a security and ease of certificate management perspective than the TemplateFx Server - don't re-invent the wheel if something already exists!</p>
+      <p>The above example will proxy anything sent to "/api" to the TemplateFx Server. This is the preferred way as Apache is much better at dealing with certificate renewals via Let's Encrypt than manually having to update and restart the TemplateFx Server when the certificate changes. To support scenarios where you might want to run a cluster of TemplateFx containers via Kubernetes there is also support for running a self-contained container that supports TLS (v1.2 or v1.3) via the TemplateFx Server (using the "-cert" option) without Apache or NGINX (or you could deploy Apache, NGINX or even HAProxy into the container, but then it makes the container quite complex and goes against the Docker philosophy of only running a single process within a container).</p>
 
+      <p>As the TemplateFx Server supports external JavaScript libraries, we need a way to pass them into a Docker container - the following syntax can be used to expose your local "/var/lib/templatefx" directory (or a mounted NFS share) into your container - this enables you to make changes to your external libraries without having to rebuild your containers - a simple "docker restart templatefx" is all that is required.</p>
+
+      <pre>docker container run -d --name templatefx --restart unless-stopped -e TFX_LIB=/opt/templatefx/lib/library.js -v /var/lib/templatefx:/opt/templatefx/lib -p 127.0.0.1:8080:8080 chrixm/templatefx:latest</pre>
+
+      <p>In the same sense, you also need a way to pass in the PEM file if you wish to enable TLS support within a container. We use the same approach for this, where we can reference a PEM file from the local file system - there are multiple ways of doing this (e.g. in Kubernetes you could use a ConfigMap), but this is just one option. This exposes TCP/443 to the outside world, which is then forwarded to the TemplateFx Server running within your container on TCP/8443 - it assumes the PEM file is called "templatefx.pem" and is located in the current working directory.</p>
+
+      <pre>docker container run -d --name templatefx --restart unless-stopped -e TFX_CERT=/opt/templatefx/templatefx.pem -v $(pwd)/templatefx.pem:/opt/templatefx/templatefx.pem -p 443:8443 chrixm/templatefx:latest</pre>
+
+      <a name="client"></a>
       <h4 class="heading">8.4. JavaScript Client Example</h4>
 
       <p>As an example, I have included a simple HTML page with some JavaScript that makes a call to the TemplateFx Server - it assumes it is running on the same host and we have setup the "/api" location as per the above example. We basically define some data, define a template and then pass it via an <code>XMLHttpRequest</code> object to the TemplateFx Server. The response is then decoded and printed into the web page. As JavaScript doesn't support HEREDOC syntax we are using some JavaScript magic to simulate multi-line strings where we don't have to escape chevrons in the template.</p>
@@ -1549,7 +1626,7 @@ systemctl restart apache2</pre>
     &lt;/script&gt;
   &lt;/head&gt;
 &lt;/html&gt;
-</pre>     
+</pre>
       <br />
     </div>
   </body>
