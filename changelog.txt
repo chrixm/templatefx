@@ -1,6 +1,14 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2019 Chris Mason <chris@templatefx.org>
 
+TemplateFx Server v3.3.0 - 25th June 2019
+	* Reintroduced support for TLS via RSA/EC certificates in TemplateFx Server for Docker/Kubernetes use cases.
+	* TemplateFx Server only supports TLS >= 1.2 and secure ciphers to ensure an "A" rating in Qualys.
+	* Removed support for Offline Mode in TemplateFx Server in favour of using the REST API.
+	* Added support for a TFX_TIMEOUT environment variable in the TemplateFx Server.
+	* TemplateFx Server now supports "/ping" which returns "200 OK" for health check scripts, but doesn't log.
+	* Cleaned up CRLF vs LF usage within HTTP responses in the TemplateFx Server.
+
 Version 3.2.0 - 16th June 2019
 	* Added support in the GUI to import JSON based DataTemplates
 	* The "~NOPROMPT" Snippet is now included by default on new DataTemplates in the GUI.
