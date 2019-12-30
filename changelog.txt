@@ -1,5 +1,16 @@
 TemplateFx | Dynamic Templating Tool
-Copyright (c) 2011-2019 Chris Mason <chris@templatefx.org>
+Copyright (c) 2011-2020 Chris Mason <chris@templatefx.org>
+
+TemplateFx v3.5.0 - 30th December 2019
+	* TemplateFx Server now has a web client (with IP Calc) if you connect via a web browser (e.g. http://127.0.0.1:8080/). 
+	* Phase 1 of Jinja2 template compatibility with support for using "{{ X }}" instead of "<< X >>"
+	* FOR field variables can no longer overlap with template fields - a warning is now displayed.
+	* Added support for displaying DNS servers at startup and when rotated in the TemplateFx Server.
+	* Removed the "Connection" header from HTTP responses in the TemplateFx Server to allow session keep alive. 
+	* Enhanced the examples within the User Guide for Docker and Kubernetes.
+	* Minor tweaks to the TemplateFx Server TLS support to enable DHE Key Exchange and force DH to 2048 bits.
+	* Changed Auth Variables to use ";" to split out the authentication string from the regex.
+	* Added support to specify custom authentication headers to the "curl" function.
 
 TemplateFx Server v3.4.0 - 22nd July 2019
 	* Added support for server side Auth Variables to the "curl()" function - see the User Guide for details.
