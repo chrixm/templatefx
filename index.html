@@ -45,8 +45,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>TemplateFx Server v3.4.0 (Build 19203)<br />Released: 22nd July 2019</h4>
-        <h4>TemplateFx GUI v3.2.0 (Build 19167)<br />Released: 16th June 2019</h4>
+        <h4>TemplateFx v3.5.0 (Build 19364)<br />Released: 30th December 2019</h4>
         <h4>TemplateFx Web Client<br /><a href="https://templatefx.io">https://templatefx.io</a></h4> 
       </div>
 
@@ -72,6 +71,7 @@
               <li><a href="#snippets">Snippets</a></li>
               <li><a href="#externals">Including External Files</a></li>
               <li><a href="#input">User Input</a></li>
+              <li><a href="#inputweb">User Input in Web Client</a></li>
               <li><a href="#comments">Comments</a></li>
               <li><a href="#markers">Markers</a></li>
             </ul>
@@ -89,9 +89,10 @@
           <li>
             <a href="#server">TemplateFx as a Service (REST API)</a>
             <ul>
+              <li><a href="#client">Web Client</a></li>
               <li><a href="#request">Request Format</a></li>
               <li><a href="#response">Response Format</a></li>
-              <li><a href="#docker">Docker and TemplateFx Server</a></li>
+              <li><a href="#container">Running as a Container</a></li>
               <li><a href="#client">JavaScript Client Example</a></li>
             </ul>
           </li>
@@ -141,7 +142,7 @@
       <a name="template-pane"></a>
       <h4 class="heading">2.2. Template Pane</h4>
 
-      <p>The template pane is where you enter the text of your template that will be used as the basis for your output. TemplateFx fields are defined through the use of double chevrons (e.g. <code>&lt;&lt;FIELD&gt;&gt;</code>) and once you define them within the template pane, they are added to the "Template Fields" list (fields are highlighted in red if they don't exist in the data pane). When you click on the "Generate Output" button, the fields will be substituted for the values in the source data. In the "Generate Output" dialog you have the option of specifying a label for the output tab.</p>
+      <p>The template pane is where you enter the text of your template that will be used as the basis for your output. TemplateFx fields are defined through the use of double chevrons (e.g. <code>&lt;&lt;FIELD&gt;&gt;</code>) or double braces to match Jinja2 templates (e.g. <code>{{FIELD}}</code>) and once you define them within the template pane, they are added to the "Template Fields" list (fields are highlighted in red if they don't exist in the data pane). When you click on the "Generate Output" button, the fields will be substituted for the values in the source data. In the "Generate Output" dialog you have the option of specifying a label for the output tab.</p>
       
       <p>In the event that a template field hasn't been defined within the source data then you will get a warning message as well as it being highlighted in the output to allow you to easily identify it.</p>
 
@@ -352,8 +353,10 @@ Gi0/0/2, 192.0.2.9, R3 (Gi0/2)</pre>
 
       <p>The FOR construct is also an important feature of many languages, templates included - it is used to support intra-row looping. There are two different syntaxes that are supported for this construct; the first allows you to specify a variable "VAR" and a comma separated list of data values, e.g. <code>"VAL1", "VAL2", ..., "VALn"</code>, the second allows you to specify a variable "VAR" and then use the <code>X TO Y [STEP N]</code> syntax for the values - if "STEP" is omitted then a default value of 1 or -1 will be used depending on the context. It will then duplicate the contents of the FOR block for every entry by substituting <code>{{VAR}}</code> for the value. If there are no entries within the list of data values then the block isn't displayed (white space is maintained at the beginning and end of FOR blocks, but not empty lines). To maintain performance and preserve memory, a maximum iteration limit of 1024 has been imposed.</p>
 
-      <pre><span class="for">&lt;FOR VAR = ["VAL1", "VAL2", ..., "VALn"]&gt;</span>
-<span class="for">{{VAR}}</span>
+      <p><span class="label label-danger">NOTE</span>&nbsp;To support Jinja2 template compatibility, the use of "<code>&lt;&lt; &gt;&gt;</code>" and "<code>{{ }}</code>" can be used in place of each other. This now means you can't overlap local FOR fields with template fields - if this happens then a warning message will be displayed in the Console.</p>
+
+      <pre><span class="for">&lt;FOR <span class="field">VAR</span> = ["VAL1", "VAL2", ..., "VALn"]&gt;</span>
+<span class="field">{{VAR}}</span>
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
 
@@ -361,8 +364,8 @@ Gi0/0/2, 192.0.2.9, R3 (Gi0/2)</pre>
 
       <pre>interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>
  ip address <span class="field">&lt;&lt;IP&gt;&gt;</span> 255.255.255.252
-<span class="for">&lt;FOR H = ["192.0.2.129", "192.0.2.130"]&gt;</span>
- ip helper-address <span class="for">{{H}}</span>
+<span class="for">&lt;FOR <span class="field">H</span> = ["192.0.2.129", "192.0.2.130"]&gt;</span>
+ ip helper-address <span class="field">{{H}}</span>
 <span class="for">&lt;/FOR&gt;</span>
  no shutdown
 !</pre>
@@ -392,16 +395,16 @@ interface Gi0/0/2
 
       <p>The second type of syntax allows you to do more conventional loops that go from a start value to an end value, with an optional step (where "X" and "Y" could be a number or a character with the smaller value on the left or the right):</p>
 
-      <pre><span class="for">&lt;FOR VAR = ["X" TO "Y" STEP N]&gt;</span>
-<span class="for">{{VAR}}</span>
+      <pre><span class="for">&lt;FOR <span class="field">VAR</span> = ["X" TO "Y" STEP N]&gt;</span>
+<span class="field">{{VAR}}</span>
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
 
       <p>You are permitted to nest FOR blocks as many times as you want while mixing and matching the syntax - the following primitive example demonstrates an example of this:</p>
 
-      <pre><span class="for">&lt;FOR I = [1 TO 5 STEP 2]&gt;</span>
-  <span class="for">&lt;FOR J = [B TO A]&gt;</span>
-R = <span class="for">{{I}}</span>:<span class="for">{{J}}</span>
+      <pre><span class="for">&lt;FOR <span class="field">I</span> = [1 TO 5 STEP 2]&gt;</span>
+  <span class="for">&lt;FOR <span class="field">J</span> = [B TO A]&gt;</span>
+R = <span class="field">{{I}}</span>:<span class="field">{{J}}</span>
   <span class="for">&lt;/FOR&gt;</span>
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
@@ -456,7 +459,7 @@ R = 5:A</pre>
       <a name="input"></a>
       <h4 class="heading">4.4. User Input</h4>
 
-      <p><span class="label label-danger">GUI Only</span>&nbsp;Not supported within TemplateFx Server DataTemplates</p>
+      <p><span class="label label-danger">GUI Only</span>&nbsp;Not supported within TemplateFx Server DataTemplates (see below for Web Client)</p>
 
       <p>There might be some situations where you don't want to store dynamic or sensitive data within the actual DataTemplate. In these situations, TemplateFx provides the ability to request data from the user as the output is being generated through the use of input blocks using the <code>&lt;[ ... ]&gt;</code> or <code>&lt;[ ... ][0|1|2]&gt;</code> syntax. By default it will present the user with a multi-line input box, which allows you to enter data which would normally be difficult to do so using the "Data" pane. The second format of syntax allows a numerical type to be specified as per the list below:</p>
 
@@ -484,8 +487,16 @@ R = 5:A</pre>
 
       <p>Regardless of how many data rows you have, the user will be prompted once per input before output generation commences (if the same input is requested multiple times then the value is cached). The value provided by the user will then replace the <code>&lt;[ ... ]&gt;</code> block.</p>
 
+      <a name="inputweb"></a>
+      <h4 class="heading">4.5. User Input in Web Client</h4>
+
+      <p>Input in the Web Client is also supported using the <code>&lt;[ ... ]&gt;</code> syntax, but it only supports a single implied type (Implicit Type 1). When you click on "Generate", it will search the Template for all the inputs and allow you to enter them in a form before the Output is generated. It will remember the values you enter, so you don't need to keep entering them on further generations of the same Template.</p>
+
+      <pre><span class="comment"># Use Single-Line Input Box (Implicit Type 1)</span>
+<span class="input">&lt;[ BGP Password ]&gt;</span></pre>
+
       <a name="comments"></a>
-      <h4 class="heading">4.5. Comments</h4>
+      <h4 class="heading">4.6. Comments</h4>
 
       <p>There are two types of comments which can be used within a template (and snippets), both of which must be used at the beginning of a line as TemplateFx doesn't presently support end of line comments. The first is a template comment and uses the <code>#</code> syntax to comment out a line in a template - this results in the line being completely ignored and not appearing in your output (if you require a <code>#</code> at the start of a line then you can escape it using <code>##</code> instead). The second type of comment, which uses the <code>!</code> syntax is used to supplement your output with comments:</p>
 
@@ -499,7 +510,7 @@ R = 5:A</pre>
 </pre>
 
       <a name="markers"></a>
-      <h4 class="heading">4.6. Markers</h4>
+      <h4 class="heading">4.7. Markers</h4>
 
       <p><span class="label label-danger">GUI Only</span>&nbsp;Not supported within TemplateFx Server DataTemplates</p>
 
@@ -774,8 +785,8 @@ PE-1A, Gi0/0/2, 192.0.2.8, R3 (Gi0/2), 10.254.0.1</pre>
 
           <pre>interface <span class="field">&lt;&lt;INTERFACE&gt;&gt;</span>
  ip address <span class="script">&lt;?= ip("<span class="field">&lt;&lt;IP_SUBNET&gt;&gt;</span>", +1) ?&gt;</span> 255.255.255.252
-<span class="for">&lt;FOR H = [<span class="script">&lt;?= "<span class="field">&lt;&lt;HELPERS&gt;&gt;</span>".split("; ") ?&gt;</span>]&gt;</span>
- ip helper-address <span class="for">{{H}}</span>
+<span class="for">&lt;FOR <span class="field">H</span> = [<span class="script">&lt;?= "<span class="field">&lt;&lt;HELPERS&gt;&gt;</span>".split("; ") ?&gt;</span>]&gt;</span>
+ ip helper-address <span class="field">{{H}}</span>
 <span class="for">&lt;/FOR&gt;</span>
  no shutdown
 !</pre>
@@ -869,8 +880,8 @@ DATA
         <dd>
           <p>This function provides an alternative method of accessing the field values (the "field" variable is case insensitive) instead of using the <code>&lt;&lt;FIELD&gt;&gt;</code> syntax. This has been added for a specific use-case as there was no way to access a field value dynamically, the <code>&lt;&lt;FIELD&gt;&gt;</code> syntax doesn't support any variable or script section between the chevrons (i.e. <code>&lt;&lt;{{F}}&gt;&gt;</code>). By using this function the following is now possible:</p>
 
-          <pre><span class="for">&lt;FOR F = ["ROUTER", "INTERFACE", "STATE"]&gt;</span>
-<span class="for">{{F}}</span> has a value of <span class="script">&lt;?= templatefx.field("<span class="for">{{F}}</span>") ?&gt;</span> - equivalent of <span class="field">&lt;&lt;{{F}}&gt;&gt;</span> which isn't supported.
+          <pre><span class="for">&lt;FOR <span class="field">F</span> = ["ROUTER", "INTERFACE", "STATE"]&gt;</span>
+<span class="field">{{F}}</span> has a value of <span class="script">&lt;?= templatefx.field("<span class="field">{{F}}</span>") ?&gt;</span> - equivalent of <span class="field">&lt;&lt;{{F}}&gt;&gt;</span> which isn't supported.
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
         </dd>
@@ -1247,15 +1258,15 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
 
           <p>An alternative way of doing the same thing, but with more control on the output would be using a FOR loop as follows:</p>
 
-<pre><span class="for">&lt;FOR H = [<span class="script">&lt;?= iphosts("192.0.2.0/28") ?&gt;</span>]&gt;</span>
-<span class="for">{{H}}</span> = <span class="script">&lt;?= nslookup("<span class="for">{{H}}</span>") ?&gt;</span>
+<pre><span class="for">&lt;FOR <span class="field">H</span> = [<span class="script">&lt;?= iphosts("192.0.2.0/28") ?&gt;</span>]&gt;</span>
+<span class="field">{{H}}</span> = <span class="script">&lt;?= nslookup("<span class="field">{{H}}</span>") ?&gt;</span>
 <span class="for">&lt;/FOR&gt;</span>
 </pre>
         </dd>
         <a name="curl"></a>
-        <dt><strong>curl ("url", ["basic_auth_string" or "auth variable"], [ignore_ssl_cert], [timeout])</strong></dt>
+        <dt><strong>curl ("url", ["auth string" or "auth variable"], [ignore_ssl_cert], [timeout])</strong></dt>
         <dd>
-          <p>This function can be used to download http/https based content using the HTTP GET method. The only mandatory argument is "url" which is the same as what you would enter into your web browser (e.g. "https://www.google.com"). It supports HTTP Basic Authentication and if required can be invoked by providing a Base64 encoded string in the format of "username:password" as the "basic_auth_string" argument (or using an Auth Variable - see below). HTTP Cookies are also supported and will persist for subsequent requests to the same server. If a HTTPS URL has been provided then it will check to ensure a valid trusted SSL certificate is being presented - you can override this behaviour by passing a value of "true" to the "ignore_ssl_cert" argument which will permit self-signed certificates to be accepted and bypass other security checks (this isn't advisable or recommended, but is provided out of necessity). The "timeout" argument can be used to specify a connection timeout in milliseconds - the default timeout is 5000 ms (5 seconds). At the moment this function only supports direct connections - the use of a proxy server isn't supported.</p>
+        <p>This function can be used to download http/https based content using the HTTP GET method. The only mandatory argument is "url" which is the same as what you would enter into your web browser (e.g. "https://www.google.com"). It supports HTTP Basic Authentication and if required can be invoked by providing a Base64 encoded string in the format of "username:password" as the "auth string" argument (or using an Auth Variable - see below). In addition to specifying basic authentication, it also supports custom authentication headers (e.g. Private-Token for GitLab) - if it detects a ":" within the "auth string" then it treats it as a "Header: Value" field (e.g. "Private-Token: &lt;TOKEN&gt;"). HTTP Cookies are also supported and will persist for subsequent requests to the same server. If a HTTPS URL has been provided then it will check to ensure a valid trusted SSL certificate is being presented - you can override this behaviour by passing a value of "true" to the "ignore_ssl_cert" argument which will permit self-signed certificates to be accepted and bypass other security checks (this isn't advisable or recommended, but is provided out of necessity). The "timeout" argument can be used to specify a connection timeout in milliseconds - the default timeout is 5000 ms (5 seconds). At the moment this function only supports direct connections - the use of a proxy server isn't supported.</p>
 
           <p>On success this function will return the contents of the HTTP response as a string and on failure it will return one of following numerical error codes:</p>
           
@@ -1289,8 +1300,8 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
           <p><strong>Auth Variables</strong>&nbsp;<span class="label label-danger">Server Only</span><br />
           By passing the Base64 encoded username and password directly to the curl function, you are exposing your credentials within your script - you will also need to update all your scripts when the credentials change. The Auth Variables feature tries to mitigate this by referencing an environment variable that contains the credentials. Using the TemplateFx Server as an example, let's assume we have an external JavaScript library that connects to a REST API that requires authentication. By using an Auth Variable we can define the credentials on the server in an environment variable without exposing them to the users of the library.</p>
           <p>Auth Variables are defined as follows (using Bash syntax as an example):</p>
-          <code>export TFX_AUTH__&lt;NAME&gt;="&lt;BASE64 AUTH STRING&gt;[:HOST_REGEX]"</code>
-          <p>To reference it from the curl function, you would pass <code>"AUTH__&lt;NAME&gt;"</code> as the second argument (take note of the double underscore between "AUTH" and "&lt;NAME&gt;"), which tells curl to use the contents of the environment variable <code>TFX_AUTH__&lt;NAME&gt;</code>. The Auth Variable will contain the Base64 encoded credentials, but also permits an optional second part with a ":" separating the sections - this allows you to specify a case-insensitive regex pattern that is checked against the host entry of the "url" - this stops people trying to obtain the contents of the Auth Variables by sending them as Basic Auth to web servers they control. For example, to use the credentials "myuser:mypassword" and only when accessing "myserver", we can define an Auth Variable of <code>TFX_AUTH__MYSERVER</code> as <code>"bXl1c2VyOm15cGFzc3dvcmQ=:^myserver$"</code> - to use this we would then pass <code>"AUTH__MYSERVER"</code> as the second argument to curl.</p>
+          <code>export TFX_AUTH__&lt;NAME&gt;="&lt;BASE64 AUTH STRING&gt;[;HOST_REGEX]"</code>
+          <p>To reference it from the curl function, you would pass <code>"AUTH__&lt;NAME&gt;"</code> as the second argument (take note of the double underscore between "AUTH" and "&lt;NAME&gt;"), which tells curl to use the contents of the environment variable <code>TFX_AUTH__&lt;NAME&gt;</code>. The Auth Variable will contain the Base64 encoded credentials, but also permits an optional second part with a ";" separating the sections - this allows you to specify a case-insensitive regex pattern that is checked against the host entry of the "url" - this stops people trying to obtain the contents of the Auth Variables by sending them as Basic Auth to web servers they control. For example, to use the credentials "myuser:mypassword" and only when accessing "myserver", we can define an Auth Variable of <code>TFX_AUTH__MYSERVER</code> as <code>"bXl1c2VyOm15cGFzc3dvcmQ=;^myserver$"</code> - to use this we would then pass <code>"AUTH__MYSERVER"</code> as the second argument to curl. Similar to the "auth_string" argument, we also support the ability to pass through custom authentication headers (e.g. we can use the "Header: Value" syntax as the variable value, which will then get interpreted as a request header).</p>
         </dd>
         <a name="passwd"></a>
         <dt><strong>passwd ([length], [ ["chars", ...] ])</strong></dt>
@@ -1413,7 +1424,18 @@ ProxyPass /api http://127.0.0.1:8080</pre>
 
       <dt><strong>TFX_CERT</strong></dt>
         <dd>
-        <p>This is used to specify a bundled PEM file which contains the RSA/EC Private Key as well as all the X.509 Certificates required in the chain - it is the same as the "-cert" command line argument.</p>
+        <p>This is used to specify a bundled PEM file which contains the RSA/EC Private Key as well as all the X.509 Certificates required in the chain (include them all in one file) - it is the same as the "-cert" command line argument. Example OpenSSL syntax has been included below to generate RSA certificates.</p>
+        <pre><span class="comment"># Generate Certificate Signing Request</span>
+openssl req -nodes -newkey rsa:4096 -keyout templatefx.key -out templatefx.csr -subj "/CN=<span class="field">&lt;&lt;FQDN&gt;&gt;</span>/emailAddress=<span class="field">&lt;&lt;emailAddress&gt;&gt;</span>/O=<span class="field">&lt;&lt;O&gt;&gt;</span>/L=<span class="field">&lt;&lt;L&gt;&gt;</span>/ST=<span class="field">&lt;&lt;ST&gt;&gt;</span>/C=<span class="field">&lt;&lt;C&gt;&gt;</span>" -reqexts SAN -config &lt;(cat /etc/ssl/openssl.cnf &lt;(printf "[SAN]\nsubjectAltName=DNS:<span class="field">&lt;&lt;FQDN&gt;&gt;</span>"))
+
+<span class="comment"># Generate Self-Signed Certificate</span>
+openssl req -x509 -nodes -newkey rsa:4096 -sha256 -keyout templatefx.key -out templatefx.crt -days <span class="field">&lt;&lt;DAYS&gt;&gt;</span> -subj "/CN=<span class="field">&lt;&lt;FQDN&gt;&gt;</span>/emailAddress=<span class="field">&lt;&lt;emailAddress&gt;&gt;</span>/O=<span class="field">&lt;&lt;O&gt;&gt;</span>/L=<span class="field">&lt;&lt;L&gt;&gt;</span>/ST=<span class="field">&lt;&lt;ST&gt;&gt;</span>/C=<span class="field">&lt;&lt;C&gt;&gt;</span>" -reqexts SAN -config &lt;(cat /etc/ssl/openssl.cnf &lt;(printf "[SAN]\nsubjectAltName=DNS:<span class="field">&lt;&lt;FQDN&gt;&gt;</span>"))
+
+<span class="comment"># Obtain Certificate via Let's Encrypt</span>
+certbot certonly --manual --preferred-challenges=dns --rsa-key-size 4096 --email <span class="field">&lt;&lt;emailAddress&gt;&gt;</span> --agree-tos -d <span class="field">&lt;&lt;FQDN&gt;&gt;</span>
+
+cat /etc/letsencrypt/live/<span class="field">&lt;&lt;FQDN&gt;&gt;</span>/privkey.pem &gt;templatefx.pem
+cat /etc/letsencrypt/live/<span class="field">&lt;&lt;FQDN&gt;&gt;</span>/fullchain.pem &gt;&gt;templatefx.pem</pre>
         </dd>
 
       <dt><strong>TFX_DEBUG</strong></dt>
@@ -1440,14 +1462,23 @@ ProxyPass /api http://127.0.0.1:8080</pre>
         <p>This is used to specify the maximum number of threads the TemplateFx Server will use in processing DataTemplates when threading is being used. Normally the TemplateFx Server will discover the total number of CPU cores to determine the maximum number of threads, but when running under Docker or Kubernetes it misreports the number of CPU cores as 1, hence this option to override.</p>
         </dd>
 
+      <a name="client"></a>
+      <h4 class="heading">8.1. Web Client</h4>
+
+      <p>To try and provide parity between the GUI and the Server components of TemplateFx and to allow you to remotely host it without having to write your own client, I have now included a web client as part of the TemplateFx Server.</p>
+      
+      <p>If you point your web browser at the base of the REST API service (e.g. <a href="http://127.0.0.1:8080" target="_blank">http://127.0.0.1:8080</a> by default), then you will be presented with a web client that you can use in a similar way to the GUI. It allows you to import text based DataTemplates in either the "application/datatemplate" or "application/json" formats. You don't have to explicitly use the "Import" function, you can paste in the contents of a DataTemplate to any of the panes and it will work out the rest for you.</p>
+
+      <p>It also supports the "data", "template" and "filter" query string parameters (with values encoded in Base64), which allows you to pass through parts of a DataTemplate in the URL (e.g. <a href="http://127.0.0.1:8080?template=SGVsbG8gV29ybGQ=" target="_blank">http://127.0.0.1:8080/?template=SGVsbG8gV29ybGQ=</a> would populate the "Template" pane with "Hello World").</p>
+
       <a name="request"></a>
-      <h4 class="heading">8.1. Request Format</h4>
+      <h4 class="heading">8.2. Request Format</h4>
 
       <p>To submit a request to the TemplateFx Server you need to use a standard HTTP POST request using the URL "/generate". The POST DATA should contain your DataTemplate in the text based format that is described in section 3 of this document or preferably using the web friendly JavaScript Object Notation (JSON) format - an example of both has been included below. The "Content-Type" header must be either "application/json" or "application/datatemplate" depending on the request format.</p>
 
       <p>To perform a liveliness check you can also use a standard HTTP GET request using the URL "/ping", which will respond with "200 OK" if the Template Server is up. By using this url, it has the advantage that it doesn't get printed in the log output, else it will flood the logs depending on your health check interval.</p>
 
-      <h4 class="heading">8.1.1. JavaScript Object Notation (JSON) Format</h4>
+      <h4 class="heading">8.2.1. JavaScript Object Notation (JSON) Format</h4>
 
       <pre>POST /generate HTTP/1.1
 Host: 127.0.0.1:8080
@@ -1464,7 +1495,7 @@ Content-Length: 207
   }
 }</span></pre>
 
-      <h4 class="heading">8.1.2. DataTemplate Format</h4>
+      <h4 class="heading">8.2.2. DataTemplate Format</h4>
 
       <p><span class="label label-warning">DEPRECATED</span>&nbsp;It is preferred and recommended to pass requests using the "application/json" content type.</p>
 
@@ -1491,13 +1522,13 @@ interface &lt;&lt;INTERFACE&gt;&gt;
 <strong>&lt;/templatefx:template&gt;</strong></span></pre>
 
       <a name="response"></a>
-      <h4 class="heading">8.2. Response Format</h4>
+      <h4 class="heading">8.3. Response Format</h4>
 
       <p>Assuming the request is valid HTTP and you don't get a HTTP error code back (i.e. something which isn't HTTP 200 OK), then there are two different response formats (all responses use JSON as per most REST APIs) - one for success and one for failure.</p>
 
       <p>All responses will have a "version" field which is expected to be set to "1.0" as this defines the version of the API - any changes which radically change the response format will increase the version number. The "status" field is either "ok" or "error" depending on the response - when it is "ok" then it will return the generated outputs using array notation via the "outputs" object, which contains a separate hash containing a "group" and "value" key per output. In all instances the outputs themselves are encoded using Base64. The "console" field is also always included on success, but may be empty if nothing was written to it - again always Base64 encoded. The "elapsed" field is the processing duration in seconds represented to 3 decimal places and the "uptime" field will report the uptime of the TemplateFx Server in seconds. When the status is "error" then it will return an error "code" and "message" to tell you what went wrong.</p>
 
-      <h4 class="heading">8.2.1. On Success</h4>
+      <h4 class="heading">8.3.1. On Success</h4>
 
 <pre>
 {
@@ -1520,7 +1551,7 @@ interface &lt;&lt;INTERFACE&gt;&gt;
 </pre>
 
 
-      <h4 class="heading">8.2.2. On Error</h4>
+      <h4 class="heading">8.3.2. On Error</h4>
 
 <pre>
 {
@@ -1534,52 +1565,200 @@ interface &lt;&lt;INTERFACE&gt;&gt;
 }
 </pre>
 
-      <a name="docker"></a>
-      <h4 class="heading">8.3. Docker and TemplateFx Server</h4>
+      <a name="container"></a>
+      <h4 class="heading">8.4. Running as a Container</h4>
 
-      <p>The TemplateFx Server is the perfect example of a stateless microservice - something which lends itself very well to Docker containers. The latest Docker image of the TemplateFx Server is available on Docker Hub at "chrixm/templatefx:latest" - if you want to build the image from scratch then you can use the <a target="_blank" href="https://github.com/chrixm/templatefx/raw/master/Dockerfile">Dockerfile</a> stored in GitHub.</p>
+      <p>The TemplateFx Server is the perfect example of a stateless micro-service - something which lends itself very well to running in a container. The latest Docker image of the TemplateFx Server is available on Docker Hub at "chrixm/templatefx:latest". The latest stable release (as opposed to the last image to be pushed) will always use the "latest" tag - if you wish to pull a specific version of the image, then you can use the version number (matches the GitHub release tag) as the tag (i.e. "chrixm/templatefx:v3.3.0" for version 3.3.0). If you want to build the image from scratch then the following Dockerfile can be used to build it - it will download the latest version of the TemplateFx Server from GitHub and builds it with AdoptOpenJDK 11.</p>
       
-      <p>The latest stable release (as opposed to the last image to be pushed) will always use the "latest" tag - if you wish to pull a specific version of the image, then you can use the version number (matches the GitHub release tag) as the tag (i.e. "chrixm/templatefx:v3.3.0" for version 3.3.0).</p>
+<pre>
+FROM adoptopenjdk/openjdk11:latest AS build
 
-      <p>To demonstrate how quickly you can get the TemplateFx Server up and running, the following commands can be executed on a new Linux install (this example was done using Ubuntu on AWS EC2, but others can equally be used).</p>
+RUN jlink \
+--add-modules java.base,java.management,java.naming,java.scripting,jdk.httpserver,jdk.scripting.nashorn,jdk.naming.dns,jdk.crypto.ec \
+--strip-debug \
+--compress=2 \
+--no-header-files \
+--no-man-pages \
+--output /tmp/java
 
-      <pre><span class="comment"># Install Docker</span>
-wget -qO- https://get.docker.com | sh
+RUN curl -s https://api.github.com/repos/chrixm/templatefx/releases/latest \
+| grep "browser_download_url.*TemplateFx_Server_v.*.tar.gz" \
+| cut -d'"' -f4 \
+| xargs -I {} curl -sL {} \
+| tar -zx -C /tmp
 
-<span class="comment"># Run Container (Listens on 127.0.0.1:8080)</span>
-docker container run -d --name templatefx --restart unless-stopped -p 127.0.0.1:8080:8080 chrixm/templatefx:latest
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
+MAINTAINER Chris Mason &lt;chris@templatefx.org&gt;
 
-<span class="comment"># Install Apache2 and Let's Encrypt</span>
-apt install apache2 python-certbot-apache
-a2enmod ssl proxy_http
+COPY --chown=nobody:nobody --from=build /tmp/java /opt/java
+COPY --chown=nobody:nobody --from=build /tmp/TFxServer.jar /opt/templatefx/
 
-<span class="comment"># Generate a Let's Encrypt Certificate</span>
-certbot --apache -d <span class="field">&lt;&lt;PUBLIC FQDN&gt;&gt;</span>
+USER nobody
 
-<span class="comment"># Add ProxyPass to Apache2 to Proxy Requests to TemplateFx Server</span>
-sed -i <font style="color: darkred;">'/&lt;VirtualHost/a \
-  ProxyRequests Off \
-  &lt;Location /api/&gt; \
-    ProxyPass http://127.0.0.1:8080/ \
-  &lt;/Location&gt;'</font> /etc/apache2/sites-available/000-default-le-ssl.conf
+EXPOSE 8080
 
-<span class="comment"># Restart Apache2</span>
-systemctl restart apache2</pre>
+CMD [ "/opt/java/bin/java", "-jar", "/opt/templatefx/TFxServer.jar", "-s", "0.0.0.0" ]
+</pre>
+      
+      <p>To launch the Docker container you would then run the following command - this will start listening for requests at http://127.0.0.1:8080.</p>
 
-      <p>The above example will proxy anything sent to "/api" to the TemplateFx Server. This is the preferred way as Apache is much better at dealing with certificate renewals via Let's Encrypt than manually having to update and restart the TemplateFx Server when the certificate changes. To support scenarios where you might want to run a cluster of TemplateFx containers via Kubernetes there is also support for running a self-contained container that supports TLS (v1.2 or v1.3) via the TemplateFx Server (using the "-cert" option) without Apache or NGINX (or you could deploy Apache, NGINX or even HAProxy into the container, but then it makes the container quite complex and goes against the Docker philosophy of only running a single process within a container).</p>
+      <pre>docker container run -d --name templatefx --restart unless-stopped -e TZ=Europe/London -p 127.0.0.1:8080:8080 chrixm/templatefx:latest</pre>
 
       <p>As the TemplateFx Server supports external JavaScript libraries, we need a way to pass them into a Docker container - the following syntax can be used to expose your local "/var/lib/templatefx" directory (or a mounted NFS share) into your container - this enables you to make changes to your external libraries without having to rebuild your containers - a simple "docker restart templatefx" is all that is required.</p>
 
-      <pre>docker container run -d --name templatefx --restart unless-stopped -e TFX_LIB=/opt/templatefx/lib/library.js -v /var/lib/templatefx:/opt/templatefx/lib -p 127.0.0.1:8080:8080 chrixm/templatefx:latest</pre>
+      <pre>docker container run -d --name templatefx --restart unless-stopped -e TZ=Europe/London -e TFX_LIB=/opt/templatefx/lib/library.js -v /var/lib/templatefx:/opt/templatefx/lib -p 127.0.0.1:8080:8080 chrixm/templatefx:latest</pre>
 
-      <p>In the same sense, you also need a way to pass in the PEM file if you wish to enable TLS support within a container. We use the same approach for this, where we can reference a PEM file from the local file system - there are multiple ways of doing this (e.g. in Kubernetes you could use a ConfigMap), but this is just one option. This exposes TCP/443 to the outside world, which is then forwarded to the TemplateFx Server running within your container on TCP/8443 - it assumes the PEM file is called "templatefx.pem" and is located in the current working directory.</p>
+      <p>In the same sense, you also need a way to pass in the PEM file if you wish to enable TLS support within a container. We use the same approach for this, where we can reference a PEM file from the local file system - there are multiple ways of doing this (e.g. in Kubernetes you could use a ConfigMap or a Secret), but this is just one option. This exposes TCP/443 to the outside world, which is then forwarded to the TemplateFx Server running within your container on TCP/8443 - it assumes the PEM file is called "templatefx.pem" and is located in the current working directory.</p>
 
-      <pre>docker container run -d --name templatefx --restart unless-stopped -e TFX_CERT=/opt/templatefx/templatefx.pem -v $(pwd)/templatefx.pem:/opt/templatefx/templatefx.pem -p 443:8443 chrixm/templatefx:latest</pre>
+      <pre>docker container run -d --name templatefx --restart unless-stopped -e TZ=Europe/London -e TFX_CERT=/opt/templatefx/templatefx.pem -v $(pwd)/templatefx.pem:/opt/templatefx/templatefx.pem -p 443:8443 chrixm/templatefx:latest</pre>
+
+      <a name="kubernetes"></a>
+      <h4 class="heading">8.4.1 Kubernetes</h4>
+
+      <p>While it is possible to instantiate Docker containers through Docker, a better approach would be to use a tool like Kubernetes (or Red Hat's OpenShift) to schedule your containers. This has the added advantage as well as being able to scale up and down as required, you also have the ability to perform rolling upgrades - it will spawn a new version and won't kill the old version until the new one is working (it uses a probe to test the new pod is up). The following Kubernetes deployment can be used to instantiate the TemplateFx Server as a Kubernetes micro-service with a single container (I use MicroK8s to deploy a single node Kubernetes cluster) - it will listen for external requests on TCP/80 by mapping the service to the "externalIPs", which then forwards the requests to the running pods.</p>
+      
+<pre>
+apiVersion: v1
+kind: Service
+metadata:
+  name: templatefx
+  labels:
+    app: templatefx
+spec:
+  type: ClusterIP
+  selector:
+    app: templatefx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  externalIPs:
+    - <span class="field">&lt;&lt;EXTERNAL-IP&gt;&gt;</span>
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: templatefx
+spec:
+  selector:
+    matchLabels:
+      app: templatefx
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: templatefx
+    spec:
+      dnsPolicy: Default
+      containers:
+        - name: templatefx
+          image: chrixm/templatefx:<span class="field">&lt;&lt;TAG&gt;&gt;</span>
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /ping
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /ping
+              scheme: HTTP
+            initialDelaySeconds: 180
+            periodSeconds: 30
+            timeoutSeconds: 5
+          env:
+            - name: TZ
+              value: 'Europe/London'
+</pre>
+
+<p>Whilst the use of an "externalIP" works well for testing with a single node deployment, it doesn't work well in Production (apart from other things, Kubernetes insists on using Source NAT which hides the client IP address). In Production, you should really use the LoadBalancer service to expose your service externally. If you do need visibility of the Source IP, then you will need to deploy something like HAProxy outside of your cluster, which then adds the "X-Forwarded-For" header - in this scenario you don't need to use an "externalIP" and can target the "clusterIP" instead. The following can be added to your <code>/etc/haproxy/haproxy.cfg</code> file to provide this functionality (if you wish to use HAProxy for SSL termination then please check <a href="https://ssl-config.mozilla.org/#server=haproxy">https://ssl-config.mozilla.org/#server=haproxy</a> for optimal TLS configuration).</p>
+
+<pre>
+frontend fe_templatefx
+  bind *:80
+  mode http
+  default_backend be_templatefx
+
+backend be_templatefx
+  mode http
+  server templatefx <span class="field">&lt;&lt;CLUSTER-IP&gt;&gt;</span>:8080
+</pre>
+
+      <p>You also have the option to pass through a certificate to TemplateFx, but be aware that you won't be able to pass through the Source IP unless you perform SSL termination on something like HAProxy. To enable TLS, we need to pass through the PEM file as a Kubernetes Secret using the following additional configuration (it assumes the Certificate and Key are combined within a single PEM file - similar to HAProxy). You will also need to change all references of "8080" to "8443" and "HTTP" to "HTTPS".</p>
+
+<pre>
+kubectl create secret generic templatefx-tls --from-file=<span class="field">&lt;&lt;PEM-FILE&gt;&gt;</span>
+</pre>
+
+<pre>
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: templatefx
+          volumeMounts:
+            - name: templatefx-tls
+              mountPath: '/var/lib/templatefx-tls'
+          env:
+            - name: TFX_CERT
+              value: '/var/lib/templatefx-tls/<span class="field">&lt;&lt;PEM-FILE&gt;&gt;</span>'
+      volumes:
+        - name: templatefx-tls
+          secret:
+            secretName: templatefx-tls
+</pre>
+
+      <p>External JavaScript libraries can be passed through using a ConfigMap - these can be created from a file or defined within your YAML file. The following example uses the YAML file, as any changes to the YAML will allow a RollingUpdate to occur on your pod if you re-apply it.</p>
+
+<pre>
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: templatefx
+          volumeMounts:
+            - name: templatefx
+              mountPath: '/var/lib/templatefx'
+          env:
+            - name: TFX_LIB
+              value: '/var/lib/templatefx/external.js'
+      volumes:
+        - name: templatefx
+          configMap:
+            name: templatefx
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: templatefx
+data:
+  external.js: |
+    ...
+</pre>
 
       <a name="client"></a>
-      <h4 class="heading">8.4. JavaScript Client Example</h4>
+      <h4 class="heading">8.5. JavaScript Client Example</h4>
 
-      <p>As an example, I have included a simple HTML page with some JavaScript that makes a call to the TemplateFx Server - it assumes it is running on the same host and we have setup the "/api" location as per the above example. We basically define some data, define a template and then pass it via an <code>XMLHttpRequest</code> object to the TemplateFx Server. The response is then decoded and printed into the web page. As JavaScript doesn't support HEREDOC syntax we are using some JavaScript magic to simulate multi-line strings where we don't have to escape chevrons in the template.</p>
+      <p>In addition to the web client, I have also included a simple HTML snippet with some JavaScript that makes a call to the TemplateFx Server - it assumes it is running on the same host and we have setup the "/api" location using ProxyPass. We basically define some data, define a template and then pass it via an <code>XMLHttpRequest</code> object to the TemplateFx Server. The response is then decoded and printed into the web page. As JavaScript doesn't support HEREDOC syntax we are using some JavaScript magic to simulate multi-line strings where we don't have to escape chevrons in the template.</p>
 
 <pre><span style="color: #0000ff">&lt;!DOCTYPE html&gt;</span>
 &lt;html lang=<span style="color: #a31515">&quot;en&quot;</span>&gt;
