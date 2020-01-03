@@ -1682,6 +1682,8 @@ spec:
           env:
             - name: TZ
               value: 'Europe/London'
+            - name: TFX_MAX_THREADS
+              value: '<span class="field">&lt;&lt;vCPU Count&gt;&gt;</span>'              
 </pre>
 
 <p>Whilst the use of an "externalIP" works well for testing with a single node deployment, it doesn't work well in Production (apart from other things, Kubernetes insists on using Source NAT which hides the client IP address). In Production, you should really use the LoadBalancer service to expose your service externally. If you do need visibility of the Source IP, then you will need to deploy something like HAProxy outside of your cluster, which then adds the "X-Forwarded-For" header - in this scenario you don't need to use an "externalIP" and can target the "clusterIP" instead. The following can be added to your <code>/etc/haproxy/haproxy.cfg</code> file to provide this functionality (if you wish to use HAProxy for SSL termination then please check <a href="https://ssl-config.mozilla.org/#server=haproxy">https://ssl-config.mozilla.org/#server=haproxy</a> for optimal TLS configuration).</p>
