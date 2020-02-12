@@ -1,6 +1,30 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2020 Chris Mason <chris@templatefx.org>
 
+TemplateFx v3.6.0 - 12th February 2020
+	* Added support for an experimental "templatefx.dataobj" feature to allow complex data structures in the Data Pane (see 7.1 in User Guide).
+	* Added support for JavaScript functions "encrypt()" and "decrypt()" which use AES256-GCM to encrypt/decrypt data.
+	* For Security reasons, the cURL function is disabled by default in TemplateFx Server and has to be explicitly enabled.
+	* Fixed an issue in the Web Client where things weren't being substituted if Input Fields were being used.
+	* The cURL function wasn't thread safe in TemplateFx Server - this has now been fixed.
+	* Added URL caching for cURL - for the same DataTemplate it will only fetch the same URL once.
+	* Template Fields are now substituted in cURL output if they match a valid field.
+	* Added support for Jinja2 style include statements in the Web Client as a shortcut for "curl".
+	* The "add_output_mutation()" function now checks the replacement value isn't null else the replacement is skipped.
+	* The "add_output_mutation()" now has an optional "literal" argument, which will now quote the replacement string as it was interpreting \ and $ characters.
+	* Fixed a regression when replacing FOR fields which was causing a hidden Exception.
+	* Fixed an issue in the GUI where it was marking FOR fields in Snippets as missing in Template Fields.
+	* Input fields are now masked in Web Client if it detects "password" in the field name.
+	* Fixed an issue where nested Exceptions were being ignored and output generation was hanging in TemplateFx Server.
+	* Fixed an issue where "console.log" wasn't converting input to String which caused a hidden Exception.
+	* Added colouring to POST and cURL requests in the TemplateFx Server logging so they can be seen.
+	* Added an error when trying to use non-ASCII characters in the Web Client.
+	* The order in which input fields appear in the Web Client is now maintained within the Input window.
+	* Updated syntax highlighting in the Web Client to deal with spaces before and after logic blocks.
+	* The Web Client will now prompt before leaving an edited DataTemplate.
+	* Within the Web Client tabs are now converted to spaces on DataTemplate export.
+	* TemplateFx Server now logs all HTTP requests instead of just the initial one.
+
 TemplateFx v3.5.0 - 30th December 2019
 	* TemplateFx Server now has a web client (with IP Calc) if you connect via a web browser (e.g. http://127.0.0.1:8080/). 
 	* Phase 1 of Jinja2 template compatibility with support for using "{{ X }}" instead of "<< X >>"
