@@ -45,7 +45,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>TemplateFx v3.5.0 (Build 19364)<br />Released: 30th December 2019</h4>
+        <h4>TemplateFx v3.6.0 (Build 20043)<br />Released: 12th February 2020</h4>
         <h4>TemplateFx Web Client<br /><a href="https://templatefx.io">https://templatefx.io</a></h4> 
       </div>
 
@@ -495,6 +495,8 @@ R = 5:A</pre>
       <pre><span class="comment"># Use Single-Line Input Box (Implicit Type 1)</span>
 <span class="input">&lt;[ BGP Password ]&gt;</span></pre>
 
+      <p>If it detects the word "password" within the input field then it will automatically mask the input using a password input box.</p>
+
       <a name="comments"></a>
       <h4 class="heading">4.6. Comments</h4>
 
@@ -846,6 +848,39 @@ interface Gi0/0/2
         <dd>
           <p>This variable returns the total amount of rows within the data set.</p>
         </dd>
+        <dt><strong>templatefx.dataobj</strong></dt>
+        <dd>
+          <p><span class="label label-danger">EXPERIMENTAL</span>&nbsp;This feature is currently experimental and its behaviour may change in a future release.</p>
+          <p>The current Data Pane can be quite restrictive when it comes to providing data for your Template as it only supports a two dimensional table without any support for complex data structures or objects. The Data Object feature tries to overcome these limitations by allowing an optional JavaScript object to precede a data row and then be available within the template via the <code>templatefx.dataobj</code> object. The format must be strictly JavaScript Object Notation (JSON) as a complete object as per the following example.</p>
+
+          <pre><span class="comment">ROUTER, MGMT-IP</span>
+PE-1A, 198.51.100.1
+{
+  "interfaces": {
+    "Gi0/0/0/1": { "description": "my first interface", "address": "192.0.2.1/25" },
+    "Gi0/0/0/2": { "description": "my second interface", "address": "192.0.2.129/25" }
+  }
+}
+PE-1B, 198.51.100.2
+{
+  "interfaces": {
+    "Gi0/0/0/1": { "description": "my third interface", "address": "192.0.2.2/25" },
+    "Gi0/0/0/2": { "description": "my fourth interface", "address": "192.0.2.130/25" }
+  }
+}</pre>
+
+          <p>Within your template you then have the ability to access the object associated with the row using <code>templatefx.dataobj</code> as per the following example, which loops through the "interfaces".</p>
+
+          <pre><span class="for">&lt;FOR <span class="field">IF</span> = [<span class="script">&lt;?= Object.keys(templatefx.dataobj.interfaces) ?&gt;</span>]&gt;</span>
+interface <span class="field">{{ IF }}</span>
+ description ## <span class="script">&lt;?= templatefx.dataobj.interfaces["<span class="field">{{ IF }}</span>"].description ?&gt;</span> ##
+ ipv4 address <span class="script">&lt;?= templatefx.dataobj.interfaces["<span class="field">{{ IF }}</span>"].address ?&gt;</span>
+!
+<span class="for">&lt;/FOR&gt;</span></pre>
+
+          <p>Different JavaScript Objects can be specified after different rows - if you don't specify anything then <code>templatefx.dataobj</code> will have a value of <code>{ }</code> - an empty object.</p>
+          
+        </dd>
         <dt><strong>templatefx.output</strong></dt>
         <dd>
           <p>This variable contains the output from the template as it is being generated - as the template is processed, the contents of this variable will dynamically change. If you check this variable at the end of your template then it will contain the finished output. This is useful if you want to validate anything in the output (i.e. search through the output and find all the IP addresses to check they all have a valid host entry in DNS). Please refrain from trying to update the output using this variable as bad things could happen - please see the <code>add_output_mutation()</code> function for changing the output post generation.</p>
@@ -981,6 +1016,21 @@ DORRIS, 32, ESTONIA</pre>
 <span class="comment"># This will produce a positive sequence of 1, 2, 3, 4, 5, etc - it will be reset to 1 for every row</span>
 <span class="script">&lt;?= counter() ?&gt;</span>
 </pre>
+        </dd>
+        <a name="encrypt"></a>
+        <dt><strong>encrypt ("plaintext", "password")</strong></dt>
+        <dd>
+        <p>This function is used to encrypt a string ("plaintext") using AES256-GCM - the return value is a Base64 encoded string of the encrypted data. The function starts off by generating a 16 byte (128 bits) random salt using the SecureRandom class, which it passes to PBKDF2 with the password. The PBKDF2 function uses Hmac256 with 262,144 iterations to generate a 32 byte (256 bits) AES key for encryption. It will then generate a random 12 byte (96 bits) initialisation vector which is used by AES256-GCM. The "plaintext" is then passed to the encrypt function along with the random IV, an Authentication Tag length of 16 bytes (128 bits), which results in our encrypted string, which is then concatenated as <code>VERSION || SALT || IV || CIPHERTEXT || TAG</code> (in this implementation the "VERSION" field is always set to 0x01). The concatenated string is then encoded using Base64 and returned.</p> 
+
+        <p>As it isn't good practice to store your password in your template, the following can be used to request the password from the user.</p>
+
+<pre><span class="script">&lt;?= encrypt("The Quick Brown Fox Jumped Over The Lazy Dog", "<span class="input">&lt;[ Encryption Password ]&gt;</span>") ?&gt;</span>
+</pre>
+        </dd>
+        <a name="decrypt"></a>
+        <dt><strong>decrypt ("ciphertext", "password")</strong></dt>
+        <dd>
+          <p>This function is the opposite of the <code>encrypt()</code> function - it takes the Base64 encoded string, extracts the SALT to regenerate the AES key using the provided password and then decrypts the message from the IV and Ciphertext. AES256-GCM provides Authenticated Encryption which means it will fail (returns null) if the data is altered or the password is incorrect.</p>
         </dd>
         <a name="cancel"></a>
         <dt><strong>cancel (["message"])</strong></dt>
@@ -1302,6 +1352,12 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
           <p>Auth Variables are defined as follows (using Bash syntax as an example):</p>
           <code>export TFX_AUTH__&lt;NAME&gt;="&lt;BASE64 AUTH STRING&gt;[;HOST_REGEX]"</code>
           <p>To reference it from the curl function, you would pass <code>"AUTH__&lt;NAME&gt;"</code> as the second argument (take note of the double underscore between "AUTH" and "&lt;NAME&gt;"), which tells curl to use the contents of the environment variable <code>TFX_AUTH__&lt;NAME&gt;</code>. The Auth Variable will contain the Base64 encoded credentials, but also permits an optional second part with a ";" separating the sections - this allows you to specify a case-insensitive regex pattern that is checked against the host entry of the "url" - this stops people trying to obtain the contents of the Auth Variables by sending them as Basic Auth to web servers they control. For example, to use the credentials "myuser:mypassword" and only when accessing "myserver", we can define an Auth Variable of <code>TFX_AUTH__MYSERVER</code> as <code>"bXl1c2VyOm15cGFzc3dvcmQ=;^myserver$"</code> - to use this we would then pass <code>"AUTH__MYSERVER"</code> as the second argument to curl. Similar to the "auth_string" argument, we also support the ability to pass through custom authentication headers (e.g. we can use the "Header: Value" syntax as the variable value, which will then get interpreted as a request header).</p>
+
+          <p>In the Web Client, we also support the Jinja2 include syntax which will be replaced with the <code>curl()</code> syntax on generation. You can use either, but it helps to distinguish include statements from script blocks.</p>
+
+          <pre><span class="at">{% include "http://..." %}</span></pre>
+
+          <p><span class="label label-info">NOTE</span>&nbsp;By default the <code>curl()</code> function (and includes) is now disabled in the TemplateFx Server for security reasons to stop people using it as an anonymous proxy. If you wish to enable cURL support in trusted environments you can either pass the "-allowcurl" command line argument or set the "TFX_ALLOW_CURL" environment variable to enable it.</p>
         </dd>
         <a name="passwd"></a>
         <dt><strong>passwd ([length], [ ["chars", ...] ])</strong></dt>
@@ -1354,9 +1410,9 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
 <span class="script">&lt;?= date("18/Oct/2014", "dd/MMM/yyyy", 5, null, "w") ?&gt;</span></pre>
         </dd>
         <a name="add_output_mutation"></a>
-        <dt><strong>add_output_mutation ("regex", "replacement")</strong></dt>
+        <dt><strong>add_output_mutation ("regex", "replacement", [literal])</strong></dt>
         <dd>
-          <p>This function allows you to make changes to the output post generation before it is displayed. This function can be called at any point in your template, but it won't perform the changes until after the output has finished being generated. The replacements will be performed in the order they are added. This function could be used to insert information into your template that isn't known at the point where you want it inserted. As an example, you might want to add a section to your output which lists all the IP addresses which have been used in your output, however you won't being able to produce this list until after the output has been generated. You could leave a placeholder (i.e. "[PLACEHOLDER]") in the template and then use this function to update it at the end with the list of IP addresses that have been found by searching through the output using <code>templatefx.output</code>. The "regex" is case-sensitive and must be provided as a string as opposed to the <code>/regex/</code> JavaScript construct.</p>
+          <p>This function allows you to make changes to the output post generation before it is displayed. This function can be called at any point in your template, but it won't perform the changes until after the output has finished being generated. The replacements will be performed in the order they are added. This function could be used to insert information into your template that isn't known at the point where you want it inserted. As an example, you might want to add a section to your output which lists all the IP addresses which have been used in your output, however you won't being able to produce this list until after the output has been generated. You could leave a placeholder (i.e. "[PLACEHOLDER]") in the template and then use this function to update it at the end with the list of IP addresses that have been found by searching through the output using <code>templatefx.output</code>. The "regex" is case-sensitive and must be provided as a string as opposed to the <code>/regex/</code> JavaScript construct. The optional "literal" option allows you to specify whether you want the function to treat the replacement as a literal ("true") string or allow regex groups ("false" or omitted) via $n.</p>
         </dd>
         <a name="console.log"></a>
         <dt><strong>console.log ("message")</strong></dt>
@@ -1399,10 +1455,11 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
 
       <p>The TemplateFx Server is a cut down version of TemplateFx which is contained within a separate JAR file and only contains the core templating engine. It is run via the command line and supports the following usage:</p>
 
-      <p><code>java -jar TFxServer.jar -s [host][:][port] @[-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-cert &lt;pem file&gt;] [-t &lt;timeout&gt;]</code></p>
+      <p><code>java -jar TFxServer.jar -s [host][:][port] @[-lib &lt;library.js&gt;] [-log &lt;logfile&gt;] [-cert &lt;pem file&gt;] [-t &lt;timeout&gt;] [-allowcurl]</code></p>
       <p>The "-s" parameter is used to initiate the TemplateFx Server and by default without any other parameters it will listen on TCP port 8080 (or 8443 if using TLS) on 127.0.0.1 only (localhost - doesn't accept remote connections) - if you prefer, you can specify a different host or port as a parameter (i.e. "0.0.0.0:8080" to listen on all IPs - if connecting over a network then you should really enable TLS).</p>
       <p>The "-lib" parameter is used to specify external JavaScript modules (it can be used multiple times) - they are loaded server side so are accessible to all API clients.</p>
       <p>The "-cert" parameter is used to enable TLS - you specify a bundled PEM file that contains the X.509 Certificate, the RSA or EC Private Key (in PKCS#8 format) and all intermediate X.509 Certificates.</p><p>The "-t" parameter is used to change the default processing timeout in seconds from 120 seconds - you can specify 0 to disable the timeout altogether.</p>
+      <p>The "-allowcurl" parameter enables support for the <code>curl()</code> function in DataTemplates - this has recently been disabled by default to stop the TemplateFx Server to be used as an anonymous proxy (it is recommended to enable this for internal deployments where you trust your users).</p> 
 
       <p>Although the TemplateFx Server supports HTTPS via TLS, it should be noted that when you enable TLS (via the "-cert" option), it only enables TLSv1.2 and TLSv1.3 (on Java 9 and higher) as anything else is considered insecure. It also only allows RSA/EC keys and TLS Ciphers which will ensure an "A" rating is achieved on a Qualys scan regardless of whether you are using Java 8 or Java 11.</p>
 
@@ -1462,12 +1519,65 @@ cat /etc/letsencrypt/live/<span class="field">&lt;&lt;FQDN&gt;&gt;</span>/fullch
         <p>This is used to specify the maximum number of threads the TemplateFx Server will use in processing DataTemplates when threading is being used. Normally the TemplateFx Server will discover the total number of CPU cores to determine the maximum number of threads, but when running under Docker or Kubernetes it misreports the number of CPU cores as 1, hence this option to override.</p>
         </dd>
 
+      <dt><strong>TFX_ALLOW_CURL</strong></dt>
+        <dd>
+        <p>This can be set to any value you want, but if TemplateFx Server sees the presence of this environment variable then it will enable cURL support in DataTemplates. By default cURL support is now disabled in the TemplateFx Server to stop people using TemplateFx as an anonymous proxy.</p>
+        </dd>
+
       <a name="client"></a>
       <h4 class="heading">8.1. Web Client</h4>
 
       <p>To try and provide parity between the GUI and the Server components of TemplateFx and to allow you to remotely host it without having to write your own client, I have now included a web client as part of the TemplateFx Server.</p>
       
       <p>If you point your web browser at the base of the REST API service (e.g. <a href="http://127.0.0.1:8080" target="_blank">http://127.0.0.1:8080</a> by default), then you will be presented with a web client that you can use in a similar way to the GUI. It allows you to import text based DataTemplates in either the "application/datatemplate" or "application/json" formats. You don't have to explicitly use the "Import" function, you can paste in the contents of a DataTemplate to any of the panes and it will work out the rest for you.</p>
+
+      <p>The Web Client is built using the <a href="https://codemirror.net/" target="_blank">CodeMirror</a> text editor component, which supports the following shortcut keys from the <a href="https://codemirror.net/demo/search.html" target="_blank">Search/Replace</a> addon:</p>
+
+
+      <table class="inline-center">
+        <thead>
+          <tr>
+            <th class="inline-left" style="width: 200px">Action</th>
+            <th style="width: 150px">Windows</th>
+            <th style="width: 150px">Mac OS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="inline-left">Search</td>
+            <td>Ctrl-F</td>
+            <td>Cmd-FF</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Find Next</td>
+            <td>Ctrl-G</td>
+            <td>Cmd-G</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Find Previous</td>
+            <td>Shift-Ctrl-G</td>
+            <td>Shift-Cmd-G</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Replace</td>
+            <td>Shift-Ctrl-F</td>
+            <td>Cmd-Option-F</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Replace All</td>
+            <td>Shift-Ctrl-R</td>
+            <td>Shift-Cmd-Option-F</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Persistent Search</td>
+            <td colspan=2>Alt-F</td>
+          </tr>
+          <tr>
+            <td class="inline-left">Jump to Line</td>
+            <td colspan=2>Alt-G</td>
+          </tr>
+        </tbody>
+      </table>
 
       <p>It also supports the "data", "template" and "filter" query string parameters (with values encoded in Base64), which allows you to pass through parts of a DataTemplate in the URL (e.g. <a href="http://127.0.0.1:8080?template=SGVsbG8gV29ybGQ=" target="_blank">http://127.0.0.1:8080/?template=SGVsbG8gV29ybGQ=</a> would populate the "Template" pane with "Hello World").</p>
 
@@ -1592,6 +1702,7 @@ MAINTAINER Chris Mason &lt;chris@templatefx.org&gt;
 
 COPY --chown=nobody:nobody --from=build /tmp/java /opt/java
 COPY --chown=nobody:nobody --from=build /tmp/TFxServer.jar /opt/templatefx/
+# COPY --chown=nobody:nobody TFxServer.jar /opt/templatefx/
 
 USER nobody
 
@@ -1683,7 +1794,7 @@ spec:
             - name: TZ
               value: 'Europe/London'
             - name: TFX_MAX_THREADS
-              value: '<span class="field">&lt;&lt;vCPU Count&gt;&gt;</span>'              
+              value: '<span class="field">&lt;&lt;vCPU Count&gt;&gt;</span>'
 </pre>
 
 <p>Whilst the use of an "externalIP" works well for testing with a single node deployment, it doesn't work well in Production (apart from other things, Kubernetes insists on using Source NAT which hides the client IP address). In Production, you should really use the LoadBalancer service to expose your service externally. If you do need visibility of the Source IP, then you will need to deploy something like HAProxy outside of your cluster, which then adds the "X-Forwarded-For" header - in this scenario you don't need to use an "externalIP" and can target the "clusterIP" instead. The following can be added to your <code>/etc/haproxy/haproxy.cfg</code> file to provide this functionality (if you wish to use HAProxy for SSL termination then please check <a href="https://ssl-config.mozilla.org/#server=haproxy">https://ssl-config.mozilla.org/#server=haproxy</a> for optimal TLS configuration).</p>
