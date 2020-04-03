@@ -45,7 +45,7 @@
         <h3>TemplateFx | Dynamic Templating Tool</h3>
         <h4>by Chris Mason &lt;<a href="mailto:chris@templatefx.org">chris@templatefx.org</a>&gt;</h4>
         
-        <h4>TemplateFx v3.6.0 (Build 20043)<br />Released: 12th February 2020</h4>
+        <h4>TemplateFx v3.7.0 (Build 20094)<br />Released: 3rd April 2020</h4>
         <h4>TemplateFx Web Client<br /><a href="https://templatefx.io">https://templatefx.io</a></h4> 
       </div>
 
@@ -70,6 +70,7 @@
               <li><a href="#constructs">Branching and Looping Constructs</a></li>
               <li><a href="#snippets">Snippets</a></li>
               <li><a href="#externals">Including External Files</a></li>
+              <li><a href="#includes">Including Remote URLs</a></li>
               <li><a href="#input">User Input</a></li>
               <li><a href="#inputweb">User Input in Web Client</a></li>
               <li><a href="#comments">Comments</a></li>
@@ -136,6 +137,8 @@
       </ol>
 
       <p>A nice feature of TemplateFx is its ability to accept data from Microsoft Excel. If you construct your data within Excel then you are able to copy and paste it into the data pane. This is the preferred method of constructing source data as you are able to manipulate and sort the data before pasting it into TemplateFx - however be aware of Excel dropping leading zeroes and converting "x/x/x" syntax into dates by default.</p>
+
+      <p>If you wish to specify more complex data structures then please see the <code>templatefx.dataobj</code> variable within section 7.1 of this guide.</p>
 
       <p><span class="label label-info">NOTE</span>&nbsp;You will get a warning message if the data pane contains a <code>"</code>, <code>'</code> or <code>\</code> character. This is because TemplateFx doesn't keep track in which context the template fields are being inserted - it could be within the main body of the template or within a dynamic script block within an already quoted string. In some contexts, those characters may need to be escaped (e.g. <code>&lt;? print("&lt;&lt;FIELD&gt;&gt;") ?&gt;</code> when there is already a double quote in the value of <code>&lt;&lt;FIELD&gt;&gt;</code>), and in some they might not. If you aren't using those template fields in a scenario (generally a script block) which might cause a problem then you can ignore this warning.</p>
       
@@ -456,8 +459,18 @@ R = 5:A</pre>
 
       <p>The above syntax instructs TemplateFx to include the contents of "\\uk\ukroot\templates\site-build-template.txt" into the template at this point. The current order of operation means that snippets are imported into the template before includes, which means snippets can include external files. A maximum filesize of 262,144 bytes is currently enforced per external file.</p>
 
+      <a name="includes"></a>
+      <h4 class="heading">4.4. Including Remote URLs</h4>
+
+      <p>Similar to including external files, but something which is supported universally, is the ability to import a piece of a template from a remote URL. This is useful if you have a shared piece of templating syntax used by multiple templates, but you only wish to maintain it once. We have adopted the Jinja2 syntax in this instance by using the following syntax. The syntax will be replaced with the contents of the remote URL - this happens before the template is processed so full template syntax is supported in the remote template.</p>
+
+          <pre><span class="at">{% include "http(s?)://..." %}</span></pre>
+
+          <p><span class="label label-info">NOTE</span>&nbsp;Internally this will use the cURL function, which is now disabled in the TemplateFx Server for security reasons to stop people using it as an anonymous proxy. If you wish to enable cURL support in trusted environments you can either pass the <code>-allowcurl</code> command line argument or set the <code>TFX_ALLOW_CURL</code> environment variable to enable it.</p>
+      </p>
+
       <a name="input"></a>
-      <h4 class="heading">4.4. User Input</h4>
+      <h4 class="heading">4.5. User Input</h4>
 
       <p><span class="label label-danger">GUI Only</span>&nbsp;Not supported within TemplateFx Server DataTemplates (see below for Web Client)</p>
 
@@ -488,7 +501,7 @@ R = 5:A</pre>
       <p>Regardless of how many data rows you have, the user will be prompted once per input before output generation commences (if the same input is requested multiple times then the value is cached). The value provided by the user will then replace the <code>&lt;[ ... ]&gt;</code> block.</p>
 
       <a name="inputweb"></a>
-      <h4 class="heading">4.5. User Input in Web Client</h4>
+      <h4 class="heading">4.6. User Input in Web Client</h4>
 
       <p>Input in the Web Client is also supported using the <code>&lt;[ ... ]&gt;</code> syntax, but it only supports a single implied type (Implicit Type 1). When you click on "Generate", it will search the Template for all the inputs and allow you to enter them in a form before the Output is generated. It will remember the values you enter, so you don't need to keep entering them on further generations of the same Template.</p>
 
@@ -498,7 +511,7 @@ R = 5:A</pre>
       <p>If it detects the word "password" within the input field then it will automatically mask the input using a password input box.</p>
 
       <a name="comments"></a>
-      <h4 class="heading">4.6. Comments</h4>
+      <h4 class="heading">4.7. Comments</h4>
 
       <p>There are two types of comments which can be used within a template (and snippets), both of which must be used at the beginning of a line as TemplateFx doesn't presently support end of line comments. The first is a template comment and uses the <code>#</code> syntax to comment out a line in a template - this results in the line being completely ignored and not appearing in your output (if you require a <code>#</code> at the start of a line then you can escape it using <code>##</code> instead). The second type of comment, which uses the <code>!</code> syntax is used to supplement your output with comments:</p>
 
@@ -512,7 +525,7 @@ R = 5:A</pre>
 </pre>
 
       <a name="markers"></a>
-      <h4 class="heading">4.7. Markers</h4>
+      <h4 class="heading">4.8. Markers</h4>
 
       <p><span class="label label-danger">GUI Only</span>&nbsp;Not supported within TemplateFx Server DataTemplates</p>
 
@@ -850,7 +863,6 @@ interface Gi0/0/2
         </dd>
         <dt><strong>templatefx.dataobj</strong></dt>
         <dd>
-          <p><span class="label label-danger">EXPERIMENTAL</span>&nbsp;This feature is currently experimental and its behaviour may change in a future release.</p>
           <p>The current Data Pane can be quite restrictive when it comes to providing data for your Template as it only supports a two dimensional table without any support for complex data structures or objects. The Data Object feature tries to overcome these limitations by allowing an optional JavaScript object to precede a data row and then be available within the template via the <code>templatefx.dataobj</code> object. The format must be strictly JavaScript Object Notation (JSON) as a complete object as per the following example.</p>
 
           <pre><span class="comment">ROUTER, MGMT-IP</span>
@@ -871,15 +883,27 @@ PE-1B, 198.51.100.2
 
           <p>Within your template you then have the ability to access the object associated with the row using <code>templatefx.dataobj</code> as per the following example, which loops through the "interfaces".</p>
 
-          <pre><span class="for">&lt;FOR <span class="field">IF</span> = [<span class="script">&lt;?= Object.keys(templatefx.dataobj.interfaces) ?&gt;</span>]&gt;</span>
+          <pre><span class="script">&lt;?</span>
+<span class="script">  var interfaces = templatefx.dataobj.interfaces;</span>
+<span class="script">?&gt;</span>
+<span class="for">&lt;FOR <span class="field">IF</span> = [<span class="script">&lt;?= Object.keys(interfaces) ?&gt;</span>]&gt;</span>
 interface <span class="field">{{ IF }}</span>
- description ## <span class="script">&lt;?= templatefx.dataobj.interfaces["<span class="field">{{ IF }}</span>"].description ?&gt;</span> ##
- ipv4 address <span class="script">&lt;?= templatefx.dataobj.interfaces["<span class="field">{{ IF }}</span>"].address ?&gt;</span>
+ description ## <span class="script">&lt;?= interfaces["<span class="field">{{ IF }}</span>"].description ?&gt;</span> ##
+ ipv4 address <span class="script">&lt;?= interfaces["<span class="field">{{ IF }}</span>"].address ?&gt;</span>
 !
 <span class="for">&lt;/FOR&gt;</span></pre>
 
           <p>Different JavaScript Objects can be specified after different rows - if you don't specify anything then <code>templatefx.dataobj</code> will have a value of <code>{ }</code> - an empty object.</p>
           
+          <p>You also have the option of specifying a Data Object URL instead of including the JSON in the Data Pane - actually you can do both in the same DataTemplate, but the JSON in the Data Pane will take priority over the Data Object URL. To specify a Data Object URL, you will need to specify another column within your Data called "DATAOBJ" as per the example below.</p>
+
+          <pre><span class="comment">ROUTER, MGMT-IP, DATAOBJ</span>
+PE-1A, 198.51.100.1, https://gitlab.com/user/project/raw/master/pe-1a.json
+PE-1B, 198.51.100.2, https://gitlab.com/user/project/raw/master/pe-1b.json</pre>
+
+          <p>This will then use cURL to download the JSON and use the contents as the Data Object - it needs to be valid JSON.</p>
+
+          <p><span class="label label-info">NOTE</span>&nbsp;Data Object URLs use the <code>curl()</code> function, which is now disabled by default in the TemplateFx Server for security reasons. If you wish to enable cURL support in trusted environments you can either pass the <code>-allowcurl</code> command line argument or set the <code>TFX_ALLOW_CURL</code> environment variable to enable it.</p>
         </dd>
         <dt><strong>templatefx.output</strong></dt>
         <dd>
@@ -1037,6 +1061,23 @@ DORRIS, 32, ESTONIA</pre>
         <dd>
           <p>This function provides a way to cancel processing a template if something isn't right. This could be if an invalid value has been specified in the data source or if a key field hasn't been filled in correctly. An optional "message" can be provided to give the user more information about why processing was cancelled. The first time the function is executed, the whole processing is stopped.</p>
         </dd>
+        <a name="extend_obj"></a>
+        <dt><strong>extend_obj (target, object1, object2, ...)</strong></dt>
+        <dd>
+        <p>This function provides a polyfill for <code>Object.assign()</code> which isn't supported in TemplateFx. It was added to provide a capability to extend or merge another JSON object into the row specific Data Object. Let's assume you have the following:</p>
+          <pre><span class="comment">ROUTER, MGMT-IP, DATAOBJ</span>
+PE-1A, 198.51.100.1, https://gitlab.com/user/project/raw/master/pe-1a.json
+PE-1B, 198.51.100.2, https://gitlab.com/user/project/raw/master/pe-1b.json</pre>
+
+          <p>By using the <code>extend_obj()</code> function, you could have a <code>globals.json</code> file with some default values, which you can then merge into the Data Object:</p>
+
+          <pre><span class="script">&lt;?</span>
+<span class="script">  extend_obj(templatefx.dataobj, <span class="at">{% include "https://gitlab.com/user/project/raw/master/globals.json" %}</span>);</span>
+<span class="script">?&gt;</span></pre>
+
+          <p>The above syntax will extend the Data Object by merging in the contents of <code>globals.json</code> - no existing keys will be overwritten (i.e. Strings, Numbers or Arrays), but Objects will be merged.</p>
+
+        </dd>
         <a name="skiprow"></a>
         <dt><strong>skiprow ()</strong></dt>
         <dd>
@@ -1113,6 +1154,14 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
   ...
 <span class="if">&lt;/IF&gt;</span>
 </pre>
+        </dd>
+        <a name="peerip"></a>
+        <dt>
+          <strong>peerip ("cidr")</strong>
+          <span class="label label-danger">IPv4</span> + <span class="label label-primary">IPv6</span>
+        </dt>
+        <dd>
+        <p>This function takes a point to point IP with mask (i.e. /30 or /31 for IPv4 and /127 or /126 for IPv6) and returns the "other" IP. For example, if you specified <code>192.0.2.1/30</code> then it would return <code>192.0.2.2</code>, if you specified <code>192.0.2.3/31</code> then it would return <code>192.0.2.2</code>.</p>
         </dd>
         <a name="ipsplit"></a>
         <dt>
@@ -1353,11 +1402,6 @@ XYZ-RTR-1[AB], Te0/[23]/0/[0-3], ## Reserved for Expansion ##</pre>
           <code>export TFX_AUTH__&lt;NAME&gt;="&lt;BASE64 AUTH STRING&gt;[;HOST_REGEX]"</code>
           <p>To reference it from the curl function, you would pass <code>"AUTH__&lt;NAME&gt;"</code> as the second argument (take note of the double underscore between "AUTH" and "&lt;NAME&gt;"), which tells curl to use the contents of the environment variable <code>TFX_AUTH__&lt;NAME&gt;</code>. The Auth Variable will contain the Base64 encoded credentials, but also permits an optional second part with a ";" separating the sections - this allows you to specify a case-insensitive regex pattern that is checked against the host entry of the "url" - this stops people trying to obtain the contents of the Auth Variables by sending them as Basic Auth to web servers they control. For example, to use the credentials "myuser:mypassword" and only when accessing "myserver", we can define an Auth Variable of <code>TFX_AUTH__MYSERVER</code> as <code>"bXl1c2VyOm15cGFzc3dvcmQ=;^myserver$"</code> - to use this we would then pass <code>"AUTH__MYSERVER"</code> as the second argument to curl. Similar to the "auth_string" argument, we also support the ability to pass through custom authentication headers (e.g. we can use the "Header: Value" syntax as the variable value, which will then get interpreted as a request header).</p>
 
-          <p>In the Web Client, we also support the Jinja2 include syntax which will be replaced with the <code>curl()</code> syntax on generation. You can use either, but it helps to distinguish include statements from script blocks.</p>
-
-          <pre><span class="at">{% include "http://..." %}</span></pre>
-
-          <p><span class="label label-info">NOTE</span>&nbsp;By default the <code>curl()</code> function (and includes) is now disabled in the TemplateFx Server for security reasons to stop people using it as an anonymous proxy. If you wish to enable cURL support in trusted environments you can either pass the "-allowcurl" command line argument or set the "TFX_ALLOW_CURL" environment variable to enable it.</p>
         </dd>
         <a name="passwd"></a>
         <dt><strong>passwd ([length], [ ["chars", ...] ])</strong></dt>
