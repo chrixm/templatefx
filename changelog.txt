@@ -1,6 +1,20 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2020 Chris Mason <chris@templatefx.org>
 
+TemplateFx v3.7.0 - 3rd April 2020
+	* Added support for Data Object URLs.
+	* The Jinja2 style include statements are now universal and not Web Client specific.
+	* Jinja2 style includes now also support Template Fields in the URL part.
+	* Improved cURL error messages when it fails and something is written to the Console.
+	* Added a "peerip()" JavaScript function to return the "other" IP in point to point subnets.
+	* Fixed an issue when cURL wasn't working for some https requests in the GUI - a Java jlink issue in the bundled packages.
+	* Added support for an "extend_obj()" function to extend JavaScript objects as a polyfill for "Object.assign()".
+	* Includes are now pre-processed which means they support full template syntax - no longer a cURL shortcut.
+	* Template Fields are no longer substituted in cURL output if they match a valid field.
+	* Console errors were hidden if no output was generated - we now return an empty "Null" output instead of an error.
+	* Added support in the Web Client to be able to download the outputs as a ZIP file.
+	* Updated Web Client to use CodeMirror 5.51.0 from 5.48.4.
+
 TemplateFx v3.6.0 - 12th February 2020
 	* Added support for an experimental "templatefx.dataobj" feature to allow complex data structures in the Data Pane (see 7.1 in User Guide).
 	* Added support for JavaScript functions "encrypt()" and "decrypt()" which use AES256-GCM to encrypt/decrypt data.
