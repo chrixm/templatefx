@@ -1,6 +1,13 @@
 TemplateFx | Dynamic Templating Tool
 Copyright (c) 2011-2020 Chris Mason <chris@templatefx.org>
 
+TemplateFx v3.7.1 - 28th April 2020
+	* Fixed a bug when using group block numbering if not all blocks had a number.
+	* Updated Web Client to use CodeMirror 5.52.2 from 5.51.0.
+	* Fixed an issue where Output shows "Generating..." in Web Client when refreshed.
+	* Fixed an issue when using "\" in Output groups, which ended up with a JSON syntax error.
+	* The "Download Outputs" option now supports folders if using "/" or "\" in Output groups.
+
 TemplateFx v3.7.0 - 3rd April 2020
 	* Added support for Data Object URLs.
 	* The Jinja2 style include statements are now universal and not Web Client specific.
