@@ -1,5 +1,5 @@
 TemplateFx | Dynamic Templating Tool
-Copyright (c) 2011-2020 Chris Mason <chris@templatefx.org>
+Copyright (c) 2011-2020 Chris Mason <chris@netnix.org>
 
 TemplateFx v3.7.1 - 28th April 2020
 	* Fixed a bug when using group block numbering if not all blocks had a number.
